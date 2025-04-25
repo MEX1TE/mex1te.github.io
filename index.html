@@ -1,0 +1,557 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мемные и крутые викторины</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #2a2a4e);
+            color: #fff;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            background: #2e2e4a;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        h1 {
+            font-size: 28px;
+            color: #00ffcc;
+            text-shadow: 0 0 10px #00ffcc;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 24px;
+            color: #00ffcc;
+            margin-bottom: 15px;
+        }
+        .quiz-list button, .answer-btn, .restart-btn, .back-btn {
+            background: #ff007a;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            margin: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+        .quiz-list button:hover, .answer-btn:hover, .restart-btn:hover, .back-btn:hover {
+            background: #cc0066;
+            transform: scale(1.05);
+        }
+        .answer-btn {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+        }
+        .quiz {
+            display: none;
+        }
+        .question {
+            display: none;
+        }
+        .result {
+            display: none;
+        }
+        .home-screen {
+            display: block;
+        }
+        p {
+            font-size: 18px;
+            color: #e0e0ff;
+        }
+        a {
+            color: #00ffcc;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .debug-text {
+            color: #ff007a;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .fallback-text {
+            color: #ff007a;
+            font-size: 16px;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 22px;
+            }
+            h2 {
+                font-size: 20px;
+            }
+            button {
+                font-size: 14px;
+                padding: 10px 15px;
+            }
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="home-screen" id="home">
+            <h1>Мемные и крутые викторины!</h1>
+            <p>Выбери тест и узнай, кто ты в этом безумном мире!</p>
+            <div class="quiz-list">
+                <button onclick="startQuiz('quiz1')">Какой ты персонаж из мемов?</button>
+                <button onclick="startQuiz('quiz2')">Какой ты супергерой?</button>
+                <button onclick="startQuiz('quiz3')">Какой ты блогер?</button>
+                <button onclick="startQuiz('quiz4')">Какой у тебя вайб из 2020-х?</button>
+                <button onclick="startQuiz('quiz5')">Какой ты игрок в Among Us?</button>
+            </div>
+        </div>
+
+        <!-- Викторина 1: Какой ты персонаж из мемов? -->
+        <div class="quiz" id="quiz1">
+            <p class="fallback-text">Викторина 1 загружена (если вопросы не видны, JavaScript не сработал).</p>
+            <div class="question" id="q1-1">
+                <h2>Что ты делаешь, когда видишь мем?</h2>
+                <button class="answer-btn" onclick="selectAnswer('quiz1', 1, 1)">Сразу шлю друзьям</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz1', 1, 2)">Ржу в голос</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz1', 1, 3)">Сохраняю в галерею</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz1', 1, 4)">Похер, скролю дальше</button>
+            </div>
+            <div class="question" id="q1-2">
+                <h2>Какой мем тебе ближе?</h2>
+                <button class="answer-btn" onclick="selectAnswer('quiz1', 2, 1)">Distracted Boyfriend</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz1', 2, 2)">Drake Hotline Bling</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz1', 2, 3)">Sad Affleck</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz1', 2, 4)">Pepe the Frog</button>
+            </div>
+            <div class="question" id="q1-3">
+                <h2>Где ты чаще сидишь?</h2>
+                <button class="answer-btn" onclick="selectAnswer('quiz1', 3, 1)">TikTok</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz1', 3, 2)">Twitter/X</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz1', 3, 3)">Reddit</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz1', 3, 4)">ВКонтакте</button>
+            </div>
+            <div class="result" id="result1">
+                <h2>Твой мемный персонаж!</h2>
+                <p id="result-text1"></p>
+                <button class="restart-btn" onclick="restartQuiz('quiz1')">Пройти заново</button>
+                <button class="back-btn" onclick="backToHome()">На главную</button>
+            </div>
+        </div>
+
+        <!-- Викторина 2: Какой ты супергерой? -->
+        <div class="quiz" id="quiz2">
+            <p class="fallback-text">Викторина 2 загружена (если вопросы не видны, JavaScript не сработал).</p>
+            <div class="question" id="q2-1">
+                <h2>Какой у тебя навык?</h2>
+                <button class="answer-btn" onclick="selectAnswer('quiz2', 1, 1)">Суперсила</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz2', 1, 2)">Гениальность</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz2', 1, 3)">Ловкость</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz2', 1, 4)">Харизма</button>
+            </div>
+            <div class="question" id="q2-2">
+                <h2>Кого ты спасёшь первым?</h2>
+                <button class="answer-btn" onclick="selectAnswer('quiz2', 2, 1)">Весь мир</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz2', 2, 2)">Своих друзей</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz2', 2, 3)">Себя</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz2', 2, 4)">Котят</button>
+            </div>
+            <div class="question" id="q2-3">
+                <h2>Какой твой стиль?</h2>
+                <button class="answer-btn" onclick="selectAnswer('quiz2', 3, 1)">Классический плащ</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz2', 3, 2)">Техно-костюм</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz2', 3, 3)">Кожаная куртка</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz2', 3, 4)">Маска и капюшон</button>
+            </div>
+            <div class="result" id="result2">
+                <h2>Твой супергерой!</h2>
+                <p id="result-text2"></p>
+                <button class="restart-btn" onclick="restartQuiz('quiz2')">Пройти заново</button>
+                <button class="back-btn" onclick="backToHome()">На главную</button>
+            </div>
+        </div>
+
+        <!-- Викторина 3: Какой ты блогер? -->
+        <div class="quiz" id="quiz3">
+            <p class="fallback-text">Викторина 3 загружена (если вопросы не видны, JavaScript не сработал).</p>
+            <div class="question" id="q3-1">
+                <h2>Что ты постишь?</h2>
+                <button class="answer-btn" onclick="selectAnswer('quiz3', 1, 1)">Трэвел-фото</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz3', 1, 2)">Лайфхаки</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz3', 1, 3)">Мемы</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz3', 1, 4)">Еду</button>
+            </div>
+            <div class="question" id="q3-2">
+                <h2>Где твоя аудитория?</h2>
+                <button class="answer-btn" onclick="selectAnswer('quiz3', 2, 1)">Instagram</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz3', 2, 2)">YouTube</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz3', 2, 3)">TikTok</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz3', 2, 4)">Twitch</button>
+            </div>
+            <div class="question" id="q3-3">
+                <h2>Какой у тебя вайб?</h2>
+                <button class="answer-btn" onclick="selectAnswer('quiz3', 3, 1)">Позитив и мотивация</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz3', 3, 2)">Сарказм и юмор</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz3', 3, 3)">Эстетика</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz3', 3, 4)">Чил и уют</button>
+            </div>
+            <div class="result" id="result3">
+                <h2>Твой тип блогера!</h2>
+                <p id="result-text3"></p>
+                <button class="restart-btn" onclick="restartQuiz('quiz3')">Пройти заново</button>
+                <button class="back-btn" onclick="backToHome()">На главную</button>
+            </div>
+        </div>
+
+        <!-- Викторина 4: Какой у тебя вайб из 2020-х? -->
+        <div class="quiz" id="quiz4">
+            <p class="fallback-text">Викторина 4 загружена (если вопросы не видны, JavaScript не сработал).</p>
+            <div class="question" id="q4-1">
+                <h2>Что ты слушаешь?</h2>
+                <button class="answer-btn" onclick="selectAnswer('quiz4', 1, 1)">Phonk и lo-fi</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz4', 1, 2)">K-pop</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz4', 1, 3)">Ретро 80-х</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz4', 1, 4)">Тикток-ремиксы</button>
+            </div>
+            <div class="question" id="q4-2">
+                <h2>Твой стиль одежды?</h2>
+                <button class="answer-btn" onclick="selectAnswer('quiz4', 2, 1)">Оверсайз и кроссы</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz4', 2, 2)">Y2K с блестками</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz4', 2, 3)">Гранж и кожа</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz4', 2, 4)">Эко-минимализм</button>
+            </div>
+            <div class="question" id="q4-3">
+                <h2>Что ты делаешь в выходные?</h2>
+                <button class="answer-btn" onclick="selectAnswer('quiz4', 3, 1)">Чиллю с Netflix</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz4', 3, 2)">Тусую в клубе</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz4', 3, 3)">Играю в ретро-игры</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz4', 3, 4)">Гуляю в парке</button>
+            </div>
+            <div class="result" id="result4">
+                <h2>Твой вайб 2020-х!</h2>
+                <p id="result-text4"></p>
+                <button class="restart-btn" onclick="restartQuiz('quiz4')">Пройти заново</button>
+                <button class="back-btn" onclick="backToHome()">На главную</button>
+            </div>
+        </div>
+
+        <!-- Викторина 5: Какой ты игрок в Among Us? -->
+        <div class="quiz" id="quiz5">
+            <p class="fallback-text">Викторина 5 загружена (если вопросы не видны, JavaScript не сработал).</p>
+            <div class="question" id="q5-1">
+                <h2>Что ты делаешь в игре?</h2>
+                <button class="answer-btn" onclick="selectAnswer('quiz5', 1, 1)">Бегу делать таски</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz5', 1, 2)">Слежу за всеми</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz5', 1, 3)">Троллю в чате</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz5', 1, 4)">Прячусь в вентиляции</button>
+            </div>
+            <div class="question" id="q5-2">
+                <h2>Как ты на собрании?</h2>
+                <button class="answer-btn" onclick="selectAnswer('quiz5', 2, 1)">Доказываю свою невиновность</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz5', 2, 2)">Обвиняю всех</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz5', 2, 3)">Молчу</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz5', 2, 4)">Спамлю мемы</button>
+            </div>
+            <div class="question" id="q5-3">
+                <h2>Какой твой цвет в игре?</h2>
+                <button class="answer-btn" onclick="selectAnswer('quiz5', 3, 1)">Красный</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz5', 3, 2)">Чёрный</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz5', 3, 3)">Жёлтый</button>
+                <button class="answer-btn" onclick="selectAnswer('quiz5', 3, 4)">Зелёный</button>
+            </div>
+            <div class="result" id="result5">
+                <h2>Твой стиль в Among Us!</h2>
+                <p id="result-text5"></p>
+                <button class="restart-btn" onclick="restartQuiz('quiz5')">Пройти заново</button>
+                <button class="back-btn" onclick="backToHome()">На главную</button>
+            </div>
+        </div>
+
+        <!-- Заглушка для отладки -->
+        <div class="debug-text" id="debug-text">Контейнер загружен. Если викторина не видна, проверь консоль (F12).</div>
+    </div>
+
+    <script defer>
+        let currentQuiz = '';
+        let currentQuestion = 0;
+        let score = 0;
+
+        function startQuiz(quizId) {
+            console.log(`[StartQuiz] Starting quiz: ${quizId}`);
+
+            // Скрываем главную страницу
+            console.log('[StartQuiz] Step 1: Hiding home screen');
+            const homeScreen = document.getElementById('home');
+            if (homeScreen) {
+                homeScreen.style.display = 'none';
+                console.log('[StartQuiz] Home screen hidden');
+            } else {
+                console.error('[StartQuiz] Home screen not found!');
+                return;
+            }
+
+            // Инициализируем переменные
+            currentQuiz = quizId;
+            currentQuestion = 1;
+            score = 0;
+
+            // Показываем викторину
+            console.log('[StartQuiz] Step 2: Showing quiz');
+            const quizElement = document.getElementById(quizId);
+            if (quizElement) {
+                quizElement.style.display = 'block';
+                console.log(`[StartQuiz] Quiz ${quizId} is now visible`);
+            } else {
+                console.error(`[StartQuiz] Quiz element ${quizId} not found!`);
+                return;
+            }
+
+            // Скрываем fallback-текст
+            console.log('[StartQuiz] Step 3: Hiding fallback text');
+            const fallbackText = quizElement.querySelector('.fallback-text');
+            if (fallbackText) {
+                fallbackText.style.display = 'none';
+                console.log('[StartQuiz] Fallback text hidden');
+            } else {
+                console.warn('[StartQuiz] Fallback text not found');
+            }
+
+            // Показываем первый вопрос
+            console.log('[StartQuiz] Step 4: Showing first question');
+            const quizNumber = quizId.replace('quiz', '');
+            const firstQuestion = document.getElementById(`q${quizNumber}-1`);
+            if (firstQuestion) {
+                firstQuestion.style.display = 'block';
+                console.log(`[StartQuiz] Question q${quizNumber}-1 is now visible`);
+            } else {
+                console.error(`[StartQuiz] Question q${quizNumber}-1 not found!`);
+                return;
+            }
+
+            // Скрываем отладочный текст
+            console.log('[StartQuiz] Step 5: Hiding debug text');
+            const debugText = document.getElementById('debug-text');
+            if (debugText) {
+                debugText.style.display = 'none';
+                console.log('[StartQuiz] Debug text hidden');
+            } else {
+                console.warn('[StartQuiz] Debug text not found');
+            }
+        }
+
+        function selectAnswer(quizId, questionNum, answer) {
+            console.log(`[SelectAnswer] Selected answer for ${quizId}, question ${questionNum}, score +${answer}`);
+            score += answer;
+
+            const quizNumber = quizId.replace('quiz', '');
+            console.log('[SelectAnswer] Step 1: Hiding current question');
+            const currentQuestionElement = document.getElementById(`q${quizNumber}-${questionNum}`);
+            if (currentQuestionElement) {
+                currentQuestionElement.style.display = 'none';
+                console.log(`[SelectAnswer] Question q${quizNumber}-${questionNum} hidden`);
+            } else {
+                console.error(`[SelectAnswer] Question q${quizNumber}-${questionNum} not found!`);
+                return;
+            }
+
+            if (questionNum < 3) {
+                currentQuestion++;
+                console.log('[SelectAnswer] Step 2: Showing next question');
+                const nextQuestion = document.getElementById(`q${quizNumber}-${currentQuestion}`);
+                if (nextQuestion) {
+                    nextQuestion.style.display = 'block';
+                    console.log(`[SelectAnswer] Question q${quizNumber}-${currentQuestion} is now visible`);
+                } else {
+                    console.error(`[SelectAnswer] Next question q${quizNumber}-${currentQuestion} not found!`);
+                    return;
+                }
+            } else {
+                showResult(quizId);
+            }
+        }
+
+        function showResult(quizId) {
+            console.log(`[ShowResult] Showing result for ${quizId}, total score: ${score}`);
+            let resultText = '';
+            if (quizId === 'quiz1') {
+                if (score <= 4) {
+                    resultText = 'Ты — <b>Drake Hotline Bling</b>! Любишь одобрять крутые штуки и отвергать кринж. Купи мерч с мемами! <a href="https://example.com/merch" target="_blank">Смотреть мерч</a>';
+                } else if (score <= 7) {
+                    resultText = 'Ты — <b>Pepe the Frog</b>! Эмоциональный и вайбовый, живёшь в мемах. Попробуй NordVPN для анонимности! <a href="https://example.com/nordvpn" target="_blank">Попробовать</a>';
+                } else if (score <= 10) {
+                    resultText = 'Ты — <b>Distracted Boyfriend</b>! Вечно отвлекаешься на новый тренд. Найди мемы в нашем Telegram! <a href="https://t.me/example" target="_blank">Подписаться</a>';
+                } else {
+                    resultText = 'Ты — <b>Sad Affleck</b>! Мемная грусть — твой вайб. Купи что-нибудь весёлое! <a href="https://example.com/shop" target="_blank">В магазин</a>';
+                }
+            } else if (quizId === 'quiz2') {
+                if (score <= 4) {
+                    resultText = 'Ты — <b>Супермен</b>! Классика, сила и плащ. Купи комиксы DC! <a href="https://example.com/comics" target="_blank">Смотреть</a>';
+                } else if (score <= 7) {
+                    resultText = 'Ты — <b>Железный Человек</b>! Гений и техно-вайб. Попробуй merch Marvel! <a href="https://example.com/marvel" target="_blank">Купить</a>';
+                } else if (score <= 10) {
+                    resultText = 'Ты — <b>Человек-Паук</b>! Ловкость и юмор. Найди фигурки героев! <a href="https://example.com/figures" target="_blank">Смотреть</a>';
+                } else {
+                    resultText = 'Ты — <b>Дэдпул</b>! Хаос и харизма. Закажи мерч с Дэдпулом! <a href="https://example.com/deadpool" target="_blank">Купить</a>';
+                }
+            } else if (quizId === 'quiz3') {
+                if (score <= 4) {
+                    resultText = 'Ты — <b>Трэвел-блогер</b>! Эстетика и путешествия. Бронируй туры! <a href="https://example.com/travel" target="_blank">Найти тур</a>';
+                } else if (score <= 7) {
+                    resultText = 'Ты — <b>Лайфхакер</b>! Полезные советы и юмор. Попробуй курсы! <a href="https://example.com/courses" target="_blank">Смотреть</a>';
+                } else if (score <= 10) {
+                    resultText = 'Ты — <b>Мемный блогер</b>! Твой контент — чистый кринж и угар. Создай мерч! <a href="https://example.com/merch" target="_blank">Создать</a>';
+                } else {
+                    resultText = 'Ты — <b>Фуд-блогер</b>! Еда — твоя страсть. Закажи доставку! <a href="https://example.com/food" target="_blank">Заказать</a>';
+                }
+            } else if (quizId === 'quiz4') {
+                if (score <= 4) {
+                    resultText = 'Твой вайб — <b>Phonk & Chill</b>! Ночной вайб и оверсайз. Слушай плейлист! <a href="https://example.com/playlist" target="_blank">Слушать</a>';
+                } else if (score <= 7) {
+                    resultText = 'Твой вайб — <b>Y2K</b>! Блёстки и тусовки. Купи аксессуары! <a href="https://example.com/y2k" target="_blank">Купить</a>';
+                } else if (score <= 10) {
+                    resultText = 'Твой вайб — <b>Ретро-геймер</b>! 80-е и пиксели. Закажи ретро-консоль! <a href="https://example.com/consoles" target="_blank">Купить</a>';
+                } else {
+                    resultText = 'Твой вайб — <b>Эко-чил</b>! Природа и минимализм. Попробуй эко-продукты! <a href="https://example.com/eco" target="_blank">Смотреть</a>';
+                }
+            } else if (quizId === 'quiz5') {
+                if (score <= 4) {
+                    resultText = 'Ты — <b>Честный таскер</b>! Делаешь таски и не палшься. Купи скин в Among Us! <a href="https://example.com/amongus" target="_blank">Купить</a>';
+                } else if (score <= 7) {
+                    resultText = 'Ты — <b>Детектив</b>! Всегда вычисляешь предателя. Попробуй Discord Nitro! <a href="https://example.com/discord" target="_blank">Купить</a>';
+                } else if (score <= 10) {
+                    resultText = 'Ты — <b>Тролль</b>! Мемы и хаос — твой стиль. Создай стикеры! <a href="https://example.com/stickers" target="_blank">Создать</a>';
+                } else {
+                    resultText = 'Ты — <b>Импостер</b>! Мастер вентиляции и саботажа. Закажи мерч Among Us! <a href="https://example.com/amongusmerch" target="_blank">Купить</a>';
+                }
+            }
+            console.log('[ShowResult] Step 1: Showing result');
+            const resultElement = document.getElementById(`result${quizId.replace('quiz', '')}`);
+            if (resultElement) {
+                document.getElementById(`result-text${quizId.replace('quiz', '')}`).innerHTML = resultText;
+                resultElement.style.display = 'block';
+                console.log(`[ShowResult] Result for ${quizId} is now visible`);
+            } else {
+                console.error(`[ShowResult] Result element for ${quizId} not found!`);
+            }
+        }
+
+        function restartQuiz(quizId) {
+            console.log(`[RestartQuiz] Restarting quiz: ${quizId}`);
+            score = 0;
+            currentQuestion = 0;
+
+            console.log('[RestartQuiz] Step 1: Hiding result');
+            const resultElement = document.getElementById(`result${quizId.replace('quiz', '')}`);
+            if (resultElement) {
+                resultElement.style.display = 'none';
+            }
+
+            console.log('[RestartQuiz] Step 2: Hiding all questions');
+            const quizNumber = quizId.replace('quiz', '');
+            for (let i = 1; i <= 3; i++) {
+                const questionElement = document.getElementById(`q${quizNumber}-${i}`);
+                if (questionElement) {
+                    questionElement.style.display = 'none';
+                }
+            }
+
+            console.log('[RestartQuiz] Step 3: Showing first question');
+            const firstQuestion = document.getElementById(`q${quizNumber}-1`);
+            if (firstQuestion) {
+                firstQuestion.style.display = 'block';
+            }
+            currentQuestion = 1;
+        }
+
+        function backToHome() {
+            console.log(`[BackToHome] Returning to home from ${currentQuiz}`);
+
+            console.log('[BackToHome] Step 1: Hiding current quiz');
+            const quizElement = document.getElementById(currentQuiz);
+            if (quizElement) {
+                quizElement.style.display = 'none';
+            }
+
+            console.log('[BackToHome] Step 2: Showing home screen');
+            const homeScreen = document.getElementById('home');
+            if (homeScreen) {
+                homeScreen.style.display = 'block';
+            }
+
+            console.log('[BackToHome] Step 3: Resetting state');
+            const quizNumber = currentQuiz.replace('quiz', '');
+            for (let i = 1; i <= 3; i++) {
+                const questionElement = document.getElementById(`q${quizNumber}-${i}`);
+                if (questionElement) {
+                    questionElement.style.display = 'none';
+                }
+            }
+            const resultElement = document.getElementById(`result${currentQuiz.replace('quiz', '')}`);
+            if (resultElement) {
+                resultElement.style.display = 'none';
+            }
+            score = 0;
+            currentQuestion = 0;
+
+            console.log('[BackToHome] Step 4: Hiding debug text');
+            const debugText = document.getElementById('debug-text');
+            if (debugText) {
+                debugText.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
