@@ -3,95 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Скачай SystemCleaner — приложение для очистки и оптимизации твоего ПК. Удали ненужные файлы и ускорь работу системы!">
+    <meta name="description" content="Скачай SystemCleaner — приложение для очистки и оптимизации твоего ПК. Удали ненужные файлы, ускори работу системы и наслаждайся стабильной производительностью!">
     <meta name="keywords" content="SystemCleaner, очистка ПК, оптимизация, скачать приложение, Windows">
-    <title>SystemCleaner — Очистка и оптимизация твоего ПК</title>
+    <title>SystemCleaner — Оптимизация и очистка твоего ПК</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/glider-js@1.7.8/glider.min.css">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1e1e2f, #2a2a4e);
-            color: #fff;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: #0f172a;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        /* Шапка */
+        header {
+            background: #1e293b;
+            padding: 15px 30px;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            min-height: 100vh;
-            overflow: auto;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
-        .container {
-            background: #2e2e4a;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 600px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-        }
-        h1 {
-            font-size: 32px;
-            color: #00ffcc;
-            text-shadow: 0 0 10px #00ffcc;
-            margin-bottom: 20px;
-        }
-        p {
-            font-size: 18px;
-            color: #e0e0ff;
-            margin-bottom: 20px;
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: #38bdf8;
         }
         .download-btn {
-            background: #ff007a;
+            background: #38bdf8;
             color: #fff;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: transform 0.2s, background 0.3s;
+            padding: 10px 20px;
+            border-radius: 25px;
             text-decoration: none;
-            display: inline-block;
+            font-weight: 500;
+            transition: background 0.3s, transform 0.2s;
         }
         .download-btn:hover {
-            background: #cc0066;
+            background: #0ea5e9;
             transform: scale(1.05);
         }
-        .footer {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #e0e0ff;
+        /* Главный раздел */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            background: linear-gradient(135deg, #1e3a8a, #0f172a);
+            min-height: 80vh;
         }
-        .footer a {
-            color: #00ffcc;
+        .hero-content {
+            max-width: 600px;
+            text-align: center;
+        }
+        .hero-content h1 {
+            font-size: 48px;
+            color: #38bdf8;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+        }
+        .hero-content p {
+            font-size: 18px;
+            color: #cbd5e1;
+            margin-bottom: 30px;
+        }
+        .hero-content .download-btn {
+            font-size: 18px;
+            padding: 15px 30px;
+        }
+        /* Преимущества */
+        .features {
+            padding: 50px 20px;
+            background: #111827;
+            text-align: center;
+        }
+        .features h2 {
+            font-size: 36px;
+            color: #38bdf8;
+            margin-bottom: 40px;
+        }
+        .feature-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .feature-card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 300px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        .feature-card i {
+            font-size: 40px;
+            color: #38bdf8;
+            margin-bottom: 15px;
+        }
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #e2e8f0;
+        }
+        .feature-card p {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        /* Скриншоты */
+        .screenshots {
+            padding: 50px 20px;
+            background: #0f172a;
+            text-align: center;
+        }
+        .screenshots h2 {
+            font-size: 36px;
+            color: #38bdf8;
+            margin-bottom: 40px;
+        }
+        .glider-contain {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .glider {
+            display: flex;
+            gap: 20px;
+        }
+        .screenshot {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .glider-prev, .glider-next {
+            background: #38bdf8;
+            border: none;
+            color: #fff;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .glider-prev:hover, .glider-next:hover {
+            background: #0ea5e9;
+        }
+        /* Подвал */
+        footer {
+            padding: 30px 20px;
+            background: #1e293b;
+            text-align: center;
+            border-top: 1px solid #334155;
+        }
+        footer p {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        footer a {
+            color: #38bdf8;
             text-decoration: none;
         }
-        .footer a:hover {
+        footer a:hover {
             text-decoration: underline;
         }
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 24px;
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 36px;
             }
-            p {
+            .hero-content p {
                 font-size: 16px;
             }
-            .download-btn {
+            .features h2, .screenshots h2 {
+                font-size: 28px;
+            }
+            .feature-card {
+                max-width: 100%;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 28px;
+            }
+            .hero-content .download-btn {
                 font-size: 16px;
                 padding: 12px 25px;
             }
-            .container {
-                padding: 20px;
+            header {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>SystemCleaner</h1>
-        <p>Очисти свой ПК от ненужных файлов и ускори его работу с помощью SystemCleaner! Простое и эффективное приложение для оптимизации Windows.</p>
-        <a href="downloads/SystemCleaner.exe" class="download-btn" download>Скачать SystemCleaner</a>
-        <div class="footer">
-            <p>Скачивая приложение, вы соглашаетесь с нашей <a href="privacy.html">Политикой конфиденциальности</a>.</p>
+    <!-- Шапка -->
+    <header>
+        <div class="logo">SystemCleaner</div>
+        <a href="downloads/SystemCleaner.exe" class="download-btn" download>Скачать</a>
+    </header>
+
+    <!-- Главный раздел -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>SystemCleaner</h1>
+            <p>Оптимизируй свой ПК с помощью SystemCleaner! Удали ненужные файлы, ускори работу системы и наслаждайся стабильной производительностью.</p>
+            <a href="downloads/SystemCleaner.exe" class="download-btn" download>Скачать сейчас</a>
         </div>
-    </div>
+    </section>
+
+    <!-- Преимущества -->
+    <section class="features">
+        <h2>Почему выбрать SystemCleaner?</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <i class="fas fa-broom"></i>
+                <h3>Глубокая очистка</h3>
+                <p>Удаляй временные файлы, кэш и другой мусор, который замедляет твой ПК.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-rocket"></i>
+                <h3>Ускорение системы</h3>
+                <p>Оптимизируй процессы и запускай приложения быстрее.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Безопасность</h3>
+                <p>Надёжный инструмент, который не повредит твои данные.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Скриншоты -->
+    <section class="screenshots">
+        <h2>Посмотри, как это работает</h2>
+        <div class="glider-contain">
+            <div class="glider">
+                <img src="screenshots/screen1.png" alt="Скриншот SystemCleaner 1" class="screenshot">
+                <img src="screenshots/screen2.png" alt="Скриншот SystemCleaner 2" class="screenshot">
+                <img src="screenshots/screen3.png" alt="Скриншот SystemCleaner 3" class="screenshot">
+            </div>
+            <button aria-label="Previous" class="glider-prev"><i class="fas fa-chevron-left"></i></button>
+            <button aria-label="Next" class="glider-next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer>
+        <p>© 2025 SystemCleaner. Все права защищены. <a href="privacy.html">Политика конфиденциальности</a></p>
+    </footer>
+
+    <!-- Скрипты -->
+    <script src="https://unpkg.com/glider-js@1.7.8/glider.min.js"></script>
+    <script>
+        new Glider(document.querySelector('.glider'), {
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            draggable: true,
+            arrows: {
+                prev: '.glider-prev',
+                next: '.glider-next'
+            },
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 2
+                    }
+                }
+            ]
+        });
+    </script>
 </body>
 </html>
