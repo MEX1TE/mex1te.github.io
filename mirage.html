@@ -11,9 +11,13 @@
             color: #ffffff;
             font-family: 'Arial', sans-serif;
         }
-        .card:hover {
-            transform: translateY(-5px);
-            transition: transform 0.3s ease;
+        .grenade-btn.active {
+            background-color: #f97316;
+            color: #ffffff;
+        }
+        .map-point:hover {
+            fill: #f97316;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -33,30 +37,29 @@
     <!-- Основной контент -->
     <main class="container mx-auto py-8">
         <h1 class="text-4xl font-bold text-center mb-8">Лайнапы для Mirage</h1>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Карточка лайнапа -->
-            <div class="card bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-                <img src="https://via.placeholder.com/300x200?text=A+Site+Smoke" alt="A Site Smoke" class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h2 class="text-xl font-semibold">A Site Smoke</h2>
-                    <p class="text-gray-400 mt-2">Смок для A сайта с T Spawn.</p>
-                    <a href="#" class="mt-4 inline-block text-orange-500 hover:underline">Посмотреть лайнап</a>
-                </div>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Карта -->
+            <div class="lg:w-2/3 bg-gray-800 rounded-lg p-4">
+                <h2 class="text-2xl font-semibold mb-4">Карта Mirage</h2>
+                <svg id="mirage-map" width="100%" height="400" viewBox="0 0 400 400" style="background: #4b5563;">
+                    <!-- Упрощённый контур карты -->
+                    <rect x="0" y="0" width="400" height="400" fill="#4b5563" />
+                    <!-- Точки для лайнапов -->
+                    <circle id="point-a-site" class="map-point" cx="100" cy="100" r="10" fill="#ffffff" data-point="a-site" />
+                    <circle id="point-ct" class="map-point" cx="200" cy="150" r="10" fill="#ffffff" data-point="ct" />
+                    <circle id="point-mid" class="map-point" cx="150" cy="250" r="10" fill="#ffffff" data-point="mid" />
+                </svg>
             </div>
-            <div class="card bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-                <img src="https://via.placeholder.com/300x200?text=CT+Smoke" alt="CT Smoke" class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h2 class="text-xl font-semibold">CT Smoke</h2>
-                    <p class="text-gray-400 mt-2">Смок для CT с Jungle.</p>
-                    <a href="#" class="mt-4 inline-block text-orange-500 hover:underline">Посмотреть лайнап</a>
+            <!-- Панель управления -->
+            <div class="lg:w-1/3 bg-gray-800 rounded-lg p-4">
+                <h2 class="text-2xl font-semibold mb-4">Выберите гранату</h2>
+                <div class="flex  flex space-x-2 mb-4">
+                    <button id="smoke-btn" class="grenade-btn px-4 py-2 bg-gray-700 rounded hover:bg-orange-500">Smoke</button>
+                    <button id="flash-btn" class="grenade-btn px-4 py-2 bg-gray-700 rounded hover:bg-orange-500">Flash</button>
+                    <button id="molotov-btn" class="grenade-btn px-4 py-2 bg-gray-700 rounded hover:bg-orange-500">Molotov</button>
                 </div>
-            </div>
-            <div class="card bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-                <img src="https://via.placeholder.com/300x200?text=Mid+Molotov" alt="Mid Molotov" class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h2 class="text-xl font-semibold">Mid Molotov</h2>
-                    <p class="text-gray-400 mt-2">Молотов для мида с T Spawn.</p>
-                    <a href="#" class="mt-4 inline-block text-orange-500 hover:underline">Посмотреть лайнап</a>
+                <div id="lineup-info" class="text-gray-300">
+                    <p>Выберите тип гранаты и точку на карте, чтобы увидеть лайнап.</p>
                 </div>
             </div>
         </div>
@@ -75,6 +78,59 @@
     </footer>
 
     <script>
+        // Данные лайнапов
+        const lineups = {
+            'a-site': {
+                smoke: 'Смок для A сайта: Бросьте с T Spawn, прицел на угол здания.',
+                flash: 'Флешка для A сайта: Бросьте с лестницы на A Ramp.',
+                molotov: 'Молотов для A сайта: Бросьте с T Spawn в угол ящика.'
+            },
+            'ct': {
+                smoke: 'Смок для CT: Бросьте с Jungle в сторону мида.',
+                flash: 'Флешка для CT: Бросьте с CT Spawn в сторону лестницы.',
+                molotov: 'Молотов для CT: Бросьте с CT Spawn в угол A Ramp.'
+            },
+            'mid': {
+                smoke: 'Смок для мида: Бросьте с T Spawn в окно.',
+                flash: 'Флешка для мида: Бросьте с T Spawn в сторону коннектора.',
+                molotov: 'Молотов для мида: Бросьте с T Spawn в угол Short.'
+            }
+        };
+
+        // Переменная для текущего типа гранаты
+        let selectedGrenade = null;
+
+        // Обработчики кнопок гранат
+        const buttons = document.querySelectorAll('.grenade-btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                buttons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                selectedGrenade = button.id.replace('-btn', '');
+                updateLineupInfo();
+            });
+        });
+
+        // Обработчики точек на карте
+        const points = document.querySelectorAll('.map-point');
+        points.forEach(point => {
+            point.addEventListener('click', () => {
+                const pointId = point.getAttribute('data-point');
+                updateLineupInfo(pointId);
+            });
+        });
+
+        // Обновление информации о лайнапе
+        function updateLineupInfo(pointId = null) {
+            const infoDiv = document.getElementById('lineup-info');
+            if (!selectedGrenade || !pointId) {
+                infoDiv.innerHTML = '<p>Выберите тип гранаты и точку на карте, чтобы увидеть лайнап.</p>';
+                return;
+            }
+            const lineup = lineups[pointId][selectedGrenade];
+            infoDiv.innerHTML = `<p><strong>Лайнап:</strong> ${lineup}</p>`;
+        }
+
         // Плавная прокрутка для якорных ссылок
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
