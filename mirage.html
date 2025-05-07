@@ -38,6 +38,7 @@
             border: 2px solid #ffffff;
             cursor: pointer;
             transform: translate(-50%, -50%);
+            display: none; /* Изначально скрыты */
         }
         .grenade-point:hover {
             background-color: #ff9500;
@@ -113,10 +114,26 @@
                 <div class="map-container" id="map-container">
                     <img src="map_mirage.jpeg" alt="Mirage Map" class="w-full h-auto">
                     <!-- Точки для гранат (цели) -->
-                    <div class="grenade-point" data-point="a-site" style="left: 300px; top: 300px;"></div>
-                    <div class="grenade-point" data-point="ct" style="left: 200px; top: 150px;"></div>
-                    <div class="grenade-point" data-point="mid1" style="left: 150px; top: 250px;"></div>
-                    <div class="grenade-point" data-point="mid" style="left: 323px; top: 360px;"></div>
+                    <!-- A-site -->
+                    <div class="grenade-point smoke" data-point="a-site" style="left: 300px; top: 300px;"></div>
+                    <div class="grenade-point flash" data-point="a-site" style="left: 310px; top: 310px;"></div>
+                    <div class="grenade-point molotov" data-point="a-site" style="left: 320px; top: 320px;"></div>
+                    <!-- CT -->
+                    <div class="grenade-point smoke" data-point="ct" style="left: 200px; top: 150px;"></div>
+                    <div class="grenade-point flash" data-point="ct" style="left: 210px; top: 160px;"></div>
+                    <div class="grenade-point molotov" data-point="ct" style="left: 220px; top: 170px;"></div>
+                    <!-- Mid1 -->
+                    <div class="grenade-point smoke" data-point="mid1" style="left: 150px; top: 250px;"></div>
+                    <div class="grenade-point flash" data-point="mid1" style="left: 160px; top: 260px;"></div>
+                    <div class="grenade-point molotov" data-point="mid1" style="left: 170px; top: 270px;"></div>
+                    <!-- Mid -->
+                    <div class="grenade-point smoke" data-point="mid" style="left: 323px; top: 360px;"></div>
+                    <div class="grenade-point flash" data-point="mid" style="left: 333px; top: 370px;"></div>
+                    <div class="grenade-point molotov" data-point="mid" style="left: 343px; top: 380px;"></div>
+                    <!-- B-site -->
+                    <div class="grenade-point smoke" data-point="b-site" style="left: 199px; top: 301px;"></div>
+                    <div class="grenade-point flash" data-point="b-site" style="left: 209px; top: 311px;"></div>
+                    <div class="grenade-point molotov" data-point="b-site" style="left: 219px; top: 321px;"></div>
                 </div>
             </div>
             <!-- Панель управления -->
@@ -224,6 +241,35 @@
                         { id: "pos5", coords: { left: "270px", top: "400px" }, video: "videos/molotov-mid-pos5.mp4" }
                     ]
                 }
+            },
+            "b-site": {
+                smoke: {
+                    positions: [
+                        { id: "pos1", coords: { left: "300px", top: "200px" }, video: "videos/smoke-b-site-pos1.mp4" },
+                        { id: "pos2", coords: { left: "350px", top: "250px" }, video: "videos/smoke-b-site-pos2.mp4" },
+                        { id: "pos3", coords: { left: "280px", top: "300px" }, video: "videos/smoke-b-site-pos3.mp4" },
+                        { id: "pos4", coords: { left: "320px", top: "350px" }, video: "videos/smoke-b-site-pos4.mp4" },
+                        { id: "pos5", coords: { left: "270px", top: "400px" }, video: "videos/smoke-b-site-pos5.mp4" }
+                    ]
+                },
+                flash: {
+                    positions: [
+                        { id: "pos1", coords: { left: "300px", top: "200px" }, video: "videos/flash-b-site-pos1.mp4" },
+                        { id: "pos2", coords: { left: "350px", top: "250px" }, video: "videos/flash-b-site-pos2.mp4" },
+                        { id: "pos3", coords: { left: "280px", top: "300px" }, video: "videos/flash-b-site-pos3.mp4" },
+                        { id: "pos4", coords: { left: "320px", top: "350px" }, video: "videos/flash-b-site-pos4.mp4" },
+                        { id: "pos5", coords: { left: "270px", top: "400px" }, video: "videos/flash-b-site-pos5.mp4" }
+                    ]
+                },
+                molotov: {
+                    positions: [
+                        { id: "pos1", coords: { left: "300px", top: "200px" }, video: "videos/molotov-b-site-pos1.mp4" },
+                        { id: "pos2", coords: { left: "350px", top: "250px" }, video: "videos/molotov-b-site-pos2.mp4" },
+                        { id: "pos3", coords: { left: "280px", top: "300px" }, video: "videos/molotov-b-site-pos3.mp4" },
+                        { id: "pos4", coords: { left: "320px", top: "350px" }, video: "videos/molotov-b-site-pos4.mp4" },
+                        { id: "pos5", coords: { left: "270px", top: "400px" }, video: "videos/molotov-b-site-pos5.mp4" }
+                    ]
+                }
             }
         };
 
@@ -244,6 +290,21 @@
 
         console.log('Элементы инициализированы:', mapContainer, modal, videoElement, closeBtn); // Отладка
 
+        // Функция для управления видимостью точек на карте
+        function updateGrenadePoints() {
+            // Скрыть все точки
+            document.querySelectorAll(".grenade-point").forEach(point => {
+                point.style.display = "none";
+            });
+
+            // Показать точки, соответствующие выбранной гранате
+            if (selectedGrenade) {
+                document.querySelectorAll(`.grenade-point.${selectedGrenade}`).forEach(point => {
+                    point.style.display = "block";
+                });
+            }
+        }
+
         // Обработчики кнопок гранат
         const buttons = document.querySelectorAll(".grenade-btn");
         console.log('Найдено кнопок:', buttons.length); // Отладка: сколько кнопок найдено
@@ -257,6 +318,8 @@
                 console.log('Выбрана граната:', selectedGrenade); // Отладка
                 // Скрыть все позиционные точки при выборе новой гранаты
                 document.querySelectorAll(".position-point").forEach(point => point.remove());
+                // Обновить видимость точек на карте
+                updateGrenadePoints();
             });
         });
 
