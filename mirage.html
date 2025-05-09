@@ -130,6 +130,12 @@
                     <div class="grenade-point smoke" data-point="b-site" style="left: 199px; top: 301px;"></div>
                     <div class="grenade-point flash" data-point="b-site" style="left: 209px; top: 311px;"></div>
                     <div class="grenade-point molotov" data-point="b-site" style="left: 219px; top: 321px;"></div>
+                    <!-- B-site1 -->
+                    <div class="grenade-point smoke" data-point="b-site1" style="left: 135px; top: 304px;"></div>
+                    <!-- B-short1 -->
+                    <div class="grenade-point smoke" data-point="b-short1" style="left: 266px; top: 193px;"></div>
+                    <!-- B-short2 -->
+                    <div class="grenade-point smoke" data-point="b-short2" style="left: 268px; top: 235px;"></div>
                 </div>
             </div>
             <!-- Панель управления -->
@@ -241,11 +247,8 @@
             "b-site": {
                 smoke: {
                     positions: [
-                        { id: "pos1", coords: { left: "300px", top: "200px" }, video: "videos/smoke-b-site-pos1.mp4" },
-                        { id: "pos2", coords: { left: "350px", top: "250px" }, video: "videos/smoke-b-site-pos2.mp4" },
-                        { id: "pos3", coords: { left: "280px", top: "300px" }, video: "videos/smoke-b-site-pos3.mp4" },
-                        { id: "pos4", coords: { left: "320px", top: "350px" }, video: "videos/smoke-b-site-pos4.mp4" },
-                        { id: "pos5", coords: { left: "270px", top: "400px" }, video: "videos/smoke-b-site-pos5.mp4" }
+                        { id: "pos1", coords: { left: "472px", top: "125px" }, video: "videos/smoke-b-site-pos1.mp4" },
+                        { id: "pos2", coords: { left: "192px", top: "193px" }, video: "videos/smoke-b-site-pos2.mp4" }
                     ]
                 },
                 flash: {
@@ -266,7 +269,31 @@
                         { id: "pos5", coords: { left: "270px", top: "400px" }, video: "videos/molotov-b-site-pos5.mp4" }
                     ]
                 }
-            }
+            },
+            "b-site1": {
+                smoke: {
+                    positions: [
+                        { id: "pos1", coords: { left: "472px", top: "125px" }, video: "videos/smoke-b-site-pos1.mp4" },
+                        { id: "pos2", coords: { left: "477px", top: "177px" }, video: "videos/smoke-b-site-pos2.mp4" }
+                    ]
+                }
+            },
+            "b-short1": {
+                smoke: {
+                    positions: [
+                        { id: "pos1", coords: { left: "472px", top: "125px" }, video: "videos/smoke-b-site-pos1.mp4" },
+                        { id: "pos2", coords: { left: "477px", top: "177px" }, video: "videos/smoke-b-site-pos2.mp4" }
+                    ]
+                }
+            },
+            "b-site2": {
+                smoke: {
+                    positions: [
+                        { id: "pos1", coords: { left: "472px", top: "125px" }, video: "videos/smoke-b-site-pos1.mp4" },
+                        { id: "pos2", coords: { left: "477px", top: "177px" }, video: "videos/smoke-b-site-pos2.mp4" }
+                    ]
+                }
+            },
         };
 
         console.log('Lineups определён:', lineups); // Отладка: проверка объекта lineups
