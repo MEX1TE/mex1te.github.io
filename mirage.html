@@ -115,11 +115,10 @@
                     <img src="map_mirage.jpeg" alt="Mirage Map" class="w-full h-auto">
                     <!-- Точки для гранат (цели) -->
                     <!-- A-site -->
-                    <div class="grenade-point smoke" data-point="a-site" style="left: 300px; top: 300px;"></div>
                     <div class="grenade-point flash" data-point="a-site" style="left: 310px; top: 310px;"></div>
                     <div class="grenade-point molotov" data-point="a-site" style="left: 320px; top: 320px;"></div>
                     <!-- CT -->
-                    <div class="grenade-point smoke" data-point="ct" style="left: 200px; top: 150px;"></div>
+                    <div class="grenade-point smoke" data-point="ct" style="left: 359px; top: 627px;"></div>
                     <div class="grenade-point flash" data-point="ct" style="left: 210px; top: 160px;"></div>
                     <div class="grenade-point molotov" data-point="ct" style="left: 220px; top: 170px;"></div>
                     <!-- Mid -->
@@ -136,6 +135,12 @@
                     <div class="grenade-point smoke" data-point="b-short1" style="left: 266px; top: 193px;"></div>
                     <!-- B-short2 -->
                     <div class="grenade-point smoke" data-point="b-short2" style="left: 268px; top: 235px;"></div>
+                    <!-- jungle -->
+                    <div class="grenade-point smoke" data-point="jungle" style="left: 353px; top: 486px;"></div>
+                    <!-- con -->
+                    <div class="grenade-point smoke" data-point="con" style="left: 395px; top: 395px;"></div>
+
+
                 </div>
             </div>
             <!-- Панель управления -->
@@ -211,9 +216,14 @@
                 }
             },
             "ct": {
-                smoke: { video: "videos/smoke-ct.mp4" },
-                flash: { video: "videos/flash-ct.mp4" },
-                molotov: { video: "videos/molotov-ct.mp4" }
+                smoke: {
+                    positions : [
+                        { id: "pos1", coords: { left: "493px", top: "483px" }, video: "videos/smoke-mid-pos2.webm" },
+                        { id: "pos2", coords: { left: "648px", top: "421px" }, video: "videos/smoke-mid-pos1.webm" },
+                        { id: "pos3", coords: { left: "667px", top: "419px" }, video: "videos/smoke-mid-pos3.webm" },
+                        { id: "pos4", coords: { left: "695px", top: "395px" }, video: "videos/smoke-mid-pos4.webm" }
+                    ]
+                }
             },
             "mid": {
                 smoke: {
@@ -286,11 +296,27 @@
                     ]
                 }
             },
-            "b-site2": {
+            "b-short2": {
                 smoke: {
                     positions: [
                         { id: "pos1", coords: { left: "472px", top: "125px" }, video: "videos/smoke-b-site-pos1.mp4" },
                         { id: "pos2", coords: { left: "477px", top: "177px" }, video: "videos/smoke-b-site-pos2.mp4" }
+                    ]
+                }
+            },
+            "jungle": {
+                smoke: {
+                    positions: [
+                        { id: "pos1", coords: { left: "494px", top: "482px" }, video: "videos/smoke-b-site-pos1.mp4" },
+                        { id: "pos2", coords: { left: "626px", top: "497px" }, video: "videos/smoke-b-site-pos2.mp4" }
+                    ]
+                }
+            },
+            "con": {
+                smoke: {
+                    positions: [
+                        { id: "pos1", coords: { left: "673px", top: "162px" }, video: "videos/smoke-b-site-pos1.mp4" },
+                        { id: "pos2", coords: { left: "719px", top: "253px" }, video: "videos/smoke-b-site-pos2.mp4" }
                     ]
                 }
             },
