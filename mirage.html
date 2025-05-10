@@ -39,6 +39,12 @@
             cursor: pointer;
             transform: translate(-50%, -50%);
             display: none; /* Изначально скрыты */
+            z-index: 2; /* Выше SVG линий */
+            opacity: 0; /* Для анимации */
+            transition: opacity 0.3s ease;
+        }
+        .grenade-point.visible {
+            opacity: 1;
         }
         .grenade-point:hover {
             background-color: #ff9500;
@@ -53,9 +59,33 @@
             position: absolute;
             cursor: pointer;
             transform: translate(-50%, -50%);
+            z-index: 2; /* Выше SVG линий */
+            opacity: 0; /* Для анимации */
+            transition: opacity 0.3s ease;
+        }
+        .position-point.visible {
+            opacity: 1;
         }
         .position-point:hover {
             background-color: #f59e0b;
+        }
+        .tooltip {
+            position: absolute;
+            background-color: #2d2d2d;
+            color: #ffffff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            visibility: hidden;
+            z-index: 3;
+            bottom: 25px; /* Над точкой */
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+        .grenade-point:hover .tooltip,
+        .position-point:hover .tooltip {
+            visibility: visible;
         }
         .modal {
             display: none;
@@ -89,13 +119,22 @@
             width: 100%;
             height: auto;
         }
+        .line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Чтобы SVG не перехватывал клики */
+            z-index: 1; /* Под точками */
+        }
     </style>
 </head>
 <body>
     <!-- Навигационная панель -->
     <nav class="bg-gray-900 p-4 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
-            <div class="text-2xl font-bold text-orange-500">CS2 Лайнапы</div>
+            <div class="text-2xl font-bold text-orange-500">CS2NADES</div>
             <div class="space-x-4">
                 <a href="index.html" class="text-gray-300 hover:text-orange-500">Главная</a>
                 <a href="#" class="text-gray-300 hover:text-orange-500">Карты</a>
@@ -113,34 +152,33 @@
                 <h2 class="text-2xl font-semibold mb-4">Карта Mirage</h2>
                 <div class="map-container" id="map-container">
                     <img src="map_mirage.jpeg" alt="Mirage Map" class="w-full h-auto">
+                    <svg class="line" id="line-svg"></svg> <!-- SVG для линий -->
                     <!-- Точки для гранат (цели) -->
                     <!-- A-site -->
-                    <div class="grenade-point flash" data-point="a-site" style="left: 310px; top: 310px;"></div>
-                    <div class="grenade-point molotov" data-point="a-site" style="left: 320px; top: 320px;"></div>
+                    <div class="grenade-point flash" data-point="a-site" style="left: 310px; top: 310px;"><span class="tooltip">A-site Flash</span></div>
+                    <div class="grenade-point molotov" data-point="a-site" style="left: 320px; top: 320px;"><span class="tooltip">A-site Molotov</span></div>
                     <!-- CT -->
-                    <div class="grenade-point smoke" data-point="ct" style="left: 359px; top: 627px;"></div>
-                    <div class="grenade-point flash" data-point="ct" style="left: 210px; top: 160px;"></div>
-                    <div class="grenade-point molotov" data-point="ct" style="left: 220px; top: 170px;"></div>
+                    <div class="grenade-point smoke" data-point="ct" style="left: 359px; top: 627px;"><span class="tooltip">CT Smoke</span></div>
+                    <div class="grenade-point flash" data-point="ct" style="left: 210px; top: 160px;"><span class="tooltip">CT Flash</span></div>
+                    <div class="grenade-point molotov" data-point="ct" style="left: 220px; top: 170px;"><span class="tooltip">CT Molotov</span></div>
                     <!-- Mid -->
-                    <div class="grenade-point smoke" data-point="mid" style="left: 323px; top: 360px;"></div>
-                    <div class="grenade-point flash" data-point="mid" style="left: 333px; top: 370px;"></div>
-                    <div class="grenade-point molotov" data-point="mid" style="left: 343px; top: 380px;"></div>
+                    <div class="grenade-point smoke" data-point="mid" style="left: 323px; top: 360px;"><span class="tooltip">Mid Smoke</span></div>
+                    <div class="grenade-point flash" data-point="mid" style="left: 333px; top: 370px;"><span class="tooltip">Mid Flash</span></div>
+                    <div class="grenade-point molotov" data-point="mid" style="left: 343px; top: 380px;"><span class="tooltip">Mid Molotov</span></div>
                     <!-- B-site -->
-                    <div class="grenade-point smoke" data-point="b-site" style="left: 199px; top: 301px;"></div>
-                    <div class="grenade-point flash" data-point="b-site" style="left: 209px; top: 311px;"></div>
-                    <div class="grenade-point molotov" data-point="b-site" style="left: 219px; top: 321px;"></div>
+                    <div class="grenade-point smoke" data-point="b-site" style="left: 199px; top: 301px;"><span class="tooltip">B-site Smoke</span></div>
+                    <div class="grenade-point flash" data-point="b-site" style="left: 209px; top: 311px;"><span class="tooltip">B-site Flash</span></div>
+                    <div class="grenade-point molotov" data-point="b-site" style="left: 219px; top: 321px;"><span class="tooltip">B-site Molotov</span></div>
                     <!-- B-site1 -->
-                    <div class="grenade-point smoke" data-point="b-site1" style="left: 135px; top: 304px;"></div>
+                    <div class="grenade-point smoke" data-point="b-site1" style="left: 135px; top: 304px;"><span class="tooltip">B-site1 Smoke</span></div>
                     <!-- B-short1 -->
-                    <div class="grenade-point smoke" data-point="b-short1" style="left: 266px; top: 193px;"></div>
+                    <div class="grenade-point smoke" data-point="b-short1" style="left: 266px; top: 193px;"><span class="tooltip">B-short1 Smoke</span></div>
                     <!-- B-short2 -->
-                    <div class="grenade-point smoke" data-point="b-short2" style="left: 268px; top: 235px;"></div>
+                    <div class="grenade-point smoke" data-point="b-short2" style="left: 268px; top: 235px;"><span class="tooltip">B-short2 Smoke</span></div>
                     <!-- jungle -->
-                    <div class="grenade-point smoke" data-point="jungle" style="left: 353px; top: 486px;"></div>
+                    <div class="grenade-point smoke" data-point="jungle" style="left: 353px; top: 486px;"><span class="tooltip">Jungle Smoke</span></div>
                     <!-- con -->
-                    <div class="grenade-point smoke" data-point="con" style="left: 395px; top: 395px;"></div>
-
-
+                    <div class="grenade-point smoke" data-point="con" style="left: 395px; top: 395px;"><span class="tooltip">Con Smoke</span></div>
                 </div>
             </div>
             <!-- Панель управления -->
@@ -217,7 +255,7 @@
             },
             "ct": {
                 smoke: {
-                    positions : [
+                    positions: [
                         { id: "pos1", coords: { left: "493px", top: "483px" }, video: "videos/smoke-ct-pos1.webm" },
                         { id: "pos2", coords: { left: "648px", top: "421px" }, video: "videos/smoke-ct-pos2.webm" },
                         { id: "pos3", coords: { left: "667px", top: "419px" }, video: "videos/smoke-ct-pos3.webm" },
@@ -332,6 +370,7 @@
 
         // Элементы
         const mapContainer = document.getElementById("map-container");
+        const lineSvg = document.getElementById("line-svg");
         const modal = document.getElementById("video-modal");
         const videoElement = document.getElementById("lineup-video");
         const videoSource = videoElement.querySelector("source");
@@ -344,12 +383,14 @@
             // Скрыть все точки
             document.querySelectorAll(".grenade-point").forEach(point => {
                 point.style.display = "none";
+                point.classList.remove("visible");
             });
 
             // Показать точки, соответствующие выбранной гранате
             if (selectedGrenade) {
                 document.querySelectorAll(`.grenade-point.${selectedGrenade}`).forEach(point => {
                     point.style.display = "block";
+                    point.classList.add("visible");
                 });
             }
         }
@@ -365,9 +406,9 @@
                 button.classList.add("active");
                 selectedGrenade = button.id.replace("-btn", "");
                 console.log('Выбрана граната:', selectedGrenade); // Отладка
-                // Скрыть все позиционные точки при выборе новой гранаты
+                // Скрыть все позиционные точки и линии при выборе новой гранаты
                 document.querySelectorAll(".position-point").forEach(point => point.remove());
-                // Обновить видимость точек на карте
+                lineSvg.innerHTML = ''; // Очистить SVG линии
                 updateGrenadePoints();
             });
         });
@@ -396,11 +437,16 @@
         function showPositions(pointId) {
             console.log('Показ позиций для:', pointId); // Отладка
             document.querySelectorAll(".position-point").forEach(point => point.remove());
+            lineSvg.innerHTML = ''; // Очистить SVG линии
             const positions = lineups[pointId][selectedGrenade].positions;
             if (!positions) {
                 console.log('Позиции не найдены для:', pointId); // Отладка
                 return;
             }
+
+            const grenadePoint = document.querySelector(`.grenade-point.${selectedGrenade}[data-point="${pointId}"]`);
+            const grenadePointRect = grenadePoint.getBoundingClientRect();
+            const containerRect = mapContainer.getBoundingClientRect();
 
             positions.forEach(pos => {
                 console.log('Создание позиции:', pos.id, pos.coords); // Отладка
@@ -411,8 +457,31 @@
                 posPoint.style.left = pos.coords.left;
                 posPoint.style.top = pos.coords.top;
                 posPoint.style.display = "block"; // Показываем точку
+                posPoint.classList.add("visible"); // Анимация появления
+                // Добавляем tooltip для position-point
+                const tooltip = document.createElement("span");
+                tooltip.className = "tooltip";
+                tooltip.textContent = `Position ${pos.id}`;
+                posPoint.appendChild(tooltip);
                 posPoint.addEventListener("click", () => showVideo(pointId, pos.id));
                 mapContainer.appendChild(posPoint);
+
+                // Рисуем пунктирную линию от grenade-point к position-point
+                const posPointRect = posPoint.getBoundingClientRect();
+                const x1 = grenadePointRect.left - containerRect.left + grenadePointRect.width / 2;
+                const y1 = grenadePointRect.top - containerRect.top + grenadePointRect.height / 2;
+                const x2 = posPointRect.left - containerRect.left + posPointRect.width / 2;
+                const y2 = posPointRect.top - containerRect.top + posPointRect.height / 2;
+
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", x1);
+                line.setAttribute("y1", y1);
+                line.setAttribute("x2", x2);
+                line.setAttribute("y2", y2);
+                line.setAttribute("stroke", "#f97316");
+                line.setAttribute("stroke-width", "2");
+                line.setAttribute("stroke-dasharray", "5,5"); // Пунктирная линия
+                lineSvg.appendChild(line);
             });
         }
 
@@ -444,6 +513,7 @@
             videoElement.load();
             modal.style.display = "flex";
             document.querySelectorAll(".position-point").forEach(point => point.remove());
+            lineSvg.innerHTML = ''; // Очистить SVG линии
         }
 
         // Закрытие модального окна
@@ -451,6 +521,7 @@
             modal.style.display = "none";
             videoElement.pause();
             document.querySelectorAll(".position-point").forEach(point => point.remove());
+            lineSvg.innerHTML = ''; // Очистить SVG линии
         });
 
         // Закрытие при клике вне модального окна
@@ -459,6 +530,7 @@
                 modal.style.display = "none";
                 videoElement.pause();
                 document.querySelectorAll(".position-point").forEach(point => point.remove());
+                lineSvg.innerHTML = ''; // Очистить SVG линии
             }
         });
 
