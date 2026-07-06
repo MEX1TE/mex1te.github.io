@@ -2,484 +2,315 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dust II — Лайнапы гранат CS2 | CS2NADES</title>
-    <meta name="description" content="Все лайнапы гранат для карты Dust II в CS2: смоки Long, Short, B, Mid, X-box. Флешки и молотовы.">
-
-    <meta property="og:title" content="Dust II — Лайнапы гранат CS2">
-    <meta property="og:description" content="16 проверенных раскидок для Dust II: смоки, флешки, молотовы">
-    <meta property="og:type" content="website">
-
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Dust II — Лайнапы | CS2NADES</title>
+    <meta name="description" content="Все лайнапы гранат для Dust II в CS2: смоки Long, Short, B, Mid, X-box.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
-
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f5a623'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='%23000' font-family='Arial' font-weight='bold'>💣</text></svg>">
-
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f5a623'/><text x='50' y='68' font-size='55' text-anchor='middle'>💣</text></svg>">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<!-- ШАПКА -->
-<header class="site-header">
-    <nav class="nav-container">
+
+<header class="header">
+    <div class="header-inner">
         <a href="index.html" class="logo">
             <div class="logo-icon">💣</div>
-            <div class="logo-text">CS2<span>NADES</span></div>
+            <div>CS2<span>NADES</span></div>
         </a>
-        <ul class="nav-menu">
+        <ul class="nav">
             <li><a href="index.html">Главная</a></li>
             <li><a href="index.html#maps" class="active">Карты</a></li>
             <li><a href="index.html#about">О проекте</a></li>
         </ul>
-    </nav>
+    </div>
 </header>
 
-<!-- ЗАГОЛОВОК КАРТЫ -->
-<section class="map-header">
-    <div class="breadcrumb">
-        <a href="index.html">Главная</a>
-        <span class="separator">/</span>
-        <span>Карты</span>
-        <span class="separator">/</span>
-        <span style="color: var(--text-primary);">Dust II</span>
+<section class="page-head">
+    <div class="crumb">
+        <a href="index.html">Главная</a><span class="sep">/</span>
+        <a href="index.html#maps">Карты</a><span class="sep">/</span>
+        <span style="color:var(--text-1)">Dust II</span>
     </div>
-    <h1 class="map-title">🏜️ Dust II</h1>
-    <p class="map-subtitle">16 проверенных раскидок гранат для карты Dust II</p>
+    <h1>🏜️ Dust II</h1>
+    <p>16 проверенных раскидок гранат</p>
 </section>
 
-<!-- ФИЛЬТРЫ И ПОИСК -->
 <section class="controls">
-    <div class="search-box">
-        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="m21 21-4.3-4.3"/>
-        </svg>
-        <input type="text" id="search-input" placeholder="Поиск раскидки... (например: Long smoke)">
+    <div class="search-wrap">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="search" placeholder="Поиск раскидки...">
     </div>
-
-    <div class="filter-group filter-type">
-        <div class="filter-label">Тип гранаты</div>
-        <div class="filter-buttons">
-            <button class="filter-btn active" data-filter="all">Все</button>
-            <button class="filter-btn" data-filter="smoke"><span class="dot smoke"></span>Smoke</button>
-            <button class="filter-btn" data-filter="flash"><span class="dot flash"></span>Flash</button>
-            <button class="filter-btn" data-filter="molotov"><span class="dot molotov"></span>Molotov</button>
-            <button class="filter-btn" data-filter="he"><span class="dot he"></span>HE</button>
+    <div class="fgroup fgroup-type">
+        <div class="flabel">Тип гранаты</div>
+        <div class="fbtns">
+            <button class="fbtn active" data-f="all">Все</button>
+            <button class="fbtn" data-f="smoke"><span class="dot smoke"></span>Smoke</button>
+            <button class="fbtn" data-f="flash"><span class="dot flash"></span>Flash</button>
+            <button class="fbtn" data-f="molotov"><span class="dot molotov"></span>Molotov</button>
+            <button class="fbtn" data-f="he"><span class="dot he"></span>HE</button>
         </div>
     </div>
-
-    <div class="filter-group filter-site">
-        <div class="filter-label">Позиция</div>
-        <div class="filter-buttons">
-            <button class="filter-btn active" data-filter="all">Все</button>
-            <button class="filter-btn" data-filter="a-long">A Long</button>
-            <button class="filter-btn" data-filter="a-short">A Short</button>
-            <button class="filter-btn" data-filter="b-site">B-site</button>
-            <button class="filter-btn" data-filter="mid">Mid</button>
-            <button class="filter-btn" data-filter="ct">CT</button>
-            <button class="filter-btn" data-filter="t-spawn">T-spawn</button>
+    <div class="fgroup fgroup-site">
+        <div class="flabel">Позиция</div>
+        <div class="fbtns">
+            <button class="fbtn active" data-f="all">Все</button>
+            <button class="fbtn" data-f="a-long">A Long</button>
+            <button class="fbtn" data-f="a-short">A Short</button>
+            <button class="fbtn" data-f="b-site">B-site</button>
+            <button class="fbtn" data-f="mid">Mid</button>
+            <button class="fbtn" data-f="ct">CT</button>
+            <button class="fbtn" data-f="t-spawn">T-spawn</button>
         </div>
     </div>
-
-    <div class="results-info" id="results-info">Показано: 16 раскидок</div>
+    <div class="results-count" id="count">Показано: 16 раскидок</div>
 </section>
 
-<!-- СЕТКА РАСКИДОК -->
-<section class="lineups-grid">
-    <!-- A Long -->
-    <article class="lineup-card"
-             data-type="smoke" data-site="a-long"
-             data-title="A Long Smoke"
-             data-desc="Смок на A Long с T-spawn"
-             data-position="Позиция на T-spawn у дверей"
-             data-aim="Прицел на угол A Long doors"
-             data-instruction="1. Встань на T-spawn у дверей&#10;2. Прицел на угол A Long doors&#10;3. Jump throw — смок закроет проход на A Long"
-             data-video="">
-        <div class="lineup-preview smoke">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+<section class="lineups">
+
+    <!-- A Long Smoke -->
+    <article class="lcard" data-type="smoke" data-site="a-long"
+             data-title="A Long Smoke" data-desc="Смок на A Long doors"
+             data-pos="T-spawn у дверей" data-aim="Прицел на угол A Long doors"
+             data-inst="1. Встань на T-spawn у дверей&#10;2. Прицел на угол A Long doors&#10;3. Jump throw" data-video="">
+        <div class="lprev smoke">
+            <span class="lprev-icon">💨</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">A Long Smoke</h3>
-            <p class="lineup-desc">Смок на A Long с T-spawn</p>
-            <div class="lineup-tags">
-                <span class="tag smoke">Smoke</span>
-                <span class="tag site">A Long</span>
-            </div>
+        <div class="linfo"><h3>A Long Smoke</h3><p>Смок на A Long doors</p>
+            <div class="tags"><span class="tag smoke">Smoke</span><span class="tag loc">A Long</span></div>
         </div>
     </article>
 
-    <article class="lineup-card"
-             data-type="flash" data-site="a-long"
-             data-title="A Long Flash"
-             data-desc="Флешка для входа на A Long"
-             data-position="Позиция на T-spawn"
-             data-aim="Прицел в потолок A Long"
-             data-instruction="1. Встань на T-spawn&#10;2. Прицел в потолок A Long&#10;3. Run throw — флешка ослепит всех на Long"
-             data-video="">
-        <div class="lineup-preview flash">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- A Long Flash -->
+    <article class="lcard" data-type="flash" data-site="a-long"
+             data-title="A Long Flash" data-desc="Флешка для входа на A Long"
+             data-pos="T-spawn" data-aim="Прицел в потолок A Long"
+             data-inst="1. Встань на T-spawn&#10;2. Прицел в потолок A Long&#10;3. Run throw" data-video="">
+        <div class="lprev flash">
+            <span class="lprev-icon">⚡</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">A Long Flash</h3>
-            <p class="lineup-desc">Флешка для входа на A Long</p>
-            <div class="lineup-tags">
-                <span class="tag flash">Flash</span>
-                <span class="tag site">A Long</span>
-            </div>
+        <div class="linfo"><h3>A Long Flash</h3><p>Флешка для входа на A Long</p>
+            <div class="tags"><span class="tag flash">Flash</span><span class="tag loc">A Long</span></div>
         </div>
     </article>
 
-    <article class="lineup-card"
-             data-type="molotov" data-site="a-long"
-             data-title="A Long Molotov"
-             data-desc="Молотов на позицию A Long"
-             data-position="Позиция на T-spawn"
-             data-aim="Прицел на ящик A Long"
-             data-instruction="1. Встань на T-spawn&#10;2. Прицел на ящик A Long&#10;3. Jump throw — молотов выгонит с позиции"
-             data-video="">
-        <div class="lineup-preview molotov">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1 4-4 6-4 10 0 3 2 5 4 5s4-2 4-5c0-4-3-6-4-10zm0 13c-1 0-2-1-2-2 0-2 2-3 2-5 0 2 2 3 2 5 0 1-1 2-2 2z"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- A Long Molotov -->
+    <article class="lcard" data-type="molotov" data-site="a-long"
+             data-title="A Long Molotov" data-desc="Молотов на позицию A Long"
+             data-pos="T-spawn" data-aim="Прицел на ящик A Long"
+             data-inst="1. Встань на T-spawn&#10;2. Прицел на ящик A Long&#10;3. Jump throw" data-video="">
+        <div class="lprev molotov">
+            <span class="lprev-icon">🔥</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">A Long Molotov</h3>
-            <p class="lineup-desc">Молотов на позицию A Long</p>
-            <div class="lineup-tags">
-                <span class="tag molotov">Molotov</span>
-                <span class="tag site">A Long</span>
-            </div>
+        <div class="linfo"><h3>A Long Molotov</h3><p>Молотов на позицию A Long</p>
+            <div class="tags"><span class="tag molotov">Molotov</span><span class="tag loc">A Long</span></div>
         </div>
     </article>
 
-    <!-- A Short -->
-    <article class="lineup-card"
-             data-type="smoke" data-site="a-short"
-             data-title="A Short Smoke"
-             data-desc="Смок на A Short с T-spawn"
-             data-position="Позиция на T-spawn"
-             data-aim="Прицел на угол A Short"
-             data-instruction="1. Встань на T-spawn&#10;2. Прицел на угол A Short&#10;3. Jump throw — смок закроет проход"
-             data-video="">
-        <div class="lineup-preview smoke">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- A Short Smoke -->
+    <article class="lcard" data-type="smoke" data-site="a-short"
+             data-title="A Short Smoke" data-desc="Смок на A Short"
+             data-pos="T-spawn" data-aim="Прицел на угол A Short"
+             data-inst="1. Встань на T-spawn&#10;2. Прицел на угол A Short&#10;3. Jump throw" data-video="">
+        <div class="lprev smoke">
+            <span class="lprev-icon">💨</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">A Short Smoke</h3>
-            <p class="lineup-desc">Смок на A Short с T-spawn</p>
-            <div class="lineup-tags">
-                <span class="tag smoke">Smoke</span>
-                <span class="tag site">A Short</span>
-            </div>
+        <div class="linfo"><h3>A Short Smoke</h3><p>Смок на A Short</p>
+            <div class="tags"><span class="tag smoke">Smoke</span><span class="tag loc">A Short</span></div>
         </div>
     </article>
 
-    <article class="lineup-card"
-             data-type="flash" data-site="a-short"
-             data-title="A Short Flash"
-             data-desc="Флешка для входа на A Short"
-             data-position="Позиция на A Short stairs"
-             data-aim="Прицел в потолок A site"
-             data-instruction="1. Встань на A Short stairs&#10;2. Прицел в потолок A site&#10;3. Run throw — флешка ослепит сайт"
-             data-video="">
-        <div class="lineup-preview flash">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- A Short Flash -->
+    <article class="lcard" data-type="flash" data-site="a-short"
+             data-title="A Short Flash" data-desc="Флешка для входа через A Short"
+             data-pos="A Short stairs" data-aim="Прицел в потолок A site"
+             data-inst="1. Встань на A Short stairs&#10;2. Прицел в потолок A site&#10;3. Run throw" data-video="">
+        <div class="lprev flash">
+            <span class="lprev-icon">⚡</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">A Short Flash</h3>
-            <p class="lineup-desc">Флешка для входа на A Short</p>
-            <div class="lineup-tags">
-                <span class="tag flash">Flash</span>
-                <span class="tag site">A Short</span>
-            </div>
+        <div class="linfo"><h3>A Short Flash</h3><p>Флешка для входа через A Short</p>
+            <div class="tags"><span class="tag flash">Flash</span><span class="tag loc">A Short</span></div>
         </div>
     </article>
 
-    <!-- B-site -->
-    <article class="lineup-card"
-             data-type="smoke" data-site="b-site"
-             data-title="B Doors Smoke"
-             data-desc="Смок на B Doors"
-             data-position="Позиция на T-spawn"
-             data-aim="Прицел на верх B Doors"
-             data-instruction="1. Встань на T-spawn&#10;2. Прицел на верх B Doors&#10;3. Jump throw — смок закроет двери"
-             data-video="">
-        <div class="lineup-preview smoke">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- B Doors Smoke -->
+    <article class="lcard" data-type="smoke" data-site="b-site"
+             data-title="B Doors Smoke" data-desc="Смок на B Doors"
+             data-pos="T-spawn" data-aim="Прицел на верх B Doors"
+             data-inst="1. Встань на T-spawn&#10;2. Прицел на верх B Doors&#10;3. Jump throw" data-video="">
+        <div class="lprev smoke">
+            <span class="lprev-icon">💨</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">B Doors Smoke</h3>
-            <p class="lineup-desc">Смок на B Doors</p>
-            <div class="lineup-tags">
-                <span class="tag smoke">Smoke</span>
-                <span class="tag site">B-site</span>
-            </div>
+        <div class="linfo"><h3>B Doors Smoke</h3><p>Смок на B Doors</p>
+            <div class="tags"><span class="tag smoke">Smoke</span><span class="tag loc">B-site</span></div>
         </div>
     </article>
 
-    <article class="lineup-card"
-             data-type="smoke" data-site="b-site"
-             data-title="B Site Smoke"
-             data-desc="Смок на B-site с T-spawn"
-             data-position="Позиция на T-spawn"
-             data-aim="Прицел на крышу B-site"
-             data-instruction="1. Встань на T-spawn&#10;2. Прицел на крышу B-site&#10;3. Jump throw — смок накроет сайт"
-             data-video="">
-        <div class="lineup-preview smoke">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- B Site Smoke -->
+    <article class="lcard" data-type="smoke" data-site="b-site"
+             data-title="B Site Smoke" data-desc="Смок на B-site"
+             data-pos="T-spawn" data-aim="Прицел на крышу B-site"
+             data-inst="1. Встань на T-spawn&#10;2. Прицел на крышу B-site&#10;3. Jump throw" data-video="">
+        <div class="lprev smoke">
+            <span class="lprev-icon">💨</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">B Site Smoke</h3>
-            <p class="lineup-desc">Смок на B-site с T-spawn</p>
-            <div class="lineup-tags">
-                <span class="tag smoke">Smoke</span>
-                <span class="tag site">B-site</span>
-            </div>
+        <div class="linfo"><h3>B Site Smoke</h3><p>Смок на B-site</p>
+            <div class="tags"><span class="tag smoke">Smoke</span><span class="tag loc">B-site</span></div>
         </div>
     </article>
 
-    <article class="lineup-card"
-             data-type="flash" data-site="b-site"
-             data-title="B Flash"
-             data-desc="Флешка для входа на B"
-             data-position="Позиция у B Doors"
-             data-aim="Прицел в потолок B-site"
-             data-instruction="1. Встань у B Doors&#10;2. Прицел в потолок B-site&#10;3. Run throw — флешка ослепит всех на сайте"
-             data-video="">
-        <div class="lineup-preview flash">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- B Flash -->
+    <article class="lcard" data-type="flash" data-site="b-site"
+             data-title="B Flash" data-desc="Флешка для входа на B"
+             data-pos="У B Doors" data-aim="Прицел в потолок B-site"
+             data-inst="1. Встань у B Doors&#10;2. Прицел в потолок B-site&#10;3. Run throw" data-video="">
+        <div class="lprev flash">
+            <span class="lprev-icon">⚡</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">B Flash</h3>
-            <p class="lineup-desc">Флешка для входа на B</p>
-            <div class="lineup-tags">
-                <span class="tag flash">Flash</span>
-                <span class="tag site">B-site</span>
-            </div>
+        <div class="linfo"><h3>B Flash</h3><p>Флешка для входа на B</p>
+            <div class="tags"><span class="tag flash">Flash</span><span class="tag loc">B-site</span></div>
         </div>
     </article>
 
-    <article class="lineup-card"
-             data-type="molotov" data-site="b-site"
-             data-title="B Molotov"
-             data-desc="Молотов на стандартную позицию B"
-             data-position="Позиция у B Doors"
-             data-aim="Прицел на ящик B-site"
-             data-instruction="1. Встань у B Doors&#10;2. Прицел на ящик B-site&#10;3. Jump throw — молотов выгонит с позиции"
-             data-video="">
-        <div class="lineup-preview molotov">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1 4-4 6-4 10 0 3 2 5 4 5s4-2 4-5c0-4-3-6-4-10zm0 13c-1 0-2-1-2-2 0-2 2-3 2-5 0 2 2 3 2 5 0 1-1 2-2 2z"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- B Molotov -->
+    <article class="lcard" data-type="molotov" data-site="b-site"
+             data-title="B Molotov" data-desc="Молотов на стандартную позицию B"
+             data-pos="У B Doors" data-aim="Прицел на ящик B-site"
+             data-inst="1. Встань у B Doors&#10;2. Прицел на ящик B-site&#10;3. Jump throw" data-video="">
+        <div class="lprev molotov">
+            <span class="lprev-icon">🔥</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">B Molotov</h3>
-            <p class="lineup-desc">Молотов на стандартную позицию B</p>
-            <div class="lineup-tags">
-                <span class="tag molotov">Molotov</span>
-                <span class="tag site">B-site</span>
-            </div>
+        <div class="linfo"><h3>B Molotov</h3><p>Молотов на стандартную позицию B</p>
+            <div class="tags"><span class="tag molotov">Molotov</span><span class="tag loc">B-site</span></div>
         </div>
     </article>
 
-    <!-- Mid -->
-    <article class="lineup-card"
-             data-type="smoke" data-site="mid"
-             data-title="Mid Doors Smoke"
-             data-desc="Смок на Mid Doors"
-             data-position="Позиция на T-spawn"
-             data-aim="Прицел на верх Mid Doors"
-             data-instruction="1. Встань на T-spawn&#10;2. Прицел на верх Mid Doors&#10;3. Jump throw — смок закроет двери"
-             data-video="">
-        <div class="lineup-preview smoke">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- Mid Doors Smoke -->
+    <article class="lcard" data-type="smoke" data-site="mid"
+             data-title="Mid Doors Smoke" data-desc="Смок на Mid Doors"
+             data-pos="T-spawn" data-aim="Прицел на верх Mid Doors"
+             data-inst="1. Встань на T-spawn&#10;2. Прицел на верх Mid Doors&#10;3. Jump throw" data-video="">
+        <div class="lprev smoke">
+            <span class="lprev-icon">💨</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">Mid Doors Smoke</h3>
-            <p class="lineup-desc">Смок на Mid Doors</p>
-            <div class="lineup-tags">
-                <span class="tag smoke">Smoke</span>
-                <span class="tag site">Mid</span>
-            </div>
+        <div class="linfo"><h3>Mid Doors Smoke</h3><p>Смок на Mid Doors</p>
+            <div class="tags"><span class="tag smoke">Smoke</span><span class="tag loc">Mid</span></div>
         </div>
     </article>
 
-    <article class="lineup-card"
-             data-type="flash" data-site="mid"
-             data-title="Mid Flash"
-             data-desc="Флешка через Mid на A"
-             data-position="Позиция на T-spawn"
-             data-aim="Прицел в потолок Mid"
-             data-instruction="1. Встань на T-spawn&#10;2. Прицел в потолок Mid&#10;3. Jump throw — флешка перелетит на A"
-             data-video="">
-        <div class="lineup-preview flash">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- Mid Flash -->
+    <article class="lcard" data-type="flash" data-site="mid"
+             data-title="Mid Flash" data-desc="Флешка через Mid на A"
+             data-pos="T-spawn" data-aim="Прицел в потолок Mid"
+             data-inst="1. Встань на T-spawn&#10;2. Прицел в потолок Mid&#10;3. Jump throw" data-video="">
+        <div class="lprev flash">
+            <span class="lprev-icon">⚡</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">Mid Flash</h3>
-            <p class="lineup-desc">Флешка через Mid на A</p>
-            <div class="lineup-tags">
-                <span class="tag flash">Flash</span>
-                <span class="tag site">Mid</span>
-            </div>
+        <div class="linfo"><h3>Mid Flash</h3><p>Флешка через Mid на A</p>
+            <div class="tags"><span class="tag flash">Flash</span><span class="tag loc">Mid</span></div>
         </div>
     </article>
 
-    <article class="lineup-card"
-             data-type="molotov" data-site="mid"
-             data-title="Mid Molotov"
-             data-desc="Молотов на позицию Mid"
-             data-position="Позиция на T-spawn"
-             data-aim="Прицел на ящик Mid"
-             data-instruction="1. Встань на T-spawn&#10;2. Прицел на ящик Mid&#10;3. Jump throw — молотов выгонит снайпера"
-             data-video="">
-        <div class="lineup-preview molotov">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1 4-4 6-4 10 0 3 2 5 4 5s4-2 4-5c0-4-3-6-4-10zm0 13c-1 0-2-1-2-2 0-2 2-3 2-5 0 2 2 3 2 5 0 1-1 2-2 2z"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- Mid Molotov -->
+    <article class="lcard" data-type="molotov" data-site="mid"
+             data-title="Mid Molotov" data-desc="Молотов на позицию Mid"
+             data-pos="T-spawn" data-aim="Прицел на ящик Mid"
+             data-inst="1. Встань на T-spawn&#10;2. Прицел на ящик Mid&#10;3. Jump throw" data-video="">
+        <div class="lprev molotov">
+            <span class="lprev-icon">🔥</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">Mid Molotov</h3>
-            <p class="lineup-desc">Молотов на позицию Mid</p>
-            <div class="lineup-tags">
-                <span class="tag molotov">Molotov</span>
-                <span class="tag site">Mid</span>
-            </div>
+        <div class="linfo"><h3>Mid Molotov</h3><p>Молотов на позицию Mid</p>
+            <div class="tags"><span class="tag molotov">Molotov</span><span class="tag loc">Mid</span></div>
         </div>
     </article>
 
-    <!-- CT -->
-    <article class="lineup-card"
-             data-type="smoke" data-site="ct"
-             data-title="CT Smoke"
-             data-desc="Смок на CT с T-spawn"
-             data-position="Позиция на T-spawn"
-             data-aim="Прицел на ящики CT"
-             data-instruction="1. Встань на T-spawn&#10;2. Прицел на ящики CT&#10;3. Jump throw — смок закроет CT"
-             data-video="">
-        <div class="lineup-preview smoke">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- CT Smoke -->
+    <article class="lcard" data-type="smoke" data-site="ct"
+             data-title="CT Smoke" data-desc="Смок на CT"
+             data-pos="T-spawn" data-aim="Прицел на ящики CT"
+             data-inst="1. Встань на T-spawn&#10;2. Прицел на ящики CT&#10;3. Jump throw" data-video="">
+        <div class="lprev smoke">
+            <span class="lprev-icon">💨</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">CT Smoke</h3>
-            <p class="lineup-desc">Смок на CT с T-spawn</p>
-            <div class="lineup-tags">
-                <span class="tag smoke">Smoke</span>
-                <span class="tag site">CT</span>
-            </div>
+        <div class="linfo"><h3>CT Smoke</h3><p>Смок на CT</p>
+            <div class="tags"><span class="tag smoke">Smoke</span><span class="tag loc">CT</span></div>
         </div>
     </article>
 
-    <article class="lineup-card"
-             data-type="molotov" data-site="ct"
-             data-title="CT Molotov"
-             data-desc="Молотов на позицию CT"
-             data-position="Позиция на T-spawn"
-             data-aim="Прицел на ящики CT"
-             data-instruction="1. Встань на T-spawn&#10;2. Прицел на ящики CT&#10;3. Jump throw — молотов накроет позицию"
-             data-video="">
-        <div class="lineup-preview molotov">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1 4-4 6-4 10 0 3 2 5 4 5s4-2 4-5c0-4-3-6-4-10zm0 13c-1 0-2-1-2-2 0-2 2-3 2-5 0 2 2 3 2 5 0 1-1 2-2 2z"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- CT Molotov -->
+    <article class="lcard" data-type="molotov" data-site="ct"
+             data-title="CT Molotov" data-desc="Молотов на позицию CT"
+             data-pos="T-spawn" data-aim="Прицел на ящики CT"
+             data-inst="1. Встань на T-spawn&#10;2. Прицел на ящики CT&#10;3. Jump throw" data-video="">
+        <div class="lprev molotov">
+            <span class="lprev-icon">🔥</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">CT Molotov</h3>
-            <p class="lineup-desc">Молотов на позицию CT</p>
-            <div class="lineup-tags">
-                <span class="tag molotov">Molotov</span>
-                <span class="tag site">CT</span>
-            </div>
+        <div class="linfo"><h3>CT Molotov</h3><p>Молотов на позицию CT</p>
+            <div class="tags"><span class="tag molotov">Molotov</span><span class="tag loc">CT</span></div>
         </div>
     </article>
 
-    <!-- T-spawn -->
-    <article class="lineup-card"
-             data-type="smoke" data-site="t-spawn"
-             data-title="X-box Smoke"
-             data-desc="Смок на X-box для контроля Mid"
-             data-position="Позиция на T-spawn"
-             data-aim="Прицел на X-box"
-             data-instruction="1. Встань на T-spawn&#10;2. Прицел на X-box&#10;3. Jump throw — смок закроет X-box"
-             data-video="">
-        <div class="lineup-preview smoke">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- X-box Smoke -->
+    <article class="lcard" data-type="smoke" data-site="t-spawn"
+             data-title="X-box Smoke" data-desc="Смок на X-box для контроля Mid"
+             data-pos="T-spawn" data-aim="Прицел на X-box"
+             data-inst="1. Встань на T-spawn&#10;2. Прицел на X-box&#10;3. Jump throw" data-video="">
+        <div class="lprev smoke">
+            <span class="lprev-icon">💨</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">X-box Smoke</h3>
-            <p class="lineup-desc">Смок на X-box для контроля Mid</p>
-            <div class="lineup-tags">
-                <span class="tag smoke">Smoke</span>
-                <span class="tag site">T-spawn</span>
-            </div>
+        <div class="linfo"><h3>X-box Smoke</h3><p>Смок на X-box для контроля Mid</p>
+            <div class="tags"><span class="tag smoke">Smoke</span><span class="tag loc">T-spawn</span></div>
         </div>
     </article>
 
-    <article class="lineup-card"
-             data-type="molotov" data-site="t-spawn"
-             data-title="Pit Molotov"
-             data-desc="Молотов в Pit с T-spawn"
-             data-position="Позиция на T-spawn"
-             data-aim="Прицел на Pit"
-             data-instruction="1. Встань на T-spawn&#10;2. Прицел на Pit&#10;3. Jump throw — молотов выгонит из Pit"
-             data-video="">
-        <div class="lineup-preview molotov">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1 4-4 6-4 10 0 3 2 5 4 5s4-2 4-5c0-4-3-6-4-10zm0 13c-1 0-2-1-2-2 0-2 2-3 2-5 0 2 2 3 2 5 0 1-1 2-2 2z"/></svg>
-            <div class="play-button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- Pit Molotov -->
+    <article class="lcard" data-type="molotov" data-site="t-spawn"
+             data-title="Pit Molotov" data-desc="Молотов в Pit"
+             data-pos="T-spawn" data-aim="Прицел на Pit"
+             data-inst="1. Встань на T-spawn&#10;2. Прицел на Pit&#10;3. Jump throw" data-video="">
+        <div class="lprev molotov">
+            <span class="lprev-icon">🔥</span>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-        <div class="lineup-info">
-            <h3 class="lineup-title">Pit Molotov</h3>
-            <p class="lineup-desc">Молотов в Pit с T-spawn</p>
-            <div class="lineup-tags">
-                <span class="tag molotov">Molotov</span>
-                <span class="tag site">T-spawn</span>
-            </div>
+        <div class="linfo"><h3>Pit Molotov</h3><p>Молотов в Pit</p>
+            <div class="tags"><span class="tag molotov">Molotov</span><span class="tag loc">T-spawn</span></div>
         </div>
     </article>
+
 </section>
 
-<!-- МОДАЛЬНОЕ ОКНО -->
-<div class="modal-overlay" id="lineup-modal">
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
     <div class="modal">
-        <button class="modal-close" aria-label="Закрыть">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M18 6L6 18M6 6l12 12"/>
-            </svg>
+        <button class="modal-x" aria-label="Закрыть">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
-
-        <div class="modal-video"></div>
-
-        <div class="modal-content">
-            <h2 class="modal-title"></h2>
-            <p class="modal-subtitle"></p>
-
-            <div class="modal-section modal-position">
-                <div class="modal-section-title">📍 Позиция</div>
-                <p></p>
-            </div>
-
-            <div class="modal-section modal-aim">
-                <div class="modal-section-title">🎯 Прицел</div>
-                <p></p>
-            </div>
-
-            <div class="modal-section">
-                <div class="modal-section-title">📝 Инструкция</div>
-                <div class="instruction-box">
-                    <button class="copy-btn">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="9" y="9" width="13" height="13" rx="2"/>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                        </svg>
-                        Копировать
-                    </button>
+        <div class="modal-vid"></div>
+        <div class="modal-body">
+            <h2 class="m-title"></h2>
+            <p class="sub m-desc"></p>
+            <div class="msec m-pos"><div class="msec-title">📍 Позиция</div><p></p></div>
+            <div class="msec m-aim"><div class="msec-title">🎯 Прицел</div><p></p></div>
+            <div class="msec">
+                <div class="msec-title">📝 Инструкция</div>
+                <div class="inst-box">
+                    <button class="copy-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Копировать</button>
                     <p></p>
                 </div>
             </div>
@@ -487,15 +318,10 @@
     </div>
 </div>
 
-<!-- ФУТЕР -->
-<footer class="site-footer">
-    <div class="footer-container">
-        <div class="footer-copy">© 2026 CS2NADES. Все права защищены.</div>
-        <ul class="footer-links">
-            <li><a href="#">Политика конфиденциальности</a></li>
-            <li><a href="#">Контакты</a></li>
-            <li><a href="#">Discord</a></li>
-        </ul>
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-copy">© 2026 CS2NADES</div>
+        <ul class="footer-links"><li><a href="#">Discord</a></li><li><a href="#">Контакты</a></li></ul>
     </div>
 </footer>
 

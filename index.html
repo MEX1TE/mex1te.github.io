@@ -2,147 +2,113 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS2NADES — Гранатные лайнапы для CS2</title>
-    <meta name="description" content="База лайнапов гранат для CS2: смоки, флешки, молотовы и HE для всех карт. Mirage, Dust2, Inferno, Ancient, Anubis.">
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="CS2NADES — Гранатные лайнапы для CS2">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>CS2NADES — Гранатные лайнапы CS2</title>
+    <meta name="description" content="База лайнапов гранат для CS2: смоки, флешки, молотовы для Mirage, Dust2, Inferno и других карт.">
+    <meta property="og:title" content="CS2NADES — Гранатные лайнапы CS2">
     <meta property="og:description" content="Учи идеальные раскидки гранат для всех карт CS2">
     <meta property="og:type" content="website">
-
-    <!-- Шрифты -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
-
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f5a623'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='%23000' font-family='Arial' font-weight='bold'>💣</text></svg>">
-
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f5a623'/><text x='50' y='68' font-size='55' text-anchor='middle'>💣</text></svg>">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<!-- ШАПКА -->
-<header class="site-header">
-    <nav class="nav-container">
+
+<header class="header">
+    <div class="header-inner">
         <a href="index.html" class="logo">
             <div class="logo-icon">💣</div>
-            <div class="logo-text">CS2<span>NADES</span></div>
+            <div>CS2<span>NADES</span></div>
         </a>
-        <ul class="nav-menu">
+        <ul class="nav">
             <li><a href="index.html" class="active">Главная</a></li>
             <li><a href="#maps">Карты</a></li>
             <li><a href="#about">О проекте</a></li>
         </ul>
-    </nav>
+    </div>
 </header>
 
-<!-- HERO -->
 <section class="hero">
     <h1>Гранатные лайнапы для CS2</h1>
-    <p>Прокачай свою игру с помощью идеальных раскидок гранат. Смоки, флешки, молотовы — всё в одном месте.</p>
+    <p>Идеальные раскидки смоков, флешек и молотовов. Учись у про-игроков, побеждай в ranked.</p>
     <div class="hero-stats">
-        <div class="stat">
-            <div class="stat-value">5</div>
-            <div class="stat-label">Карт</div>
-        </div>
-        <div class="stat">
-            <div class="stat-value">50+</div>
-            <div class="stat-label">Раскидок</div>
-        </div>
-        <div class="stat">
-            <div class="stat-value">HD</div>
-            <div class="stat-label">Видео</div>
-        </div>
+        <div><div class="stat-val">2</div><div class="stat-lbl">Карты</div></div>
+        <div><div class="stat-val">31</div><div class="stat-lbl">Раскидок</div></div>
+        <div><div class="stat-val">HD</div><div class="stat-lbl">Видео</div></div>
     </div>
 </section>
 
-<!-- КАРТЫ -->
 <section class="section" id="maps">
     <h2 class="section-title">Выбери карту</h2>
     <div class="maps-grid">
+
         <a href="mirage.html" class="map-card">
-            <div class="map-preview">
-                <div class="map-icon">🕌</div>
-            </div>
-            <div class="map-info">
-                <h3>Mirage</h3>
-                <p>Классическая карта с множеством тактических раскидок</p>
-                <span class="map-badge">17 раскидок</span>
+            <div class="map-thumb"><span class="map-emoji">🕌</span></div>
+            <div class="map-body">
+                <h3>Mirage <span class="map-arrow">→</span></h3>
+                <p>Классическая карта с тактическими раскидками</p>
+                <span class="badge">15 раскидок</span>
             </div>
         </a>
 
         <a href="dust2.html" class="map-card">
-            <div class="map-preview">
-                <div class="map-icon">🏜️</div>
-            </div>
-            <div class="map-info">
-                <h3>Dust II</h3>
-                <p>Легендарная карта с длинными коридорами и точными смоками</p>
-                <span class="map-badge">16 раскидок</span>
+            <div class="map-thumb"><span class="map-emoji">🏜️</span></div>
+            <div class="map-body">
+                <h3>Dust II <span class="map-arrow">→</span></h3>
+                <p>Легендарная карта с длинными коридорами</p>
+                <span class="badge">16 раскидок</span>
             </div>
         </a>
 
-        <a href="inferno.html" class="map-card">
-            <div class="map-preview">
-                <div class="map-icon">🔥</div>
-            </div>
-            <div class="map-info">
-                <h3>Inferno</h3>
-                <p>Узкие улочки Италии — каждая граната на вес золота</p>
-                <span class="map-badge">Скоро</span>
+        <a href="#" class="map-card" style="pointer-events:none;opacity:.5">
+            <div class="map-thumb"><span class="map-emoji">🔥</span></div>
+            <div class="map-body">
+                <h3>Inferno <span class="map-arrow">→</span></h3>
+                <p>Узкие улочки Италии</p>
+                <span class="badge soon">Скоро</span>
             </div>
         </a>
 
-        <a href="ancient.html" class="map-card">
-            <div class="map-preview">
-                <div class="map-icon">🏛️</div>
-            </div>
-            <div class="map-info">
-                <h3>Ancient</h3>
-                <p>Древние руины с уникальными позициями для раскидок</p>
-                <span class="map-badge">Скоро</span>
+        <a href="#" class="map-card" style="pointer-events:none;opacity:.5">
+            <div class="map-thumb"><span class="map-emoji">🏛️</span></div>
+            <div class="map-body">
+                <h3>Ancient <span class="map-arrow">→</span></h3>
+                <p>Древние руины</p>
+                <span class="badge soon">Скоро</span>
             </div>
         </a>
 
-        <a href="anubis.html" class="map-card">
-            <div class="map-preview">
-                <div class="map-icon">🐫</div>
-            </div>
-            <div class="map-info">
-                <h3>Anubis</h3>
-                <p>Египетская тематика с интересными смоками и флешками</p>
-                <span class="map-badge">Скоро</span>
+        <a href="#" class="map-card" style="pointer-events:none;opacity:.5">
+            <div class="map-thumb"><span class="map-emoji">🐫</span></div>
+            <div class="map-body">
+                <h3>Anubis <span class="map-arrow">→</span></h3>
+                <p>Египетская тематика</p>
+                <span class="badge soon">Скоро</span>
             </div>
         </a>
+
     </div>
 </section>
 
-<!-- О ПРОЕКТЕ -->
 <section class="section" id="about">
     <h2 class="section-title">О проекте</h2>
-    <div style="max-width: 800px; color: var(--text-secondary); line-height: 1.8;">
-        <p style="margin-bottom: 1rem;">
-            <strong style="color: var(--text-primary);">CS2NADES</strong> — это бесплатная база лайнапов гранат для Counter-Strike 2.
-            Мы собираем лучшие раскидки от профессиональных игроков и анализируем их, чтобы ты мог быстро научиться кидать гранаты как про-игрок.
-        </p>
-        <p>
-            Все раскидки проверены в игре и обновляются после каждого патча.
-            Используй фильтры, чтобы найти нужный смок или флешку за пару секунд.
-        </p>
+    <div style="max-width:760px;color:var(--text-2);line-height:1.8">
+        <p style="margin-bottom:1rem"><strong style="color:var(--text-1)">CS2NADES</strong> — бесплатная база лайнапов гранат для Counter-Strike 2. Все раскидки проверены в игре и обновляются после каждого патча.</p>
+        <p>Используй фильтры и поиск, чтобы найти нужный смок или флешку за пару секунд.</p>
     </div>
 </section>
 
-<!-- ФУТЕР -->
-<footer class="site-footer">
-    <div class="footer-container">
-        <div class="footer-copy">© 2026 CS2NADES. Все права защищены.</div>
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-copy">© 2026 CS2NADES</div>
         <ul class="footer-links">
-            <li><a href="#">Политика конфиденциальности</a></li>
-            <li><a href="#">Контакты</a></li>
             <li><a href="#">Discord</a></li>
+            <li><a href="#">Контакты</a></li>
         </ul>
     </div>
 </footer>
+
 </body>
 </html>
