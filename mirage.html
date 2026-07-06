@@ -3,549 +3,560 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mirage - CS2 Гранатные Лайнапы</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/x-icon" href="icons8-granade-32.png">
-    <style>
-        body {
-            background-color: #1a1a1a;
-            color: #ffffff;
-            font-family: 'Arial', sans-serif;
-        }
-        .grenade-btn {
-            background-color: #4b5563;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .grenade-btn:hover {
-            background-color: #f97316;
-        }
-        .grenade-btn.active {
-            background-color: #f97316;
-            color: #ffffff;
-        }
-        .map-container {
-            position: relative;
-            display: inline-block;
-        }
-        .grenade-point {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: #f97316;
-            border-radius: 50%;
-            border: 2px solid #ffffff;
-            cursor: pointer;
-            transform: translate(-50%, -50%);
-            display: none; /* Изначально скрыты */
-            z-index: 2; /* Выше SVG линий */
-            opacity: 0; /* Для анимации */
-            transition: opacity 0.3s ease;
-        }
-        .grenade-point.visible {
-            opacity: 1;
-        }
-        .grenade-point:hover {
-            background-color: #ff9500;
-        }
-        .position-point {
-            display: none;
-            background-color: #facc15;
-            border: 2px solid #ffffff;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            position: absolute;
-            cursor: pointer;
-            transform: translate(-50%, -50%);
-            z-index: 2; /* Выше SVG линий */
-            opacity: 0; /* Для анимации */
-            transition: opacity 0.3s ease;
-        }
-        .position-point.visible {
-            opacity: 1;
-        }
-        .position-point:hover {
-            background-color: #f59e0b;
-        }
-        .tooltip {
-            position: absolute;
-            background-color: #2d2d2d;
-            color: #ffffff;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            visibility: hidden;
-            z-index: 3;
-            bottom: 25px; /* Над точкой */
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: nowrap;
-        }
-        .grenade-point:hover .tooltip,
-        .position-point:hover .tooltip {
-            visibility: visible;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: #2d2d2d;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 800px;
-            width: 90%;
-            position: relative;
-        }
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: #ffffff;
-            font-size: 24px;
-            cursor: pointer;
-        }
-        video {
-            width: 100%;
-            height: auto;
-        }
-        .line {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; /* Чтобы SVG не перехватывал клики */
-            z-index: 1; /* Под точками */
-        }
-    </style>
+    <title>Mirage — Лайнапы гранат CS2 | CS2NADES</title>
+    <meta name="description" content="Все лайнапы гранат для карты Mirage в CS2: смоки A, B, Mid, Jungle, Connector. Флешки и молотовы.">
+
+    <meta property="og:title" content="Mirage — Лайнапы гранат CS2">
+    <meta property="og:description" content="17 проверенных раскидок для Mirage: смоки, флешки, молотовы">
+    <meta property="og:type" content="website">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f5a623'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='%23000' font-family='Arial' font-weight='bold'>💣</text></svg>">
+
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Навигационная панель -->
-    <nav class="bg-gray-900 p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="text-2xl font-bold text-orange-500">CS2NADES</div>
-            <div class="space-x-4">
-                <a href="index.html" class="text-gray-300 hover:text-orange-500">Главная</a>
-                <a href="#" class="text-gray-300 hover:text-orange-500">Карты</a>
-                <a href="#" class="text-gray-300 hover:text-orange-500">О нас</a>
-            </div>
-        </div>
+<!-- ШАПКА -->
+<header class="site-header">
+    <nav class="nav-container">
+        <a href="index.html" class="logo">
+            <div class="logo-icon">💣</div>
+            <div class="logo-text">CS2<span>NADES</span></div>
+        </a>
+        <ul class="nav-menu">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="index.html#maps" class="active">Карты</a></li>
+            <li><a href="index.html#about">О проекте</a></li>
+        </ul>
     </nav>
+</header>
 
-    <!-- Основной контент -->
-    <main class="container mx-auto py-8">
-        <h1 class="text-4xl font-bold text-center mb-8">Лайнапы для Mirage</h1>
-        <div class="flex flex-col lg:flex-row gap-8">
-            <!-- Карта -->
-            <div class="lg:w-2/3 bg-gray-800 rounded-lg p-4">
-                <h2 class="text-2xl font-semibold mb-4">Карта Mirage</h2>
-                <div class="map-container" id="map-container">
-                    <img src="map_mirage.jpeg" alt="Mirage Map" class="w-full h-auto">
-                    <svg class="line" id="line-svg"></svg> <!-- SVG для линий -->
-                    <!-- Точки для гранат (цели) -->
-                    <!-- A-site -->
-                    <div class="grenade-point flash" data-point="a-site" style="left: 310px; top: 310px;"><span class="tooltip">A-site Flash</span></div>
-                    <div class="grenade-point molotov" data-point="a-site" style="left: 320px; top: 320px;"><span class="tooltip">A-site Molotov</span></div>
-                    <!-- CT -->
-                    <div class="grenade-point smoke" data-point="ct" style="left: 359px; top: 627px;"><span class="tooltip">CT Smoke</span></div>
-                    <div class="grenade-point flash" data-point="ct" style="left: 210px; top: 160px;"><span class="tooltip">CT Flash</span></div>
-                    <div class="grenade-point molotov" data-point="ct" style="left: 220px; top: 170px;"><span class="tooltip">CT Molotov</span></div>
-                    <!-- Mid -->
-                    <div class="grenade-point smoke" data-point="mid" style="left: 323px; top: 360px;"><span class="tooltip">Mid Smoke</span></div>
-                    <div class="grenade-point flash" data-point="mid" style="left: 333px; top: 370px;"><span class="tooltip">Mid Flash</span></div>
-                    <div class="grenade-point molotov" data-point="mid" style="left: 343px; top: 380px;"><span class="tooltip">Mid Molotov</span></div>
-                    <!-- B-site -->
-                    <div class="grenade-point smoke" data-point="b-site" style="left: 199px; top: 301px;"><span class="tooltip">B-site Smoke</span></div>
-                    <div class="grenade-point flash" data-point="b-site" style="left: 209px; top: 311px;"><span class="tooltip">B-site Flash</span></div>
-                    <div class="grenade-point molotov" data-point="b-site" style="left: 219px; top: 321px;"><span class="tooltip">B-site Molotov</span></div>
-                    <!-- B-site1 -->
-                    <div class="grenade-point smoke" data-point="b-site1" style="left: 135px; top: 304px;"><span class="tooltip">B-site1 Smoke</span></div>
-                    <!-- B-short1 -->
-                    <div class="grenade-point smoke" data-point="b-short1" style="left: 266px; top: 193px;"><span class="tooltip">B-short1 Smoke</span></div>
-                    <!-- B-short2 -->
-                    <div class="grenade-point smoke" data-point="b-short2" style="left: 268px; top: 235px;"><span class="tooltip">B-short2 Smoke</span></div>
-                    <!-- jungle -->
-                    <div class="grenade-point smoke" data-point="jungle" style="left: 353px; top: 486px;"><span class="tooltip">Jungle Smoke</span></div>
-                    <!-- con -->
-                    <div class="grenade-point smoke" data-point="con" style="left: 395px; top: 395px;"><span class="tooltip">Con Smoke</span></div>
-                </div>
-            </div>
-            <!-- Панель управления -->
-            <div class="lg:w-1/3 bg-gray-800 rounded-lg p-4">
-                <h2 class="text-2xl font-semibold mb-4">Выберите гранату</h2>
-                <div class="flex space-x-2 mb-4">
-                    <button id="smoke-btn" class="grenade-btn">Smoke</button>
-                    <button id="flash-btn" class="grenade-btn">Flash</button>
-                    <button id="molotov-btn" class="grenade-btn">Molotov</button>
-                </div>
-                <div id="lineup-info" class="text-gray-300">
-                    <p>Выберите тип гранаты и точку на карте, чтобы увидеть лайнап.</p>
-                </div>
-            </div>
-        </div>
-    </main>
+<!-- ЗАГОЛОВОК КАРТЫ -->
+<section class="map-header">
+    <div class="breadcrumb">
+        <a href="index.html">Главная</a>
+        <span class="separator">/</span>
+        <span>Карты</span>
+        <span class="separator">/</span>
+        <span style="color: var(--text-primary);">Mirage</span>
+    </div>
+    <h1 class="map-title">🕌 Mirage</h1>
+    <p class="map-subtitle">17 проверенных раскидок гранат для карты Mirage</p>
+</section>
 
-    <!-- Модальное окно для видео -->
-    <div id="video-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">×</span>
-            <video id="lineup-video" controls>
-                <source src="" type="video/mp4">
-                Ваш браузер не поддерживает видео.
-            </video>
+<!-- ФИЛЬТРЫ И ПОИСК -->
+<section class="controls">
+    <div class="search-box">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.3-4.3"/>
+        </svg>
+        <input type="text" id="search-input" placeholder="Поиск раскидки... (например: CT smoke A)">
+    </div>
+
+    <div class="filter-group filter-type">
+        <div class="filter-label">Тип гранаты</div>
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Все</button>
+            <button class="filter-btn" data-filter="smoke"><span class="dot smoke"></span>Smoke</button>
+            <button class="filter-btn" data-filter="flash"><span class="dot flash"></span>Flash</button>
+            <button class="filter-btn" data-filter="molotov"><span class="dot molotov"></span>Molotov</button>
+            <button class="filter-btn" data-filter="he"><span class="dot he"></span>HE</button>
         </div>
     </div>
 
-    <!-- Футер -->
-    <footer class="bg-gray-900 p-4 mt-8">
-        <div class="container mx-auto text-center">
-            <p class="text-gray-400">© 2025 CS2 Лайнапы. Все права защищены.</p>
-            <div class="mt-2 space-x-4">
-                <a href="#" class="text-gray-300 hover:text-orange-500">Политика конфиденциальности</a>
-                <a href="#" class="text-gray-300 hover:text-orange-500">Условия использования</a>
-                <a href="#" class="text-gray-300 hover:text-orange-500">Контакты</a>
+    <div class="filter-group filter-site">
+        <div class="filter-label">Позиция</div>
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Все</button>
+            <button class="filter-btn" data-filter="a-site">A-site</button>
+            <button class="filter-btn" data-filter="b-site">B-site</button>
+            <button class="filter-btn" data-filter="mid">Mid</button>
+            <button class="filter-btn" data-filter="ct">CT</button>
+            <button class="filter-btn" data-filter="jungle">Jungle</button>
+            <button class="filter-btn" data-filter="connector">Connector</button>
+            <button class="filter-btn" data-filter="b-short">B-Short</button>
+        </div>
+    </div>
+
+    <div class="results-info" id="results-info">Показано: 17 раскидок</div>
+</section>
+
+<!-- СЕТКА РАСКИДОК -->
+<section class="lineups-grid">
+    <!-- A-site -->
+    <article class="lineup-card"
+             data-type="smoke" data-site="a-site"
+             data-title="A-site Smoke"
+             data-desc="Идеальный смок на A-site с T-spawn"
+             data-position="Встань в левый угол T-spawn, прижмись к стене"
+             data-aim="Прицел на правый край синей коробки (jump throw)"
+             data-instruction="1. Встань в левый угол T-spawn&#10;2. Прижмись к стене&#10;3. Прицел на правый край синей коробки&#10;4. Jump + Throw"
+             data-video="">
+        <div class="lineup-preview smoke">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
             </div>
         </div>
-    </footer>
+        <div class="lineup-info">
+            <h3 class="lineup-title">A-site Smoke</h3>
+            <p class="lineup-desc">Идеальный смок на A-site с T-spawn</p>
+            <div class="lineup-tags">
+                <span class="tag smoke">Smoke</span>
+                <span class="tag site">A-site</span>
+            </div>
+        </div>
+    </article>
 
-    <script>
-        console.log('Скрипт начался'); // Отладка: скрипт запускается
+    <article class="lineup-card"
+             data-type="flash" data-site="a-site"
+             data-title="A-site Pop Flash"
+             data-desc="Поп-флешка для входа на A-site"
+             data-position="Позиция у окна на A-ramp"
+             data-aim="Прицел в потолок над бустом"
+             data-instruction="1. Встань у окна A-ramp&#10;2. Прицел в потолок над бустом&#10;3. Run throw — флешка вылетит прямо над позицией"
+             data-video="">
+        <div class="lineup-preview flash">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">A-site Pop Flash</h3>
+            <p class="lineup-desc">Поп-флешка для входа на A-site</p>
+            <div class="lineup-tags">
+                <span class="tag flash">Flash</span>
+                <span class="tag site">A-site</span>
+            </div>
+        </div>
+    </article>
 
-        // Данные лайнапов с позициями и видео
-        const lineups = {
-            "a-site": {
-                smoke: {
-                    positions: [
-                        { id: "pos1", coords: { left: "300px", top: "200px" }, video: "videos/smoke-a-site-pos1.mp4" },
-                        { id: "pos2", coords: { left: "350px", top: "250px" }, video: "videos/smoke-a-site-pos2.mp4" },
-                        { id: "pos3", coords: { left: "280px", top: "300px" }, video: "videos/smoke-a-site-pos3.mp4" },
-                        { id: "pos4", coords: { left: "320px", top: "350px" }, video: "videos/smoke-a-site-pos4.mp4" },
-                        { id: "pos5", coords: { left: "270px", top: "400px" }, video: "videos/smoke-a-site-pos5.mp4" }
-                    ]
-                },
-                flash: {
-                    positions: [
-                        { id: "pos1", coords: { left: "300px", top: "200px" }, video: "videos/flash-a-site-pos1.mp4" },
-                        { id: "pos2", coords: { left: "350px", top: "250px" }, video: "videos/flash-a-site-pos2.mp4" },
-                        { id: "pos3", coords: { left: "280px", top: "300px" }, video: "videos/flash-a-site-pos3.mp4" },
-                        { id: "pos4", coords: { left: "320px", top: "350px" }, video: "videos/flash-a-site-pos4.mp4" },
-                        { id: "pos5", coords: { left: "270px", top: "400px" }, video: "videos/flash-a-site-pos5.mp4" }
-                    ]
-                },
-                molotov: {
-                    positions: [
-                        { id: "pos1", coords: { left: "300px", top: "200px" }, video: "videos/molotov-a-site-pos1.mp4" },
-                        { id: "pos2", coords: { left: "350px", top: "250px" }, video: "videos/molotov-a-site-pos2.mp4" },
-                        { id: "pos3", coords: { left: "280px", top: "300px" }, video: "videos/molotov-a-site-pos3.mp4" },
-                        { id: "pos4", coords: { left: "320px", top: "350px" }, video: "videos/molotov-a-site-pos4.mp4" },
-                        { id: "pos5", coords: { left: "270px", top: "400px" }, video: "videos/molotov-a-site-pos5.mp4" }
-                    ]
-                }
-            },
-            "ct": {
-                smoke: {
-                    positions: [
-                        { id: "pos1", coords: { left: "493px", top: "483px" }, video: "videos/smoke-ct-pos1.webm" },
-                        { id: "pos2", coords: { left: "648px", top: "421px" }, video: "videos/smoke-ct-pos2.webm" },
-                        { id: "pos3", coords: { left: "667px", top: "419px" }, video: "videos/smoke-ct-pos3.webm" },
-                        { id: "pos4", coords: { left: "695px", top: "395px" }, video: "videos/smoke-ct-pos4.webm" }
-                    ]
-                }
-            },
-            "mid": {
-                smoke: {
-                    positions: [
-                        { id: "pos1", coords: { left: "718px", top: "250px" }, video: "videos/smoke-mid-pos2.webm" },
-                        { id: "pos2", coords: { left: "722px", top: "285px" }, video: "videos/smoke-mid-pos1.webm" },
-                        { id: "pos3", coords: { left: "690px", top: "442px" }, video: "videos/smoke-mid-pos3.webm" },
-                        { id: "pos4", coords: { left: "674px", top: "449px" }, video: "videos/smoke-mid-pos4.webm" },
-                        { id: "pos5", coords: { left: "351px", top: "319px" }, video: "videos/smoke-mid-pos5.webm" }
-                    ]
-                },
-                flash: {
-                    positions: [
-                        { id: "pos1", coords: { left: "300px", top: "200px" }, video: "videos/flash-mid-pos1.mp4" },
-                        { id: "pos2", coords: { left: "350px", top: "250px" }, video: "videos/flash-mid-pos2.mp4" },
-                        { id: "pos3", coords: { left: "280px", top: "300px" }, video: "videos/flash-mid-pos3.mp4" },
-                        { id: "pos4", coords: { left: "320px", top: "350px" }, video: "videos/flash-mid-pos4.mp4" },
-                        { id: "pos5", coords: { left: "270px", top: "400px" }, video: "videos/flash-mid-pos5.mp4" }
-                    ]
-                },
-                molotov: {
-                    positions: [
-                        { id: "pos1", coords: { left: "300px", top: "200px" }, video: "videos/molotov-mid-pos1.mp4" },
-                        { id: "pos2", coords: { left: "350px", top: "250px" }, video: "videos/molotov-mid-pos2.mp4" },
-                        { id: "pos3", coords: { left: "280px", top: "300px" }, video: "videos/molotov-mid-pos3.mp4" },
-                        { id: "pos4", coords: { left: "320px", top: "350px" }, video: "videos/molotov-mid-pos4.mp4" },
-                        { id: "pos5", coords: { left: "270px", top: "400px" }, video: "videos/molotov-mid-pos5.mp4" }
-                    ]
-                }
-            },
-            "b-site": {
-                smoke: {
-                    positions: [
-                        { id: "pos1", coords: { left: "472px", top: "125px" }, video: "videos/smoke-b-site-pos2.webm" },
-                        { id: "pos2", coords: { left: "192px", top: "193px" }, video: "videos/smoke-b-site-pos1.webm" }
-                    ]
-                },
-                flash: {
-                    positions: [
-                        { id: "pos1", coords: { left: "300px", top: "200px" }, video: "videos/flash-b-site-pos1.mp4" },
-                        { id: "pos2", coords: { left: "350px", top: "250px" }, video: "videos/flash-b-site-pos2.mp4" },
-                        { id: "pos3", coords: { left: "280px", top: "300px" }, video: "videos/flash-b-site-pos3.mp4" },
-                        { id: "pos4", coords: { left: "320px", top: "350px" }, video: "videos/flash-b-site-pos4.mp4" },
-                        { id: "pos5", coords: { left: "270px", top: "400px" }, video: "videos/flash-b-site-pos5.mp4" }
-                    ]
-                },
-                molotov: {
-                    positions: [
-                        { id: "pos1", coords: { left: "300px", top: "200px" }, video: "videos/molotov-b-site-pos1.mp4" },
-                        { id: "pos2", coords: { left: "350px", top: "250px" }, video: "videos/molotov-b-site-pos2.mp4" },
-                        { id: "pos3", coords: { left: "280px", top: "300px" }, video: "videos/molotov-b-site-pos3.mp4" },
-                        { id: "pos4", coords: { left: "320px", top: "350px" }, video: "videos/molotov-b-site-pos4.mp4" },
-                        { id: "pos5", coords: { left: "270px", top: "400px" }, video: "videos/molotov-b-site-pos5.mp4" }
-                    ]
-                }
-            },
-            "b-site1": {
-                smoke: {
-                    positions: [
-                        { id: "pos1", coords: { left: "472px", top: "125px" }, video: "videos/smoke-b1-site-pos1.webm" },
-                        { id: "pos2", coords: { left: "477px", top: "177px" }, video: "videos/smoke-b1-site-pos2.webm" }
-                    ]
-                }
-            },
-            "b-short1": {
-                smoke: {
-                    positions: [
-                        { id: "pos1", coords: { left: "579px", top: "154px" }, video: "videos/smoke-short-pos2.webm" },
-                        { id: "pos2", coords: { left: "422px", top: "166px" }, video: "videos/smoke-short-pos1.webm" }
-                    ]
-                }
-            },
-            "b-short2": {
-                smoke: {
-                    positions: [
-                        { id: "pos1", coords: { left: "476px", top: "208px" }, video: "videos/smoke-short1-pos1.webm" },
-                        { id: "pos2", coords: { left: "384px", top: "182px" }, video: "videos/smoke-short1-pos2.webm" }
-                    ]
-                }
-            },
-            "jungle": {
-                smoke: {
-                    positions: [
-                        { id: "pos1", coords: { left: "494px", top: "482px" }, video: "videos/smoke-jungle-pos1.webm" },
-                        { id: "pos2", coords: { left: "626px", top: "497px" }, video: "videos/smoke-b-site-pos2.mp4" }
-                    ]
-                }
-            },
-            "con": {
-                smoke: {
-                    positions: [
-                        { id: "pos1", coords: { left: "673px", top: "162px" }, video: "videos/smoke-con-pos1.webm" },
-                        { id: "pos2", coords: { left: "719px", top: "253px" }, video: "videos/smoke-con-pos2.webm" }
-                    ]
-                }
-            },
-        };
+    <article class="lineup-card"
+             data-type="molotov" data-site="a-site"
+             data-title="A-site Molotov"
+             data-desc="Молотов на буст с T-spawn"
+             data-position="Позиция у синей коробки на T-spawn"
+             data-aim="Прицел на край крыши буста"
+             data-instruction="1. Встань у синей коробки&#10;2. Прицел на край крыши буста&#10;3. Run throw — молотов накроет всю позицию буста"
+             data-video="">
+        <div class="lineup-preview molotov">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1 4-4 6-4 10 0 3 2 5 4 5s4-2 4-5c0-4-3-6-4-10zm0 13c-1 0-2-1-2-2 0-2 2-3 2-5 0 2 2 3 2 5 0 1-1 2-2 2z"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">A-site Molotov</h3>
+            <p class="lineup-desc">Молотов на буст с T-spawn</p>
+            <div class="lineup-tags">
+                <span class="tag molotov">Molotov</span>
+                <span class="tag site">A-site</span>
+            </div>
+        </div>
+    </article>
 
-        console.log('Lineups определён:', lineups); // Отладка: проверка объекта lineups
+    <!-- CT -->
+    <article class="lineup-card"
+             data-type="smoke" data-site="ct"
+             data-title="CT Smoke"
+             data-desc="Смок, закрывающий CT и часть mid"
+             data-position="Позиция на T-spawn у ящиков"
+             data-aim="Прицел на угол здания CT"
+             data-instruction="1. Встань на T-spawn у ящиков&#10;2. Прицел на угол здания CT&#10;3. Jump throw — смок закроет CT и проход на A"
+             data-video="">
+        <div class="lineup-preview smoke">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">CT Smoke</h3>
+            <p class="lineup-desc">Смок, закрывающий CT и часть mid</p>
+            <div class="lineup-tags">
+                <span class="tag smoke">Smoke</span>
+                <span class="tag site">CT</span>
+            </div>
+        </div>
+    </article>
 
-        // Базовое видео для инструкции
-        const defaultVideo = "videos/instruction.mp4";
+    <article class="lineup-card"
+             data-type="flash" data-site="ct"
+             data-title="CT Flash"
+             data-desc="Флешка через CT для выхода на A"
+             data-position="Позиция на A-ramp"
+             data-aim="Прицел в потолок CT"
+             data-instruction="1. Встань на A-ramp&#10;2. Прицел в потолок CT&#10;3. Jump throw — флешка ослепит всех на CT"
+             data-video="">
+        <div class="lineup-preview flash">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">CT Flash</h3>
+            <p class="lineup-desc">Флешка через CT для выхода на A</p>
+            <div class="lineup-tags">
+                <span class="tag flash">Flash</span>
+                <span class="tag site">CT</span>
+            </div>
+        </div>
+    </article>
 
-        // Переменная для текущего типа гранаты
-        let selectedGrenade = null;
+    <article class="lineup-card"
+             data-type="molotov" data-site="ct"
+             data-title="CT Molotov"
+             data-desc="Молотов на позицию CT"
+             data-position="Позиция на T-spawn"
+             data-aim="Прицел на ящики CT"
+             data-instruction="1. Встань на T-spawn&#10;2. Прицел на ящики CT&#10;3. Jump throw — молотов накроет стандартную позицию"
+             data-video="">
+        <div class="lineup-preview molotov">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1 4-4 6-4 10 0 3 2 5 4 5s4-2 4-5c0-4-3-6-4-10zm0 13c-1 0-2-1-2-2 0-2 2-3 2-5 0 2 2 3 2 5 0 1-1 2-2 2z"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">CT Molotov</h3>
+            <p class="lineup-desc">Молотов на позицию CT</p>
+            <div class="lineup-tags">
+                <span class="tag molotov">Molotov</span>
+                <span class="tag site">CT</span>
+            </div>
+        </div>
+    </article>
 
-        // Элементы
-        const mapContainer = document.getElementById("map-container");
-        const lineSvg = document.getElementById("line-svg");
-        const modal = document.getElementById("video-modal");
-        const videoElement = document.getElementById("lineup-video");
-        const videoSource = videoElement.querySelector("source");
-        const closeBtn = document.querySelector(".close-btn");
+    <!-- Mid -->
+    <article class="lineup-card"
+             data-type="smoke" data-site="mid"
+             data-title="Mid Smoke"
+             data-desc="Смок на окно mid для безопасного прохода"
+             data-position="Позиция на T-spawn у стены"
+             data-aim="Прицел на раму окна"
+             data-instruction="1. Встань на T-spawn у стены&#10;2. Прицел на раму окна&#10;3. Jump throw — смок идеально закроет окно"
+             data-video="">
+        <div class="lineup-preview smoke">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">Mid Smoke</h3>
+            <p class="lineup-desc">Смок на окно mid для безопасного прохода</p>
+            <div class="lineup-tags">
+                <span class="tag smoke">Smoke</span>
+                <span class="tag site">Mid</span>
+            </div>
+        </div>
+    </article>
 
-        console.log('Элементы инициализированы:', mapContainer, modal, videoElement, closeBtn); // Отладка
+    <article class="lineup-card"
+             data-type="flash" data-site="mid"
+             data-title="Mid Flash"
+             data-desc="Флешка через mid на A-site"
+             data-position="Позиция на T-spawn"
+             data-aim="Прицел в потолок mid"
+             data-instruction="1. Встань на T-spawn&#10;2. Прицел в потолок mid&#10;3. Jump throw — флешка перелетит и ослепит A-site"
+             data-video="">
+        <div class="lineup-preview flash">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">Mid Flash</h3>
+            <p class="lineup-desc">Флешка через mid на A-site</p>
+            <div class="lineup-tags">
+                <span class="tag flash">Flash</span>
+                <span class="tag site">Mid</span>
+            </div>
+        </div>
+    </article>
 
-        // Функция для управления видимостью точек на карте
-        function updateGrenadePoints() {
-            // Скрыть все точки
-            document.querySelectorAll(".grenade-point").forEach(point => {
-                point.style.display = "none";
-                point.classList.remove("visible");
-            });
+    <article class="lineup-card"
+             data-type="molotov" data-site="mid"
+             data-title="Mid Molotov"
+             data-desc="Молотов на позицию снайпера в mid"
+             data-position="Позиция на T-spawn"
+             data-aim="Прицел на ящик в mid"
+             data-instruction="1. Встань на T-spawn&#10;2. Прицел на ящик в mid&#10;3. Jump throw — молотов выгонит снайпера"
+             data-video="">
+        <div class="lineup-preview molotov">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1 4-4 6-4 10 0 3 2 5 4 5s4-2 4-5c0-4-3-6-4-10zm0 13c-1 0-2-1-2-2 0-2 2-3 2-5 0 2 2 3 2 5 0 1-1 2-2 2z"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">Mid Molotov</h3>
+            <p class="lineup-desc">Молотов на позицию снайпера в mid</p>
+            <div class="lineup-tags">
+                <span class="tag molotov">Molotov</span>
+                <span class="tag site">Mid</span>
+            </div>
+        </div>
+    </article>
 
-            // Показать точки, соответствующие выбранной гранате
-            if (selectedGrenade) {
-                document.querySelectorAll(`.grenade-point.${selectedGrenade}`).forEach(point => {
-                    point.style.display = "block";
-                    point.classList.add("visible");
-                });
-            }
-        }
+    <!-- B-site -->
+    <article class="lineup-card"
+             data-type="smoke" data-site="b-site"
+             data-title="B-site Smoke"
+             data-desc="Смок на B-site с T-spawn"
+             data-position="Позиция на B-apps у стены"
+             data-aim="Прицел на край крыши B-site"
+             data-instruction="1. Встань на B-apps у стены&#10;2. Прицел на край крыши B-site&#10;3. Jump throw — смок накроет весь сайт"
+             data-video="">
+        <div class="lineup-preview smoke">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">B-site Smoke</h3>
+            <p class="lineup-desc">Смок на B-site с T-spawn</p>
+            <div class="lineup-tags">
+                <span class="tag smoke">Smoke</span>
+                <span class="tag site">B-site</span>
+            </div>
+        </div>
+    </article>
 
-        // Обработчики кнопок гранат
-        const buttons = document.querySelectorAll(".grenade-btn");
-        console.log('Найдено кнопок:', buttons.length); // Отладка: сколько кнопок найдено
-        buttons.forEach(button => {
-            console.log('Добавлен обработчик для кнопки:', button.id); // Отладка
-            button.addEventListener("click", () => {
-                console.log('Клик по кнопке:', button.id); // Отладка
-                buttons.forEach(btn => btn.classList.remove("active"));
-                button.classList.add("active");
-                selectedGrenade = button.id.replace("-btn", "");
-                console.log('Выбрана граната:', selectedGrenade); // Отладка
-                // Скрыть все позиционные точки и линии при выборе новой гранаты
-                document.querySelectorAll(".position-point").forEach(point => point.remove());
-                lineSvg.innerHTML = ''; // Очистить SVG линии
-                updateGrenadePoints();
-            });
-        });
+    <article class="lineup-card"
+             data-type="flash" data-site="b-site"
+             data-title="B-site Flash"
+             data-desc="Флешка для входа на B через B-apps"
+             data-position="Позиция на B-apps"
+             data-aim="Прицел в потолок B-site"
+             data-instruction="1. Встань на B-apps&#10;2. Прицел в потолок B-site&#10;3. Run throw — флешка ослепит всех на сайте"
+             data-video="">
+        <div class="lineup-preview flash">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">B-site Flash</h3>
+            <p class="lineup-desc">Флешка для входа на B через B-apps</p>
+            <div class="lineup-tags">
+                <span class="tag flash">Flash</span>
+                <span class="tag site">B-site</span>
+            </div>
+        </div>
+    </article>
 
-        // Обработчики целевых точек
-        const targetPoints = document.querySelectorAll(".grenade-point");
-        console.log('Найдено целевых точек:', targetPoints.length); // Отладка
-        targetPoints.forEach(point => {
-            point.addEventListener("click", () => {
-                console.log('Клик по целевой точке:', point.getAttribute("data-point")); // Отладка
-                const pointId = point.getAttribute("data-point");
-                if (lineups[pointId] && selectedGrenade && lineups[pointId][selectedGrenade] && lineups[pointId][selectedGrenade].positions) {
-                    showPositions(pointId);
-                } else if (lineups[pointId] && selectedGrenade) {
-                    showVideo(pointId); // Для точек без позиций (например, ct, mid)
-                } else {
-                    console.log('Граната не выбрана или позиции отсутствуют для:', pointId); // Отладка
-                    videoSource.src = defaultVideo;
-                    videoElement.load();
-                    modal.style.display = "flex";
-                }
-            });
-        });
+    <article class="lineup-card"
+             data-type="molotov" data-site="b-site"
+             data-title="B-site Molotov"
+             data-desc="Молотов на стандартную позицию B"
+             data-position="Позиция на B-apps"
+             data-aim="Прицел на ящик B-site"
+             data-instruction="1. Встань на B-apps&#10;2. Прицел на ящик B-site&#10;3. Jump throw — молотов выгонит с позиции"
+             data-video="">
+        <div class="lineup-preview molotov">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1 4-4 6-4 10 0 3 2 5 4 5s4-2 4-5c0-4-3-6-4-10zm0 13c-1 0-2-1-2-2 0-2 2-3 2-5 0 2 2 3 2 5 0 1-1 2-2 2z"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">B-site Molotov</h3>
+            <p class="lineup-desc">Молотов на стандартную позицию B</p>
+            <div class="lineup-tags">
+                <span class="tag molotov">Molotov</span>
+                <span class="tag site">B-site</span>
+            </div>
+        </div>
+    </article>
 
-        // Функция для показа позиций
-        function showPositions(pointId) {
-            console.log('Показ позиций для:', pointId); // Отладка
-            document.querySelectorAll(".position-point").forEach(point => point.remove());
-            lineSvg.innerHTML = ''; // Очистить SVG линии
-            const positions = lineups[pointId][selectedGrenade].positions;
-            if (!positions) {
-                console.log('Позиции не найдены для:', pointId); // Отладка
-                return;
-            }
+    <!-- Jungle -->
+    <article class="lineup-card"
+             data-type="smoke" data-site="jungle"
+             data-title="Jungle Smoke"
+             data-desc="Смок на Jungle для контроля A"
+             data-position="Позиция на T-spawn"
+             data-aim="Прицел на край крыши Jungle"
+             data-instruction="1. Встань на T-spawn&#10;2. Прицел на край крыши Jungle&#10;3. Jump throw — смок закроет Jungle"
+             data-video="">
+        <div class="lineup-preview smoke">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">Jungle Smoke</h3>
+            <p class="lineup-desc">Смок на Jungle для контроля A</p>
+            <div class="lineup-tags">
+                <span class="tag smoke">Smoke</span>
+                <span class="tag site">Jungle</span>
+            </div>
+        </div>
+    </article>
 
-            const grenadePoint = document.querySelector(`.grenade-point.${selectedGrenade}[data-point="${pointId}"]`);
-            const grenadePointRect = grenadePoint.getBoundingClientRect();
-            const containerRect = mapContainer.getBoundingClientRect();
+    <!-- Connector -->
+    <article class="lineup-card"
+             data-type="smoke" data-site="connector"
+             data-title="Connector Smoke"
+             data-desc="Смок на Connector для разделения mid и A"
+             data-position="Позиция на T-spawn"
+             data-aim="Прицел на стену Connector"
+             data-instruction="1. Встань на T-spawn&#10;2. Прицел на стену Connector&#10;3. Jump throw — смок отрежет Connector от mid"
+             data-video="">
+        <div class="lineup-preview smoke">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">Connector Smoke</h3>
+            <p class="lineup-desc">Смок на Connector для разделения mid и A</p>
+            <div class="lineup-tags">
+                <span class="tag smoke">Smoke</span>
+                <span class="tag site">Connector</span>
+            </div>
+        </div>
+    </article>
 
-            positions.forEach(pos => {
-                console.log('Создание позиции:', pos.id, pos.coords); // Отладка
-                const posPoint = document.createElement("div");
-                posPoint.className = "grenade-point position-point";
-                posPoint.setAttribute("data-point", pointId);
-                posPoint.setAttribute("data-position", pos.id);
-                posPoint.style.left = pos.coords.left;
-                posPoint.style.top = pos.coords.top;
-                posPoint.style.display = "block"; // Показываем точку
-                posPoint.classList.add("visible"); // Анимация появления
-                // Добавляем tooltip для position-point
-                const tooltip = document.createElement("span");
-                tooltip.className = "tooltip";
-                tooltip.textContent = `Position ${pos.id}`;
-                posPoint.appendChild(tooltip);
-                posPoint.addEventListener("click", () => showVideo(pointId, pos.id));
-                mapContainer.appendChild(posPoint);
+    <!-- B-short -->
+    <article class="lineup-card"
+             data-type="smoke" data-site="b-short"
+             data-title="B-short Smoke #1"
+             data-desc="Смок на B-short для безопасного прохода"
+             data-position="Позиция на T-spawn"
+             data-aim="Прицел на угол B-short"
+             data-instruction="1. Встань на T-spawn&#10;2. Прицел на угол B-short&#10;3. Jump throw — смок закроет проход"
+             data-video="">
+        <div class="lineup-preview smoke">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">B-short Smoke #1</h3>
+            <p class="lineup-desc">Смок на B-short для безопасного прохода</p>
+            <div class="lineup-tags">
+                <span class="tag smoke">Smoke</span>
+                <span class="tag site">B-Short</span>
+            </div>
+        </div>
+    </article>
 
-                // Рисуем пунктирную линию от grenade-point к position-point
-                const posPointRect = posPoint.getBoundingClientRect();
-                const x1 = grenadePointRect.left - containerRect.left + grenadePointRect.width / 2;
-                const y1 = grenadePointRect.top - containerRect.top + grenadePointRect.height / 2;
-                const x2 = posPointRect.left - containerRect.left + posPointRect.width / 2;
-                const y2 = posPointRect.top - containerRect.top + posPointRect.height / 2;
+    <article class="lineup-card"
+             data-type="smoke" data-site="b-short"
+             data-title="B-short Smoke #2"
+             data-desc="Второй вариант смока на B-short"
+             data-position="Позиция на B-apps"
+             data-aim="Прицел на стену B-short"
+             data-instruction="1. Встань на B-apps&#10;2. Прицел на стену B-short&#10;3. Jump throw — альтернативный смок"
+             data-video="">
+        <div class="lineup-preview smoke">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">B-short Smoke #2</h3>
+            <p class="lineup-desc">Второй вариант смока на B-short</p>
+            <div class="lineup-tags">
+                <span class="tag smoke">Smoke</span>
+                <span class="tag site">B-Short</span>
+            </div>
+        </div>
+    </article>
 
-                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                line.setAttribute("x1", x1);
-                line.setAttribute("y1", y1);
-                line.setAttribute("x2", x2);
-                line.setAttribute("y2", y2);
-                line.setAttribute("stroke", "#f97316");
-                line.setAttribute("stroke-width", "2");
-                line.setAttribute("stroke-dasharray", "5,5"); // Пунктирная линия
-                lineSvg.appendChild(line);
-            });
-        }
+    <article class="lineup-card"
+             data-type="smoke" data-site="b-short"
+             data-title="B-site1 Smoke"
+             data-desc="Смок с позиции B-site1"
+             data-position="Позиция на B-apps"
+             data-aim="Прицел на крышу B-site"
+             data-instruction="1. Встань на B-apps у B-site1&#10;2. Прицел на крышу B-site&#10;3. Jump throw — смок накроет сайт"
+             data-video="">
+        <div class="lineup-preview smoke">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="10" r="2.5"/><circle cx="16" cy="12" r="2"/></svg>
+            <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="lineup-info">
+            <h3 class="lineup-title">B-site1 Smoke</h3>
+            <p class="lineup-desc">Смок с позиции B-site1</p>
+            <div class="lineup-tags">
+                <span class="tag smoke">Smoke</span>
+                <span class="tag site">B-Short</span>
+            </div>
+        </div>
+    </article>
+</section>
 
-        // Функция для показа видео
-        function showVideo(pointId, positionId = null) {
-            console.log('Показ видео для:', pointId, 'позиция:', positionId); // Отладка
-            if (!pointId) {
-                console.log('Ошибка: точка не определена.');
-                return;
-            }
-            if (!selectedGrenade) {
-                videoSource.src = defaultVideo;
-                videoElement.load();
-                modal.style.display = "flex";
-                return;
-            }
-            let lineup = lineups[pointId][selectedGrenade];
-            if (positionId && lineup.positions) {
-                const position = lineup.positions.find(p => p.id === positionId);
-                if (position && position.video) {
-                    lineup = { video: position.video };
-                }
-            }
-            if (!lineup || !lineup.video) {
-                console.log('Видео не найдено для:', pointId, positionId);
-                return;
-            }
-            videoSource.src = lineup.video;
-            videoElement.load();
-            modal.style.display = "flex";
-            document.querySelectorAll(".position-point").forEach(point => point.remove());
-            lineSvg.innerHTML = ''; // Очистить SVG линии
-        }
+<!-- МОДАЛЬНОЕ ОКНО -->
+<div class="modal-overlay" id="lineup-modal">
+    <div class="modal">
+        <button class="modal-close" aria-label="Закрыть">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </button>
 
-        // Закрытие модального окна
-        closeBtn.addEventListener("click", () => {
-            modal.style.display = "none";
-            videoElement.pause();
-            document.querySelectorAll(".position-point").forEach(point => point.remove());
-            lineSvg.innerHTML = ''; // Очистить SVG линии
-        });
+        <div class="modal-video"></div>
 
-        // Закрытие при клике вне модального окна
-        modal.addEventListener("click", (e) => {
-            if (e.target === modal) {
-                modal.style.display = "none";
-                videoElement.pause();
-                document.querySelectorAll(".position-point").forEach(point => point.remove());
-                lineSvg.innerHTML = ''; // Очистить SVG линии
-            }
-        });
+        <div class="modal-content">
+            <h2 class="modal-title"></h2>
+            <p class="modal-subtitle"></p>
 
-        // Плавная прокрутка для якорных ссылок
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener("click", function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute("href")).scrollIntoView({
-                    behavior: "smooth"
-                });
-            });
-        });
+            <div class="modal-section modal-position">
+                <div class="modal-section-title">📍 Позиция</div>
+                <p></p>
+            </div>
 
-        console.log('Скрипт завершён'); // Отладка: скрипт дошёл до конца
-    </script>
+            <div class="modal-section modal-aim">
+                <div class="modal-section-title">🎯 Прицел</div>
+                <p></p>
+            </div>
+
+            <div class="modal-section">
+                <div class="modal-section-title">📝 Инструкция</div>
+                <div class="instruction-box">
+                    <button class="copy-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        Копировать
+                    </button>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ФУТЕР -->
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-copy">© 2026 CS2NADES. Все права защищены.</div>
+        <ul class="footer-links">
+            <li><a href="#">Политика конфиденциальности</a></li>
+            <li><a href="#">Контакты</a></li>
+            <li><a href="#">Discord</a></li>
+        </ul>
+    </div>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
