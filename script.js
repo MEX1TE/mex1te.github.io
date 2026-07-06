@@ -60,15 +60,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const vidBox = modal.querySelector('.modal-vid');
             const src = card.dataset.video;
+
             if (src) {
-                vidBox.innerHTML = `<video src="${src}" controls autoplay loop playsinline></video>`;
+                vidBox.innerHTML = `
+                    <video controls autoplay loop playsinline>
+                        <source src="${src}" type="video/mp4">
+                        Ваш браузер не поддерживает видео.
+                    </video>
+                `;
             } else {
                 vidBox.innerHTML = `
                     <div class="modal-vid-ph">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
                         <p>Видео скоро будет добавлено</p>
-                    </div>`;
+                    </div>
+                `;
             }
+
             modal.classList.add('open');
             document.body.style.overflow = 'hidden';
         });
