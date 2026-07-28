@@ -201,19 +201,56 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // VK - поддержка vk.com и vkvideo.ru
-if (videoUrl.includes('vk.com') || videoUrl.includes('vkvideo.ru')) {
-    let match = videoUrl.match(/video(-?\d+)_(\d+)/);
-    if (!match) {
-        match = videoUrl.match(/clip(-?\d+)_(\d+)/);
+    // Rutube
+    if (videoUrl.includes('rutube.ru')) {
+        let videoId = '';
+        
+        // Формат 1: https://rutube.ru/video/VIDEO_ID/
+        if (videoUrl.includes('/video/')) {
+            const match = videoUrl.match(/\/video\/([a-f0-9-]+)/i);
+            if (match) {
+                videoId = match[1];
+            }
+        }
+        // Формат 2: https://rutube.ru/play/embed/VIDEO_ID/
+        else if (videoUrl.includes('/play/embed/')) {
+            const match = videoUrl.match(/\/play\/embed\/([a-f0-9-]+)/i);
+            if (match) {
+                videoId = match[1];
+            }
+        }
+        // Формат 3: просто ID в конце URL
+        else {
+            const match = videoUrl.match(/([a-f0-9-]{36})/i);
+            if (match) {
+                videoId = match[1];
+            }
+        }
+        
+        if (videoId) {
+            return `<iframe 
+                src="https://rutube.ru/play/embed/${videoId}" 
+                width="100%" 
+                height="100%" 
+                frameborder="0" 
+                allow="autoplay; encrypted-media; fullscreen; picture-in-picture" 
+                allowfullscreen
+                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+            ></iframe>`;
+        }
     }
     
-    if (match) {
-        const oid = match[1];
-        const id = match[2];
-        // Пробуем несколько форматов embed
-        return `
-            <iframe 
+    // VK - поддержка vk.com и vkvideo.ru
+    if (videoUrl.includes('vk.com') || videoUrl.includes('vkvideo.ru')) {
+        let match = videoUrl.match(/video(-?\d+)_(\d+)/);
+        if (!match) {
+            match = videoUrl.match(/clip(-?\d+)_(\d+)/);
+        }
+        
+        if (match) {
+            const oid = match[1];
+            const id = match[2];
+            return `<iframe 
                 src="https://vk.com/video_ext.php?oid=${oid}&id=${id}&hd=2&autoplay=0" 
                 width="100%" 
                 height="100%" 
@@ -221,13 +258,9 @@ if (videoUrl.includes('vk.com') || videoUrl.includes('vkvideo.ru')) {
                 allow="autoplay; encrypted-media; fullscreen; picture-in-picture;" 
                 allowfullscreen
                 sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-            ></iframe>
-            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);color:#fff;font-size:0.85rem;text-align:center;padding:2rem;">
-                Если видео не загружается, <a href="https://vk.com/video${oid}_${id}" target="_blank" style="color:var(--accent);text-decoration:underline">откройте его напрямую</a>
-            </div>
-        `;
+            ></iframe>`;
+        }
     }
-}
     
     // Локальное видео
     if (videoUrl.endsWith('.mp4') || videoUrl.endsWith('.webm')) {
@@ -237,7 +270,7 @@ if (videoUrl.includes('vk.com') || videoUrl.includes('vkvideo.ru')) {
     // Если не распознали — показываем ссылку
     return `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3);flex-direction:column;gap:1rem">
         <div>Неподдерживаемый формат видео</div>
-        <div style="font-size:0.85rem;color:var(--text-2);max-width:80%;text-align:center">
+        <div style="font-size:0.85rem;color:var(--text-2);max-width:80%;text-align:center;word-break:break-all">
             Ссылка: ${videoUrl}
         </div>
     </div>`;
