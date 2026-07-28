@@ -184,40 +184,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Функция для создания видео embed
     function createVideoEmbed(videoUrl) {
-        if (!videoUrl) {
-            return `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3)">Видео не добавлено</div>`;
-        }
-        
-        // YouTube
-        if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
-            let videoId = '';
-            if (videoUrl.includes('v=')) {
-                videoId = videoUrl.split('v=')[1].split('&')[0];
-            } else if (videoUrl.includes('youtu.be/')) {
-                videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
-            }
-            if (videoId) {
-                return `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-            }
-        }
-        
-        // VK
-        if (videoUrl.includes('vk.com/video')) {
-            const match = videoUrl.match(/video(-?\d+)_(\d+)/);
-            if (match) {
-                const oid = match[1];
-                const id = match[2];
-                return `<iframe src="https://vk.com/video_ext.php?oid=${oid}&id=${id}&hd=2" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
-            }
-        }
-        
-        // Локальное видео
-        if (videoUrl.endsWith('.mp4') || videoUrl.endsWith('.webm')) {
-            return `<video controls autoplay loop playsinline><source src="${videoUrl}" type="video/mp4">Ваш браузер не поддерживает видео</video>`;
-        }
-        
-        return `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3)">Неподдерживаемый формат</div>`;
+    if (!videoUrl || videoUrl.trim() === '') {
+        return `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3)">Видео не добавлено</div>`;
     }
+    
+    // YouTube
+    if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+        let videoId = '';
+        if (videoUrl.includes('v=')) {
+            videoId = videoUrl.split('v=')[1].split('&')[0];
+        } else if (videoUrl.includes('youtu.be/')) {
+            videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
+        }
+        if (videoId) {
+            return `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        }
+    }
+    
+    // VK - улучшенная проверка
+    if (videoUrl.includes('vk.com')) {
+        // Формат 1: https://vk.com/video-123456_789012345
+        // Формат 2: https://vk.com/video123456_789012345
+        // Формат 3: https://vk.com/clip-123456_789012345
+        let match = videoUrl.match(/video(-?\d+)_(\d+)/);
+        if (!match) {
+            match = videoUrl.match(/clip(-?\d+)_(\d+)/);
+        }
+        
+        if (match) {
+            const oid = match[1];
+            const id = match[2];
+            return `<iframe src="https://vk.com/video_ext.php?oid=${oid}&id=${id}&hd=2" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
+        }
+    }
+    
+    // Локальное видео
+    if (videoUrl.endsWith('.mp4') || videoUrl.endsWith('.webm')) {
+        return `<video controls autoplay loop playsinline><source src="${videoUrl}" type="video/mp4">Ваш браузер не поддерживает видео</video>`;
+    }
+    
+    // Если не распознали — показываем ссылку
+    return `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3);flex-direction:column;gap:1rem">
+        <div>Неподдерживаемый формат видео</div>
+        <div style="font-size:0.85rem;color:var(--text-2);max-width:80%;text-align:center">
+            Ссылка: ${videoUrl}
+        </div>
+    </div>`;
+}
 
     function openSource(targetId, sourceId) {
         const target = window.targetsData[targetId];
