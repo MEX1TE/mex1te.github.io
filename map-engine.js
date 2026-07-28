@@ -201,22 +201,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // VK - улучшенная проверка
-    if (videoUrl.includes('vk.com')) {
-        // Формат 1: https://vk.com/video-123456_789012345
-        // Формат 2: https://vk.com/video123456_789012345
-        // Формат 3: https://vk.com/clip-123456_789012345
-        let match = videoUrl.match(/video(-?\d+)_(\d+)/);
-        if (!match) {
-            match = videoUrl.match(/clip(-?\d+)_(\d+)/);
-        }
-        
-        if (match) {
-            const oid = match[1];
-            const id = match[2];
-            return `<iframe src="https://vk.com/video_ext.php?oid=${oid}&id=${id}&hd=2" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
-        }
+    // VK - поддержка vk.com и vkvideo.ru
+if (videoUrl.includes('vk.com') || videoUrl.includes('vkvideo.ru')) {
+    let match = videoUrl.match(/video(-?\d+)_(\d+)/);
+    if (!match) {
+        match = videoUrl.match(/clip(-?\d+)_(\d+)/);
     }
+    
+    if (match) {
+        const oid = match[1];
+        const id = match[2];
+        // Пробуем несколько форматов embed
+        return `
+            <iframe 
+                src="https://vk.com/video_ext.php?oid=${oid}&id=${id}&hd=2&autoplay=0" 
+                width="100%" 
+                height="100%" 
+                frameborder="0" 
+                allow="autoplay; encrypted-media; fullscreen; picture-in-picture;" 
+                allowfullscreen
+                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+            ></iframe>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);color:#fff;font-size:0.85rem;text-align:center;padding:2rem;">
+                Если видео не загружается, <a href="https://vk.com/video${oid}_${id}" target="_blank" style="color:var(--accent);text-decoration:underline">откройте его напрямую</a>
+            </div>
+        `;
+    }
+}
     
     // Локальное видео
     if (videoUrl.endsWith('.mp4') || videoUrl.endsWith('.webm')) {
