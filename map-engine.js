@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 allow="autoplay; encrypted-media; fullscreen; picture-in-picture" 
                 allowfullscreen
                 sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-            ></iframe>`;
+            ></iframe>`
         }
     }
     
@@ -258,7 +258,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 allow="autoplay; encrypted-media; fullscreen; picture-in-picture;" 
                 allowfullscreen
                 sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-            ></iframe>`;
+            ></iframe>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);color:#fff;font-size:0.85rem;text-align:center;padding:2rem;">
+                Если видео не загружается, <a href="https://vk.com/video${oid}_${id}" target="_blank" style="color:var(--accent);text-decoration:underline">откройте его напрямую</a>
+            </div>
+        `;
+            
         }
     }
     
