@@ -28,7 +28,7 @@
         @media(max-width:1024px){.admin-layout{grid-template-columns:1fr}}
 
         .admin-map-wrapper{position:relative;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:crosshair}
-        .admin-map-image{width:100%;height:auto;display:block}
+        .admin-map-image{width:100%;height:auto;display:block;pointer-events:none}
         .admin-hotspot{position:absolute;width:28px;height:28px;transform:translate(-50%,-50%);cursor:pointer;transition:all var(--transition);z-index:10}
         .admin-hotspot::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--accent);opacity:.4;animation:pulse 2s ease-in-out infinite}
         .admin-hotspot::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent-glow)}
@@ -105,7 +105,7 @@
 
     <div class="admin-layout">
         <div>
-            <div class="admin-map-wrapper" id="map-wrapper" onclick="addHotspot(event)">
+            <div class="admin-map-wrapper" id="map-wrapper">
                 <img src="images/mirage-radar.webp" alt="Map" class="admin-map-image" id="map-image" onerror="this.style.background='var(--bg-tertiary)';this.style.minHeight='500px'">
             </div>
 
@@ -222,10 +222,13 @@
     }
 
     // Добавление точки кликом на карту
-    function addHotspot(event) {
-        if (event.target.classList.contains('admin-hotspot')) return;
+    document.getElementById('map-wrapper').addEventListener('click', function(event) {
+        // Игнорируем клики на существующие точки
+        if (event.target.classList.contains('admin-hotspot') || event.target.closest('.admin-hotspot')) {
+            return;
+        }
 
-        const rect = event.currentTarget.getBoundingClientRect();
+        const rect = this.getBoundingClientRect();
         const x = ((event.clientX - rect.left) / rect.width) * 100;
         const y = ((event.clientY - rect.top) / rect.height) * 100;
 
@@ -236,7 +239,11 @@
         editingId = null;
         document.getElementById('form-title-text').textContent = 'Добавить раскидку';
         clearForm();
-    }
+
+        // Восстанавливаем координаты после clearForm
+        document.getElementById('coord-x').textContent = tempCoords.x + '%';
+        document.getElementById('coord-y').textContent = tempCoords.y + '%';
+    });
 
     // Сохранение точки в Firebase
     function saveHotspot() {
@@ -366,7 +373,6 @@
         });
         document.getElementById('coord-x').textContent = '—';
         document.getElementById('coord-y').textContent = '—';
-        tempCoords = { x: 0, y: 0 };
     }
 
     // Отмена редактирования
