@@ -327,3 +327,304 @@ h1,h2,h3{font-family:'Rajdhani','Inter',sans-serif;font-weight:700;letter-spacin
     .modal-body{padding:1.25rem}
     .footer-inner{flex-direction:column;text-align:center}
 }
+/* ============================================
+   INTERACTIVE MAP
+   ============================================ */
+.map-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem 3rem;
+}
+
+.map-wrapper {
+    position: relative;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.map-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: var(--bg-tertiary);
+}
+
+.map-overlay {
+    position: absolute;
+    inset: 0;
+    cursor: crosshair;
+}
+
+.map-hotspot {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: all var(--transition);
+    z-index: 10;
+}
+
+.map-hotspot::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.3;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.map-hotspot::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.map-hotspot:hover {
+    transform: translate(-50%, -50%) scale(1.3);
+    z-index: 20;
+}
+
+.map-hotspot.active {
+    transform: translate(-50%, -50%) scale(1.4);
+    z-index: 30;
+}
+
+.map-hotspot.active::before {
+    background: var(--molotov);
+}
+
+.map-hotspot.active::after {
+    background: var(--molotov);
+    box-shadow: 0 0 20px rgba(248, 81, 73, 0.6);
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.8); opacity: 0; }
+}
+
+.hotspot-label {
+    position: absolute;
+    top: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: var(--text-1);
+    padding: 0.35rem 0.7rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all var(--transition);
+    border: 1px solid var(--border);
+}
+
+.map-hotspot:hover .hotspot-label {
+    opacity: 1;
+    top: 32px;
+}
+
+/* Map Legend */
+.map-legend {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-2);
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.legend-dot.smoke { background: var(--smoke); }
+.legend-dot.flash { background: var(--flash); }
+.legend-dot.molotov { background: var(--molotov); }
+.legend-dot.he { background: var(--he); }
+
+/* Lineup Panel */
+.lineup-panel {
+    position: fixed;
+    right: -450px;
+    top: 0;
+    width: 450px;
+    max-width: 90vw;
+    height: 100vh;
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--border);
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    transition: right 0.3s ease;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.lineup-panel.open {
+    right: 0;
+}
+
+.lineup-panel-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background: var(--bg-tertiary);
+}
+
+.lineup-panel-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+}
+
+.lineup-panel-subtitle {
+    color: var(--text-2);
+    font-size: 0.9rem;
+}
+
+.lineup-panel-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+}
+
+.lineup-panel-close:hover {
+    background: var(--molotov);
+    color: #fff;
+    border-color: var(--molotov);
+}
+
+.lineup-panel-content {
+    padding: 1.5rem;
+    flex: 1;
+}
+
+.lineup-panel-section {
+    margin-bottom: 1.5rem;
+}
+
+.lineup-panel-section-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.lineup-panel-video {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.lineup-panel-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lineup-panel-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.btn {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all var(--transition);
+    border: none;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: #000;
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-1);
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-hover);
+}
+
+/* Overlay when panel is open */
+.map-overlay-active {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.map-overlay-active.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .map-container { padding: 0 1rem 2rem; }
+    .lineup-panel { width: 100%; max-width: 100%; right: -100%; }
+    .map-legend { gap: 1rem; padding: 0.75rem 1rem; }
+    .legend-item { font-size: 0.75rem; }
+}

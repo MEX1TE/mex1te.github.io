@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Mirage — Лайнапы | CS2NADES</title>
-    <meta name="description" content="Все лайнапы гранат для Mirage в CS2: смоки A, B, Mid, Jungle, Connector.">
+    <title>Mirage — Интерактивная карта | CS2NADES</title>
+    <meta name="description" content="Интерактивная карта Mirage с лайнапами гранат">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
@@ -22,7 +22,10 @@
         <ul class="nav">
             <li><a href="index.html">Главная</a></li>
             <li><a href="index.html#maps" class="active">Карты</a></li>
-            <li><a href="index.html#about">О проекте</a></li>
+            <li class="fav-counter">
+                <a href="favorites.html">Избранное</a>
+                <span class="fav-badge"></span>
+            </li>
         </ul>
     </div>
 </header>
@@ -34,318 +37,159 @@
         <span style="color:var(--text-1)">Mirage</span>
     </div>
     <h1>🕌 Mirage</h1>
-    <p>15 проверенных раскидок гранат</p>
+    <p>Кликай на точки на карте, чтобы увидеть лайнапы</p>
 </section>
 
-<section class="controls">
-    <div class="search-wrap">
-        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <input type="text" id="search" placeholder="Поиск раскидки...">
-    </div>
-    <div class="fgroup fgroup-type">
-        <div class="flabel">Тип гранаты</div>
-        <div class="fbtns">
-            <button class="fbtn active" data-f="all">Все</button>
-            <button class="fbtn" data-f="smoke"><span class="dot smoke"></span>Smoke</button>
-            <button class="fbtn" data-f="flash"><span class="dot flash"></span>Flash</button>
-            <button class="fbtn" data-f="molotov"><span class="dot molotov"></span>Molotov</button>
-            <button class="fbtn" data-f="he"><span class="dot he"></span>HE</button>
-        </div>
-    </div>
-    <div class="fgroup fgroup-site">
-        <div class="flabel">Позиция</div>
-        <div class="fbtns">
-            <button class="fbtn active" data-f="all">Все</button>
-            <button class="fbtn" data-f="a-site">A-site</button>
-            <button class="fbtn" data-f="b-site">B-site</button>
-            <button class="fbtn" data-f="mid">Mid</button>
-            <button class="fbtn" data-f="ct">CT</button>
-            <button class="fbtn" data-f="jungle">Jungle</button>
-            <button class="fbtn" data-f="connector">Connector</button>
-            <button class="fbtn" data-f="b-short">B-short</button>
-        </div>
-    </div>
-    <div class="results-count" id="count">Показано: 15 раскидок</div>
-</section>
+<!-- Interactive Map -->
+<section class="map-container">
+    <div class="map-wrapper">
+        <!-- Map Image (Radar) -->
+        <img src="https://raw.githubusercontent.com/MEX1TE/mex1te.github.io/main/images/mirage-radar.png"
+             alt="Mirage Map"
+             class="map-image"
+             onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1024 1024%22><rect fill=%22%231c2333%22 width=%221024%22 height=%221024%22/><text fill=%22%23484f58%22 font-size=%2240%22 x=%2250%%%22 y=%2250%%%22 text-anchor=%22middle%22>Mirage Radar</text></svg>'">
 
-<section class="lineups">
-
-    <!-- A-site Flash -->
-    <article class="lcard" data-type="flash" data-site="a-site"
-             data-title="A-site Flash" data-desc="Поп-флешка для входа на A-site с ramp"
-             data-pos="Позиция у окна на A-ramp" data-aim="Прицел в потолок над бустом"
-             data-inst="1. Встань у окна A-ramp&#10;2. Прицел в потолок над бустом&#10;3. Run throw"
-             data-video="">
-        <div class="lprev flash">
-            <span class="lprev-icon">⚡</span>
-            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="linfo">
-            <h3>A-site Flash</h3>
-            <p>Поп-флешка для входа на A-site с ramp</p>
-            <div class="tags"><span class="tag flash">Flash</span><span class="tag loc">A-site</span></div>
-        </div>
-    </article>
-
-    <!-- A-site Molotov -->
-    <article class="lcard" data-type="molotov" data-site="a-site"
-             data-title="A-site Molotov" data-desc="Молотов на буст с T-spawn"
-             data-pos="У синей коробки на T-spawn" data-aim="Прицел на край крыши буста"
-             data-inst="1. Встань у синей коробки&#10;2. Прицел на край крыши буста&#10;3. Run throw"
-             data-video="">
-        <div class="lprev molotov">
-            <span class="lprev-icon">🔥</span>
-            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="linfo">
-            <h3>A-site Molotov</h3>
-            <p>Молотов на буст с T-spawn</p>
-            <div class="tags"><span class="tag molotov">Molotov</span><span class="tag loc">A-site</span></div>
-        </div>
-    </article>
-
-    <!-- CT Smoke -->
-    <article class="lcard" data-type="smoke" data-site="ct"
-             data-title="CT Smoke" data-desc="Смок, закрывающий CT и часть mid"
-             data-pos="T-spawn у ящиков" data-aim="Прицел на угол здания CT"
-             data-inst="1. Встань на T-spawn у ящиков&#10;2. Прицел на угол здания CT&#10;3. Jump throw"
-             data-video="">
-        <div class="lprev smoke">
-            <span class="lprev-icon">💨</span>
-            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="linfo">
-            <h3>CT Smoke</h3>
-            <p>Смок, закрывающий CT и часть mid</p>
-            <div class="tags"><span class="tag smoke">Smoke</span><span class="tag loc">CT</span></div>
-        </div>
-    </article>
-
-    <!-- CT Flash -->
-    <article class="lcard" data-type="flash" data-site="ct"
-             data-title="CT Flash" data-desc="Флешка через CT для выхода на A"
-             data-pos="Позиция на A-ramp" data-aim="Прицел в потолок CT"
-             data-inst="1. Встань на A-ramp&#10;2. Прицел в потолок CT&#10;3. Jump throw"
-             data-video="">
-        <div class="lprev flash">
-            <span class="lprev-icon">⚡</span>
-            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="linfo">
-            <h3>CT Flash</h3>
-            <p>Флешка через CT для выхода на A</p>
-            <div class="tags"><span class="tag flash">Flash</span><span class="tag loc">CT</span></div>
-        </div>
-    </article>
-
-    <!-- CT Molotov -->
-    <article class="lcard" data-type="molotov" data-site="ct"
-             data-title="CT Molotov" data-desc="Молотов на стандартную позицию CT"
-             data-pos="T-spawn" data-aim="Прицел на ящики CT"
-             data-inst="1. Встань на T-spawn&#10;2. Прицел на ящики CT&#10;3. Jump throw"
-             data-video="">
-        <div class="lprev molotov">
-            <span class="lprev-icon">🔥</span>
-            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="linfo">
-            <h3>CT Molotov</h3>
-            <p>Молотов на стандартную позицию CT</p>
-            <div class="tags"><span class="tag molotov">Molotov</span><span class="tag loc">CT</span></div>
-        </div>
-    </article>
-
-    <!-- Mid Smoke -->
-    <article class="lcard" data-type="smoke" data-site="mid"
-             data-title="Mid Window Smoke" data-desc="Смок на окно mid для безопасного прохода"
-             data-pos="T-spawn у стены" data-aim="Прицел на раму окна"
-             data-inst="1. Встань на T-spawn у стены&#10;2. Прицел на раму окна&#10;3. Jump throw"
-             data-video="">
-        <div class="lprev smoke">
-            <span class="lprev-icon">💨</span>
-            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="linfo">
-            <h3>Mid Window Smoke</h3>
-            <p>Смок на окно mid для безопасного прохода</p>
-            <div class="tags"><span class="tag smoke">Smoke</span><span class="tag loc">Mid</span></div>
-        </div>
-    </article>
-
-    <!-- Mid Flash -->
-    <article class="lcard" data-type="flash" data-site="mid"
-             data-title="Mid Flash" data-desc="Флешка через mid на A-site"
-             data-pos="T-spawn" data-aim="Прицел в потолок mid"
-             data-inst="1. Встань на T-spawn&#10;2. Прицел в потолок mid&#10;3. Jump throw"
-             data-video="">
-        <div class="lprev flash">
-            <span class="lprev-icon">⚡</span>
-            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="linfo">
-            <h3>Mid Flash</h3>
-            <p>Флешка через mid на A-site</p>
-            <div class="tags"><span class="tag flash">Flash</span><span class="tag loc">Mid</span></div>
-        </div>
-    </article>
-
-    <!-- Mid Molotov -->
-    <article class="lcard" data-type="molotov" data-site="mid"
-             data-title="Mid Molotov" data-desc="Молотов на позицию снайпера в mid"
-             data-pos="T-spawn" data-aim="Прицел на ящик в mid"
-             data-inst="1. Встань на T-spawn&#10;2. Прицел на ящик в mid&#10;3. Jump throw"
-             data-video="">
-        <div class="lprev molotov">
-            <span class="lprev-icon">🔥</span>
-            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="linfo">
-            <h3>Mid Molotov</h3>
-            <p>Молотов на позицию снайпера в mid</p>
-            <div class="tags"><span class="tag molotov">Molotov</span><span class="tag loc">Mid</span></div>
-        </div>
-    </article>
-
-    <!-- B-site Smoke -->
-    <article class="lcard" data-type="smoke" data-site="b-site"
-             data-title="B-site Smoke" data-desc="Смок на B-site с apps"
-             data-pos="B-apps у стены" data-aim="Прицел на край крыши B-site"
-             data-inst="1. Встань на B-apps у стены&#10;2. Прицел на край крыши B-site&#10;3. Jump throw"
-             data-video="">
-        <div class="lprev smoke">
-            <span class="lprev-icon">💨</span>
-            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="linfo">
-            <h3>B-site Smoke</h3>
-            <p>Смок на B-site с apps</p>
-            <div class="tags"><span class="tag smoke">Smoke</span><span class="tag loc">B-site</span></div>
-        </div>
-    </article>
-
-    <!-- B-site Flash -->
-    <article class="lcard" data-type="flash" data-site="b-site"
-             data-title="B-site Flash" data-desc="Флешка для входа на B через apps"
-             data-pos="B-apps" data-aim="Прицел в потолок B-site"
-             data-inst="1. Встань на B-apps&#10;2. Прицел в потолок B-site&#10;3. Run throw"
-             data-video="">
-        <div class="lprev flash">
-            <span class="lprev-icon">⚡</span>
-            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="linfo">
-            <h3>B-site Flash</h3>
-            <p>Флешка для входа на B через apps</p>
-            <div class="tags"><span class="tag flash">Flash</span><span class="tag loc">B-site</span></div>
-        </div>
-    </article>
-
-    <!-- B-site Molotov -->
-    <article class="lcard" data-type="molotov" data-site="b-site"
-             data-title="B-site Molotov" data-desc="Молотов на стандартную позицию B"
-             data-pos="B-apps" data-aim="Прицел на ящик B-site"
-             data-inst="1. Встань на B-apps&#10;2. Прицел на ящик B-site&#10;3. Jump throw"
-             data-video="">
-        <div class="lprev molotov">
-            <span class="lprev-icon">🔥</span>
-            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="linfo">
-            <h3>B-site Molotov</h3>
-            <p>Молотов на стандартную позицию B</p>
-            <div class="tags"><span class="tag molotov">Molotov</span><span class="tag loc">B-site</span></div>
-        </div>
-    </article>
-
-    <!-- Jungle Smoke -->
-    <article class="lcard" data-type="smoke" data-site="jungle"
-             data-title="Jungle Smoke" data-desc="Смок на Jungle для контроля A"
-             data-pos="T-spawn" data-aim="Прицел на край крыши Jungle"
-             data-inst="1. Встань на T-spawn&#10;2. Прицел на край крыши Jungle&#10;3. Jump throw"
-             data-video="videos/mirage-jungle-smoke.mp4">
-        <div class="lprev smoke">
-            <span class="lprev-icon">💨</span>
-            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="linfo">
-            <h3>Jungle Smoke</h3>
-            <p>Смок на Jungle для контроля A</p>
-            <div class="tags"><span class="tag smoke">Smoke</span><span class="tag loc">Jungle</span></div>
-        </div>
-    </article>
-
-    <!-- Connector Smoke -->
-    <article class="lcard" data-type="smoke" data-site="connector"
-             data-title="Connector Smoke" data-desc="Смок на Connector, разделяет mid и A"
-             data-pos="T-spawn" data-aim="Прицел на стену Connector"
-             data-inst="1. Встань на T-spawn&#10;2. Прицел на стену Connector&#10;3. Jump throw"
-             data-video="">
-        <div class="lprev smoke">
-            <span class="lprev-icon">💨</span>
-            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="linfo">
-            <h3>Connector Smoke</h3>
-            <p>Смок на Connector, разделяет mid и A</p>
-            <div class="tags"><span class="tag smoke">Smoke</span><span class="tag loc">Connector</span></div>
-        </div>
-    </article>
-
-    <!-- B-short Smoke 1 -->
-    <article class="lcard" data-type="smoke" data-site="b-short"
-             data-title="B-short Smoke #1" data-desc="Смок на B-short для безопасного прохода"
-             data-pos="T-spawn" data-aim="Прицел на угол B-short"
-             data-inst="1. Встань на T-spawn&#10;2. Прицел на угол B-short&#10;3. Jump throw"
-             data-video="">
-        <div class="lprev smoke">
-            <span class="lprev-icon">💨</span>
-            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="linfo">
-            <h3>B-short Smoke #1</h3>
-            <p>Смок на B-short для безопасного прохода</p>
-            <div class="tags"><span class="tag smoke">Smoke</span><span class="tag loc">B-short</span></div>
-        </div>
-    </article>
-
-    <!-- B-short Smoke 2 -->
-    <article class="lcard" data-type="smoke" data-site="b-short"
-             data-title="B-short Smoke #2" data-desc="Альтернативный смок на B-short"
-             data-pos="B-apps" data-aim="Прицел на стену B-short"
-             data-inst="1. Встань на B-apps&#10;2. Прицел на стену B-short&#10;3. Jump throw"
-             data-video="">
-        <div class="lprev smoke">
-            <span class="lprev-icon">💨</span>
-            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="linfo">
-            <h3>B-short Smoke #2</h3>
-            <p>Альтернативный смок на B-short</p>
-            <div class="tags"><span class="tag smoke">Smoke</span><span class="tag loc">B-short</span></div>
-        </div>
-    </article>
-
-</section>
-
-<!-- MODAL -->
-<div class="modal-bg" id="modal">
-    <div class="modal">
-        <button class="modal-x" aria-label="Закрыть">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-        <div class="modal-vid"></div>
-        <div class="modal-body">
-            <h2 class="m-title"></h2>
-            <p class="sub m-desc"></p>
-            <div class="msec m-pos"><div class="msec-title">📍 Позиция</div><p></p></div>
-            <div class="msec m-aim"><div class="msec-title">🎯 Прицел</div><p></p></div>
-            <div class="msec">
-                <div class="msec-title">📝 Инструкция</div>
-                <div class="inst-box">
-                    <button class="copy-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Копировать</button>
-                    <p></p>
-                </div>
+        <!-- Interactive Hotspots -->
+        <div class="map-overlay" id="map-overlay">
+            <!-- A-site -->
+            <div class="map-hotspot" data-id="mirage-a-flash" data-type="flash" style="left: 75%; top: 25%;">
+                <div class="hotspot-label">A-site Flash</div>
             </div>
+            <div class="map-hotspot" data-id="mirage-a-molotov" data-type="molotov" style="left: 78%; top: 28%;">
+                <div class="hotspot-label">A-site Molotov</div>
+            </div>
+
+            <!-- CT Spawn -->
+            <div class="map-hotspot" data-id="mirage-ct-smoke" data-type="smoke" style="left: 35%; top: 75%;">
+                <div class="hotspot-label">CT Smoke</div>
+            </div>
+            <div class="map-hotspot" data-id="mirage-ct-flash" data-type="flash" style="left: 38%; top: 72%;">
+                <div class="hotspot-label">CT Flash</div>
+            </div>
+            <div class="map-hotspot" data-id="mirage-ct-molotov" data-type="molotov" style="left: 32%; top: 78%;">
+                <div class="hotspot-label">CT Molotov</div>
+            </div>
+
+            <!-- Mid -->
+            <div class="map-hotspot" data-id="mirage-mid-smoke" data-type="smoke" style="left: 50%; top: 50%;">
+                <div class="hotspot-label">Mid Smoke</div>
+            </div>
+            <div class="map-hotspot" data-id="mirage-mid-flash" data-type="flash" style="left: 52%; top: 48%;">
+                <div class="hotspot-label">Mid Flash</div>
+            </div>
+            <div class="map-hotspot" data-id="mirage-mid-molotov" data-type="molotov" style="left: 48%; top: 52%;">
+                <div class="hotspot-label">Mid Molotov</div>
+            </div>
+
+            <!-- B-site -->
+            <div class="map-hotspot" data-id="mirage-b-smoke" data-type="smoke" style="left: 25%; top: 35%;">
+                <div class="hotspot-label">B-site Smoke</div>
+            </div>
+            <div class="map-hotspot" data-id="mirage-b-flash" data-type="flash" style="left: 28%; top: 32%;">
+                <div class="hotspot-label">B-site Flash</div>
+            </div>
+            <div class="map-hotspot" data-id="mirage-b-molotov" data-type="molotov" style="left: 22%; top: 38%;">
+                <div class="hotspot-label">B-site Molotov</div>
+            </div>
+
+            <!-- Jungle -->
+            <div class="map-hotspot" data-id="mirage-jungle-smoke" data-type="smoke" style="left: 65%; top: 40%;">
+                <div class="hotspot-label">Jungle Smoke</div>
+            </div>
+
+            <!-- Connector -->
+            <div class="map-hotspot" data-id="mirage-connector-smoke" data-type="smoke" style="left: 55%; top: 35%;">
+                <div class="hotspot-label">Connector Smoke</div>
+            </div>
+
+            <!-- B-short -->
+            <div class="map-hotspot" data-id="mirage-b-short-1" data-type="smoke" style="left: 35%; top: 45%;">
+                <div class="hotspot-label">B-short Smoke #1</div>
+            </div>
+            <div class="map-hotspot" data-id="mirage-b-short-2" data-type="smoke" style="left: 38%; top: 42%;">
+                <div class="hotspot-label">B-short Smoke #2</div>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="map-legend">
+            <div class="legend-item">
+                <div class="legend-dot smoke"></div>
+                <span>Smoke (💨)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot flash"></div>
+                <span>Flash (⚡)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot molotov"></div>
+                <span>Molotov (🔥)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot he"></div>
+                <span>HE (💥)</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- History Section -->
+<section class="history-section" id="history-section">
+    <div class="history-title">
+        <h3>🕐 Недавно просмотренные</h3>
+        <button class="history-clear">Очистить</button>
+    </div>
+    <div class="history-grid"></div>
+</section>
+
+<!-- Lineup Panel -->
+<div class="map-overlay-active" id="overlay-active"></div>
+<div class="lineup-panel" id="lineup-panel">
+    <div class="lineup-panel-header">
+        <div>
+            <h2 class="lineup-panel-title"></h2>
+            <p class="lineup-panel-subtitle"></p>
+        </div>
+        <button class="lineup-panel-close" id="panel-close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <div class="lineup-panel-content">
+        <div class="lineup-panel-section">
+            <div class="lineup-panel-section-title">🎥 Видео</div>
+            <div class="lineup-panel-video" id="panel-video"></div>
+        </div>
+        <div class="lineup-panel-section">
+            <div class="lineup-panel-section-title">📍 Позиция</div>
+            <p id="panel-pos"></p>
+        </div>
+        <div class="lineup-panel-section">
+            <div class="lineup-panel-section-title">🎯 Прицел</div>
+            <p id="panel-aim"></p>
+        </div>
+        <div class="lineup-panel-section">
+            <div class="lineup-panel-section-title">📝 Инструкция</div>
+            <div class="inst-box">
+                <button class="copy-btn" id="copy-inst">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    Копировать
+                </button>
+                <p id="panel-inst"></p>
+            </div>
+        </div>
+        <div class="lineup-panel-actions">
+            <button class="btn btn-primary" id="fav-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+                В избранное
+            </button>
+            <button class="btn btn-secondary" id="panel-close-2">Закрыть</button>
         </div>
     </div>
 </div>
@@ -358,5 +202,261 @@
 </footer>
 
 <script src="script.js"></script>
+<script>
+    // Lineup data for Mirage
+    const lineupData = {
+        'mirage-a-flash': {
+            title: 'A-site Flash',
+            desc: 'Поп-флешка для входа на A-site с ramp',
+            pos: 'Позиция у окна на A-ramp',
+            aim: 'Прицел в потолок над бустом',
+            inst: '1. Встань у окна A-ramp\n2. Прицел в потолок над бустом\n3. Run throw',
+            video: 'videos/mirage-a-flash.mp4',
+            type: 'flash'
+        },
+        'mirage-a-molotov': {
+            title: 'A-site Molotov',
+            desc: 'Молотов на буст с T-spawn',
+            pos: 'У синей коробки на T-spawn',
+            aim: 'Прицел на край крыши буста',
+            inst: '1. Встань у синей коробки\n2. Прицел на край крыши буста\n3. Run throw',
+            video: 'videos/mirage-a-molotov.mp4',
+            type: 'molotov'
+        },
+        'mirage-ct-smoke': {
+            title: 'CT Smoke',
+            desc: 'Смок, закрывающий CT и часть mid',
+            pos: 'T-spawn у ящиков',
+            aim: 'Прицел на угол здания CT',
+            inst: '1. Встань на T-spawn у ящиков\n2. Прицел на угол здания CT\n3. Jump throw',
+            video: 'videos/mirage-ct-smoke.mp4',
+            type: 'smoke'
+        },
+        'mirage-ct-flash': {
+            title: 'CT Flash',
+            desc: 'Флешка через CT для выхода на A',
+            pos: 'Позиция на A-ramp',
+            aim: 'Прицел в потолок CT',
+            inst: '1. Встань на A-ramp\n2. Прицел в потолок CT\n3. Jump throw',
+            video: 'videos/mirage-ct-flash.mp4',
+            type: 'flash'
+        },
+        'mirage-ct-molotov': {
+            title: 'CT Molotov',
+            desc: 'Молотов на стандартную позицию CT',
+            pos: 'T-spawn',
+            aim: 'Прицел на ящики CT',
+            inst: '1. Встань на T-spawn\n2. Прицел на ящики CT\n3. Jump throw',
+            video: 'videos/mirage-ct-molotov.mp4',
+            type: 'molotov'
+        },
+        'mirage-mid-smoke': {
+            title: 'Mid Window Smoke',
+            desc: 'Смок на окно mid для безопасного прохода',
+            pos: 'T-spawn у стены',
+            aim: 'Прицел на раму окна',
+            inst: '1. Встань на T-spawn у стены\n2. Прицел на раму окна\n3. Jump throw',
+            video: 'videos/mirage-mid-smoke.mp4',
+            type: 'smoke'
+        },
+        'mirage-mid-flash': {
+            title: 'Mid Flash',
+            desc: 'Флешка через mid на A-site',
+            pos: 'T-spawn',
+            aim: 'Прицел в потолок mid',
+            inst: '1. Встань на T-spawn\n2. Прицел в потолок mid\n3. Jump throw',
+            video: 'videos/mirage-mid-flash.mp4',
+            type: 'flash'
+        },
+        'mirage-mid-molotov': {
+            title: 'Mid Molotov',
+            desc: 'Молотов на позицию снайпера в mid',
+            pos: 'T-spawn',
+            aim: 'Прицел на ящик в mid',
+            inst: '1. Встань на T-spawn\n2. Прицел на ящик в mid\n3. Jump throw',
+            video: 'videos/mirage-mid-molotov.mp4',
+            type: 'molotov'
+        },
+        'mirage-b-smoke': {
+            title: 'B-site Smoke',
+            desc: 'Смок на B-site с apps',
+            pos: 'B-apps у стены',
+            aim: 'Прицел на край крыши B-site',
+            inst: '1. Встань на B-apps у стены\n2. Прицел на край крыши B-site\n3. Jump throw',
+            video: 'videos/mirage-b-smoke.mp4',
+            type: 'smoke'
+        },
+        'mirage-b-flash': {
+            title: 'B-site Flash',
+            desc: 'Флешка для входа на B через apps',
+            pos: 'B-apps',
+            aim: 'Прицел в потолок B-site',
+            inst: '1. Встань на B-apps\n2. Прицел в потолок B-site\n3. Run throw',
+            video: 'videos/mirage-b-flash.mp4',
+            type: 'flash'
+        },
+        'mirage-b-molotov': {
+            title: 'B-site Molotov',
+            desc: 'Молотов на стандартную позицию B',
+            pos: 'B-apps',
+            aim: 'Прицел на ящик B-site',
+            inst: '1. Встань на B-apps\n2. Прицел на ящик B-site\n3. Jump throw',
+            video: 'videos/mirage-b-molotov.mp4',
+            type: 'molotov'
+        },
+        'mirage-jungle-smoke': {
+            title: 'Jungle Smoke',
+            desc: 'Смок на Jungle для контроля A',
+            pos: 'T-spawn',
+            aim: 'Прицел на край крыши Jungle',
+            inst: '1. Встань на T-spawn\n2. Прицел на край крыши Jungle\n3. Jump throw',
+            video: 'videos/mirage-jungle-smoke.mp4',
+            type: 'smoke'
+        },
+        'mirage-connector-smoke': {
+            title: 'Connector Smoke',
+            desc: 'Смок на Connector, разделяет mid и A',
+            pos: 'T-spawn',
+            aim: 'Прицел на стену Connector',
+            inst: '1. Встань на T-spawn\n2. Прицел на стену Connector\n3. Jump throw',
+            video: 'videos/mirage-connector-smoke.mp4',
+            type: 'smoke'
+        },
+        'mirage-b-short-1': {
+            title: 'B-short Smoke #1',
+            desc: 'Смок на B-short для безопасного прохода',
+            pos: 'T-spawn',
+            aim: 'Прицел на угол B-short',
+            inst: '1. Встань на T-spawn\n2. Прицел на угол B-short\n3. Jump throw',
+            video: 'videos/mirage-b-short-1.mp4',
+            type: 'smoke'
+        },
+        'mirage-b-short-2': {
+            title: 'B-short Smoke #2',
+            desc: 'Альтернативный смок на B-short',
+            pos: 'B-apps',
+            aim: 'Прицел на стену B-short',
+            inst: '1. Встань на B-apps\n2. Прицел на стену B-short\n3. Jump throw',
+            video: 'videos/mirage-b-short-2.mp4',
+            type: 'smoke'
+        }
+    };
+
+    // Initialize interactive map
+    document.addEventListener('DOMContentLoaded', () => {
+        const hotspots = document.querySelectorAll('.map-hotspot');
+        const panel = document.getElementById('lineup-panel');
+        const overlay = document.getElementById('overlay-active');
+        const closeBtns = [document.getElementById('panel-close'), document.getElementById('panel-close-2')];
+        let currentLineupId = null;
+
+        hotspots.forEach(hotspot => {
+            hotspot.addEventListener('click', () => {
+                const id = hotspot.dataset.id;
+                const data = lineupData[id];
+
+                if (!data) return;
+
+                currentLineupId = id;
+
+                // Update panel
+                document.querySelector('.lineup-panel-title').textContent = data.title;
+                document.querySelector('.lineup-panel-subtitle').textContent = data.desc;
+                document.getElementById('panel-pos').textContent = data.pos;
+                document.getElementById('panel-aim').textContent = data.aim;
+                document.getElementById('panel-inst').textContent = data.inst;
+
+                // Video
+                const videoContainer = document.getElementById('panel-video');
+                if (data.video) {
+                    videoContainer.innerHTML = `
+                    <video controls autoplay loop>
+                        <source src="${data.video}" type="video/mp4">
+                        Ваш браузер не поддерживает видео.
+                    </video>
+                `;
+                } else {
+                    videoContainer.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3)">Видео скоро будет добавлено</div>';
+                }
+
+                // Update favorite button
+                updateFavButton();
+
+                // Open panel
+                panel.classList.add('open');
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+
+                // Update active hotspot
+                hotspots.forEach(h => h.classList.remove('active'));
+                hotspot.classList.add('active');
+
+                // Add to history
+                if (typeof Storage !== 'undefined') {
+                    const history = JSON.parse(localStorage.getItem('history') || '[]');
+                    history.unshift({ id, title: data.title, type: data.type, timestamp: Date.now() });
+                    localStorage.setItem('history', JSON.stringify(history.slice(0, 20)));
+                    if (typeof initHistory === 'function') initHistory();
+                }
+            });
+        });
+
+        function closePanel() {
+            panel.classList.remove('open');
+            overlay.classList.remove('show');
+            document.body.style.overflow = '';
+            hotspots.forEach(h => h.classList.remove('active'));
+            currentLineupId = null;
+        }
+
+        closeBtns.forEach(btn => btn?.addEventListener('click', closePanel));
+        overlay.addEventListener('click', closePanel);
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+
+        // Copy instruction
+        document.getElementById('copy-inst')?.addEventListener('click', async function() {
+            const text = document.getElementById('panel-inst').textContent;
+            try {
+                await navigator.clipboard.writeText(text);
+                this.innerHTML = '✓ Скопировано';
+                setTimeout(() => {
+                    this.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Копировать`;
+                }, 2000);
+            } catch (e) { console.error(e); }
+        });
+
+        // Favorite button
+        document.getElementById('fav-btn')?.addEventListener('click', () => {
+            if (!currentLineupId) return;
+            const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const index = favs.indexOf(currentLineupId);
+            if (index > -1) {
+                favs.splice(index, 1);
+            } else {
+                favs.push(currentLineupId);
+            }
+            localStorage.setItem('favorites', JSON.stringify(favs));
+            updateFavButton();
+            if (typeof updateFavCounter === 'function') updateFavCounter();
+        });
+
+        function updateFavButton() {
+            const btn = document.getElementById('fav-btn');
+            if (!btn || !currentLineupId) return;
+            const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const isFav = favs.includes(currentLineupId);
+            btn.innerHTML = isFav
+                ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" stroke="#fff" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> В избранном`
+                : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> В избранное`;
+            btn.classList.toggle('btn-primary', !isFav);
+            btn.classList.toggle('btn-secondary', isFav);
+        }
+
+        // Init history
+        if (typeof initHistory === 'function') initHistory();
+        if (typeof updateFavCounter === 'function') updateFavCounter();
+    });
+</script>
+
 </body>
 </html>
