@@ -29,11 +29,27 @@
 
         .admin-map-wrapper{position:relative;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:crosshair}
         .admin-map-image{width:100%;height:auto;display:block;pointer-events:none}
+
         .admin-hotspot{position:absolute;width:28px;height:28px;transform:translate(-50%,-50%);cursor:pointer;transition:all var(--transition);z-index:10}
         .admin-hotspot::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--accent);opacity:.4;animation:pulse 2s ease-in-out infinite}
         .admin-hotspot::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent-glow)}
         .admin-hotspot:hover{transform:translate(-50%,-50%) scale(1.3)}
         .admin-hotspot-label{position:absolute;top:32px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:var(--text-1);padding:.4rem .8rem;border-radius:var(--radius-sm);font-size:.75rem;font-weight:600;white-space:nowrap;pointer-events:none}
+
+        /* Preview точка - появляется сразу после клика */
+        .admin-hotspot-preview{position:absolute;width:32px;height:32px;transform:translate(-50%,-50%);z-index:15;pointer-events:none;animation:previewAppear .3s ease}
+        .admin-hotspot-preview::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--smoke);opacity:.5;animation:previewPulse 1.5s ease-in-out infinite}
+        .admin-hotspot-preview::after{content:'';position:absolute;inset:6px;border-radius:50%;background:var(--smoke);box-shadow:0 0 15px rgba(88,166,255,.6)}
+        .admin-hotspot-preview-label{position:absolute;top:36px;left:50%;transform:translateX(-50%);background:rgba(88,166,255,.9);color:#fff;padding:.3rem .6rem;border-radius:var(--radius-sm);font-size:.7rem;font-weight:600;white-space:nowrap}
+
+        @keyframes previewAppear{
+            from{opacity:0;transform:translate(-50%,-50%) scale(0.5)}
+            to{opacity:1;transform:translate(-50%,-50%) scale(1)}
+        }
+        @keyframes previewPulse{
+            0%,100%{transform:scale(1);opacity:.5}
+            50%{transform:scale(1.5);opacity:.2}
+        }
 
         .admin-form{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;height:fit-content;position:sticky;top:80px}
         .form-title{font-size:1.3rem;font-weight:700;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem}
@@ -67,10 +83,20 @@
         .status-bar{padding:.75rem 1rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem;font-size:.9rem}
         .status-dot{width:10px;height:10px;border-radius:50%;background:var(--he);animation:pulse 2s infinite}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+        .hint-box{padding:1rem;background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.3);border-radius:var(--radius-sm);margin-bottom:1.5rem;font-size:.88rem;color:var(--text-2);display:flex;align-items:center;gap:.75rem}
+        .hint-box-icon{font-size:1.5rem}
     </style>
 </head>
 <body>
-
+<script>
+    (function() {
+        const auth = localStorage.getItem('admin_auth');
+        if (!auth) {
+            window.location.href = 'admin-login.html';
+        }
+    })();
+</script>
 <header class="header">
     <div class="header-inner">
         <a href="index.html" class="logo"><div class="logo-icon">💣</div><div>CS2<span>NADES</span></div></a>
@@ -105,6 +131,11 @@
 
     <div class="admin-layout">
         <div>
+            <div class="hint-box">
+                <div class="hint-box-icon">💡</div>
+                <div>Кликните на карту, чтобы добавить точку. Синяя точка — это место, куда вы кликнули. Заполните форму справа и нажмите "Сохранить".</div>
+            </div>
+
             <div class="admin-map-wrapper" id="map-wrapper">
                 <img src="images/mirage-radar.webp" alt="Map" class="admin-map-image" id="map-image" onerror="this.style.background='var(--bg-tertiary)';this.style.minHeight='500px'">
             </div>
@@ -202,6 +233,7 @@
     let hotspots = { mirage: [], dust2: [] };
     let editingId = null;
     let tempCoords = { x: 0, y: 0 };
+    let previewElement = null;
 
     // Загружаем данные из Firebase
     db.ref('lineups').on('value', snapshot => {
@@ -218,7 +250,29 @@
         currentMap = document.getElementById('map-select').value;
         const img = document.getElementById('map-image');
         img.src = `images/${currentMap}-radar.webp`;
+        removePreview();
         renderHotspots();
+    }
+
+    // Удаление preview точки
+    function removePreview() {
+        if (previewElement) {
+            previewElement.remove();
+            previewElement = null;
+        }
+    }
+
+    // Создание preview точки
+    function createPreview(x, y) {
+        removePreview();
+
+        previewElement = document.createElement('div');
+        previewElement.className = 'admin-hotspot-preview';
+        previewElement.style.left = x + '%';
+        previewElement.style.top = y + '%';
+        previewElement.innerHTML = '<div class="admin-hotspot-preview-label">Новая точка</div>';
+
+        document.getElementById('map-wrapper').appendChild(previewElement);
     }
 
     // Добавление точки кликом на карту
@@ -233,6 +287,10 @@
         const y = ((event.clientY - rect.top) / rect.height) * 100;
 
         tempCoords = { x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
+
+        // Создаём preview точку
+        createPreview(tempCoords.x, tempCoords.y);
+
         document.getElementById('coord-x').textContent = tempCoords.x + '%';
         document.getElementById('coord-y').textContent = tempCoords.y + '%';
 
@@ -243,6 +301,9 @@
         // Восстанавливаем координаты после clearForm
         document.getElementById('coord-x').textContent = tempCoords.x + '%';
         document.getElementById('coord-y').textContent = tempCoords.y + '%';
+
+        // Скроллим к форме
+        document.getElementById('admin-form').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
 
     // Сохранение точки в Firebase
@@ -278,6 +339,7 @@
         db.ref(`lineups/${currentMap}`).set(hotspots[currentMap])
             .then(() => {
                 console.log('✅ Сохранено в Firebase');
+                removePreview();
                 clearForm();
                 editingId = null;
                 document.getElementById('form-title-text').textContent = 'Добавить раскидку';
@@ -292,6 +354,9 @@
 
         editingId = id;
         tempCoords = { x: hotspot.x, y: hotspot.y };
+
+        // Показываем preview на позиции редактируемой точки
+        createPreview(hotspot.x, hotspot.y);
 
         document.getElementById('input-title').value = hotspot.title;
         document.getElementById('input-desc').value = hotspot.desc;
@@ -313,7 +378,10 @@
         hotspots[currentMap] = hotspots[currentMap].filter(h => h.id !== id);
 
         db.ref(`lineups/${currentMap}`).set(hotspots[currentMap])
-            .then(() => console.log('✅ Удалено'))
+            .then(() => {
+                console.log('✅ Удалено');
+                removePreview();
+            })
             .catch(err => alert('❌ Ошибка: ' + err.message));
     }
 
@@ -323,7 +391,10 @@
         hotspots[currentMap] = [];
 
         db.ref(`lineups/${currentMap}`).set([])
-            .then(() => console.log('✅ Очищено'))
+            .then(() => {
+                console.log('✅ Очищено');
+                removePreview();
+            })
             .catch(err => alert('❌ Ошибка: ' + err.message));
     }
 
@@ -379,6 +450,7 @@
     function cancelEdit() {
         editingId = null;
         document.getElementById('form-title-text').textContent = 'Добавить раскидку';
+        removePreview();
         clearForm();
     }
 </script>
