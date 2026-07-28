@@ -78,7 +78,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script>
-    const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyAXNxDCdizaAB-3IJU65fLahDS_9ww6UWw",
   authDomain: "cs2nades-1a910.firebaseapp.com",
   databaseURL: "https://cs2nades-1a910-default-rtdb.europe-west1.firebasedatabase.app",
@@ -89,34 +89,34 @@
   measurementId: "G-M14MZNH78P"
 };
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-    const maps = ['mirage', 'dust2', 'inferno', 'ancient', 'anubis', 'nuke', 'overpass', 'vertigo'];
-    let totalLineups = 0;
+const maps = ['mirage', 'dust2', 'inferno', 'ancient', 'anubis', 'nuke', 'overpass', 'vertigo'];
+let totalLineups = 0;
 
-    maps.forEach(map => {
-        db.ref(`lineups/${map}`).on('value', snapshot => {
-            const data = snapshot.val();
-            const targets = data ? Object.values(data) : [];
-            let count = 0;
-            targets.forEach(t => { count += t.sources ? t.sources.length : 0; });
-
-            const el = document.getElementById(`count-${map}`);
-            if (el) el.textContent = count > 0 ? `${count} раскидок` : 'Пока пусто';
-
-            // Пересчёт общего количества
-            totalLineups = 0;
-            maps.forEach(m => {
-                const badge = document.getElementById(`count-${m}`);
-                if (badge) {
-                    const match = badge.textContent.match(/(\d+)/);
-                    if (match) totalLineups += parseInt(match[1]);
-                }
-            });
-            document.getElementById('total-lineups').textContent = totalLineups;
+maps.forEach(map => {
+    db.ref(`lineups/${map}`).on('value', snapshot => {
+        const data = snapshot.val();
+        const targets = data ? Object.values(data) : [];
+        let count = 0;
+        targets.forEach(t => { count += t.sources ? t.sources.length : 0; });
+        
+        const el = document.getElementById(`count-${map}`);
+        if (el) el.textContent = count > 0 ? `${count} раскидок` : 'Пока пусто';
+        
+        // Пересчёт общего количества
+        totalLineups = 0;
+        maps.forEach(m => {
+            const badge = document.getElementById(`count-${m}`);
+            if (badge) {
+                const match = badge.textContent.match(/(\d+)/);
+                if (match) totalLineups += parseInt(match[1]);
+            }
         });
+        document.getElementById('total-lineups').textContent = totalLineups;
     });
+});
 </script>
 </body>
 </html>

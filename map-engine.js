@@ -182,6 +182,43 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.appendChild(line);
     }
 
+    // Функция для создания видео embed
+    function createVideoEmbed(videoUrl) {
+        if (!videoUrl) {
+            return `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3)">Видео не добавлено</div>`;
+        }
+        
+        // YouTube
+        if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+            let videoId = '';
+            if (videoUrl.includes('v=')) {
+                videoId = videoUrl.split('v=')[1].split('&')[0];
+            } else if (videoUrl.includes('youtu.be/')) {
+                videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
+            }
+            if (videoId) {
+                return `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            }
+        }
+        
+        // VK
+        if (videoUrl.includes('vk.com/video')) {
+            const match = videoUrl.match(/video(-?\d+)_(\d+)/);
+            if (match) {
+                const oid = match[1];
+                const id = match[2];
+                return `<iframe src="https://vk.com/video_ext.php?oid=${oid}&id=${id}&hd=2" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
+            }
+        }
+        
+        // Локальное видео
+        if (videoUrl.endsWith('.mp4') || videoUrl.endsWith('.webm')) {
+            return `<video controls autoplay loop playsinline><source src="${videoUrl}" type="video/mp4">Ваш браузер не поддерживает видео</video>`;
+        }
+        
+        return `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3)">Неподдерживаемый формат</div>`;
+    }
+
     function openSource(targetId, sourceId) {
         const target = window.targetsData[targetId];
         if (!target) return;
@@ -198,9 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('panel-inst').textContent = source.inst || 'Инструкция не указана';
         
         const vidBox = document.getElementById('panel-video');
-        vidBox.innerHTML = source.video 
-            ? `<video controls autoplay loop playsinline><source src="${source.video}" type="video/mp4"></video>`
-            : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3)">Видео скоро</div>`;
+        vidBox.innerHTML = createVideoEmbed(source.video);
         
         const favBtn = document.getElementById('fav-btn');
         const favId = `${targetId}-${sourceId}`;

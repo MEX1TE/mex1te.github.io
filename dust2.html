@@ -78,7 +78,7 @@
             <div class="zoom-level" id="zoom-level">100%</div>
             <div class="zoom-controls">
                 <button class="zoom-btn" onclick="zoomOut()">−</button>
-                <button class="zoom-btn" onclick="zoomReset()"></button>
+                <button class="zoom-btn" onclick="zoomReset()">⟲</button>
                 <button class="zoom-btn" onclick="zoomIn()">+</button>
             </div>
         </div>
@@ -86,14 +86,14 @@
     <div class="hint-text">💡 <strong>Жёлтая точка</strong> — куда прилетает граната. <strong>Синие точки</strong> — откуда кидать.</div>
     <div class="map-viewport" id="map-viewport">
         <div class="map-content" id="map-content">
-            <img src="images/dust2-radar.webp" alt="dust2 Radar" class="map-image" onerror="this.style.background='var(--bg-tertiary)'">
+            <img src="images/dust2-radar.webp" alt="Dust II Radar" class="map-image" onerror="this.style.background='var(--bg-tertiary)'">
             <div class="map-overlay" id="map-overlay"></div>
         </div>
     </div>
     <div class="map-legend">
         <div class="legend-item"><div class="legend-dot target"></div><span>Цель (куда)</span></div>
         <div class="legend-item"><div class="legend-dot source"></div><span>Источник (откуда)</span></div>
-        <div class="legend-item"><span style="color:var(--text-3);font-size:.8rem">🖱️ Колёсико — приближение | Drag — перемещение</span></div>
+        <div class="legend-item"><span style="color:var(--text-3);font-size:.8rem">️ Колёсико — приближение | Drag — перемещение</span></div>
     </div>
 </div>
 
@@ -111,9 +111,9 @@
     <div class="lineup-panel-content">
         <div class="lineup-panel-section"><div class="lineup-panel-section-title">🎥 Видео</div><div class="lineup-panel-video" id="panel-video"></div></div>
         <div class="lineup-panel-section"><div class="lineup-panel-section-title">📍 Позиция</div><p id="panel-pos"></p></div>
-        <div class="lineup-panel-section"><div class="lineup-panel-section-title">🎯 Прицел</div><p id="panel-aim"></p></div>
+        <div class="lineup-panel-section"><div class="lineup-panel-section-title"> Прицел</div><p id="panel-aim"></p></div>
         <div class="lineup-panel-section">
-            <div class="lineup-panel-section-title">📝 Инструкция</div>
+            <div class="lineup-panel-section-title"> Инструкция</div>
             <div class="inst-box">
                 <button class="copy-btn" id="copy-inst"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Копировать</button>
                 <p id="panel-inst"></p>
