@@ -2,15 +2,54 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Mirage — Интерактивная карта | CS2NADES</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirage - CS2 Гранатные Лайнапы</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f5a623'/><text x='50' y='68' font-size='55' text-anchor='middle'>💣</text></svg>">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .map-container-wrapper{max-width:900px;margin:0 auto 2rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:relative}
+        .map-toolbar{display:flex;justify-content:space-between;align-items:center;padding:.75rem 1rem;background:var(--bg-tertiary);border-bottom:1px solid var(--border)}
+        .map-title{font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:.5rem}
+        .zoom-controls{display:flex;gap:.5rem}
+        .zoom-btn{width:32px;height:32px;border-radius:var(--radius-sm);background:var(--bg-card);border:1px solid var(--border);color:var(--text-1);font-size:1.2rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition)}
+        .zoom-btn:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+        .zoom-level{padding:.4rem .75rem;background:var(--bg-card);border-radius:var(--radius-sm);font-size:.8rem;font-weight:600;color:var(--text-2)}
+        .map-viewport{width:100%;height:500px;overflow:hidden;position:relative;cursor:grab}
+        .map-viewport:active{cursor:grabbing}
+        .map-content{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transform-origin:center center;transition:transform .1s ease-out;will-change:transform}
+        .map-image{width:1024px;height:1024px;display:block;background:var(--bg-tertiary)}
+        .map-overlay{position:absolute;top:0;left:0;width:1024px;height:1024px;cursor:pointer}
+        .map-hotspot{position:absolute;width:28px;height:28px;transform:translate(-50%,-50%);cursor:pointer;transition:all .2s ease;z-index:10}
+        .map-hotspot::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--accent);opacity:.4;animation:pulse 2s ease-in-out infinite}
+        .map-hotspot::after{content:'';position:absolute;inset:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent-glow)}
+        .map-hotspot:hover{transform:translate(-50%,-50%) scale(1.3);z-index:20}
+        .map-hotspot.active{transform:translate(-50%,-50%) scale(1.4);z-index:30}
+        .map-hotspot.active::before{background:var(--molotov);opacity:.6}
+        .map-hotspot.active::after{background:var(--molotov);box-shadow:0 0 20px rgba(248,81,73,.6)}
+        .map-hotspot-label{position:absolute;top:32px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:var(--text-1);padding:.35rem .7rem;border-radius:var(--radius-sm);font-size:.75rem;font-weight:600;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s ease}
+        .map-hotspot:hover .map-hotspot-label{opacity:1}
+        .map-hotspot-source{position:absolute;width:24px;height:24px;transform:translate(-50%,-50%);cursor:pointer;transition:all .2s ease;z-index:15;animation:sourceAppear .3s ease}
+        .map-hotspot-source::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--smoke);opacity:.5;animation:pulse 2s ease-in-out infinite}
+        .map-hotspot-source::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--smoke);box-shadow:0 0 10px rgba(88,166,255,.5)}
+        .map-hotspot-source:hover{transform:translate(-50%,-50%) scale(1.3);z-index:25}
+        .map-hotspot-source .map-hotspot-label{background:rgba(88,166,255,.9);color:#fff}
+        .connection-line{position:absolute;height:2px;background:linear-gradient(90deg,var(--smoke),var(--accent));transform-origin:0 50%;pointer-events:none;z-index:5;opacity:.5}
+        @keyframes sourceAppear{from{opacity:0;transform:translate(-50%,-50%) scale(.5)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+        @keyframes pulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.6);opacity:.15}}
+        .map-legend{display:flex;gap:1.5rem;padding:.75rem 1rem;background:var(--bg-card);border-top:1px solid var(--border);flex-wrap:wrap}
+        .legend-item{display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--text-2)}
+        .legend-dot{width:12px;height:12px;border-radius:50%}
+        .legend-dot.target{background:var(--accent)}
+        .legend-dot.source{background:var(--smoke)}
+        .hint-text{padding:.75rem 1rem;background:rgba(245,166,35,.08);border-bottom:1px solid rgba(245,166,35,.2);font-size:.85rem;color:var(--text-2)}
+        .hint-text strong{color:var(--accent)}
+        @media(max-width:768px){.map-viewport{height:400px}.map-content,.map-overlay{width:800px;height:800px}.map-image{width:800px;height:800px}}
+    </style>
 </head>
 <body>
+
 <header class="header">
     <div class="header-inner">
         <a href="index.html" class="logo"><div class="logo-icon">💣</div><div>CS2<span>NADES</span></div></a>
@@ -18,31 +57,45 @@
             <li><a href="index.html">Главная</a></li>
             <li><a href="index.html#maps" class="active">Карты</a></li>
             <li class="fav-counter"><a href="favorites.html">Избранное</a><span class="fav-badge"></span></li>
-            <li><a href="admin.html">Админ</a></li>
         </ul>
     </div>
 </header>
 
 <section class="page-head">
-    <div class="crumb"><a href="index.html">Главная</a><span class="sep">/</span><a href="index.html#maps">Карты</a><span class="sep">/</span><span style="color:var(--text-1)">Mirage</span></div>
+    <div class="crumb">
+        <a href="index.html">Главная</a><span class="sep">/</span>
+        <a href="index.html#maps">Карты</a><span class="sep">/</span>
+        <span style="color:var(--text-1)">Mirage</span>
+    </div>
     <h1>🕌 Mirage</h1>
-    <p>Кликай на точки на карте, чтобы увидеть лайнап</p>
+    <p>Кликай на точки, чтобы увидеть лайнапы</p>
 </section>
 
-<section class="map-container">
-    <div class="map-wrapper">
-        <img src="images/mirage-radar.webp" alt="Mirage Radar" class="map-image" onerror="this.style.background='var(--bg-tertiary)';this.style.minHeight='500px'">
-        <div class="map-overlay" id="map-overlay">
-            <!-- Точки загружаются автоматически из Firebase -->
-        </div>
-        <div class="map-legend">
-            <div class="legend-item"><div class="legend-dot smoke"></div><span>Smoke</span></div>
-            <div class="legend-item"><div class="legend-dot flash"></div><span>Flash</span></div>
-            <div class="legend-item"><div class="legend-dot molotov"></div><span>Molotov</span></div>
-            <div class="legend-item"><div class="legend-dot he"></div><span>HE</span></div>
+<div class="map-container-wrapper">
+    <div class="map-toolbar">
+        <div class="map-title">🗺️ Интерактивная карта</div>
+        <div style="display:flex;align-items:center;gap:1rem">
+            <div class="zoom-level" id="zoom-level">100%</div>
+            <div class="zoom-controls">
+                <button class="zoom-btn" onclick="zoomOut()">−</button>
+                <button class="zoom-btn" onclick="zoomReset()"></button>
+                <button class="zoom-btn" onclick="zoomIn()">+</button>
+            </div>
         </div>
     </div>
-</section>
+    <div class="hint-text">💡 <strong>Жёлтая точка</strong> — куда прилетает граната. <strong>Синие точки</strong> — откуда кидать.</div>
+    <div class="map-viewport" id="map-viewport">
+        <div class="map-content" id="map-content">
+            <img src="images/mirage-radar.webp" alt="Mirage Radar" class="map-image" onerror="this.style.background='var(--bg-tertiary)'">
+            <div class="map-overlay" id="map-overlay"></div>
+        </div>
+    </div>
+    <div class="map-legend">
+        <div class="legend-item"><div class="legend-dot target"></div><span>Цель (куда)</span></div>
+        <div class="legend-item"><div class="legend-dot source"></div><span>Источник (откуда)</span></div>
+        <div class="legend-item"><span style="color:var(--text-3);font-size:.8rem">🖱️ Колёсико — приближение | Drag — перемещение</span></div>
+    </div>
+</div>
 
 <section class="history-section" id="history-section">
     <div class="history-title"><h3>🕐 Недавно просмотренные</h3><button class="history-clear">Очистить</button></div>
@@ -79,33 +132,9 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-<script src="script.js"></script>
 <script>
-    window.lineupData = {};
-
-    db.ref('lineups/mirage').on('value', snapshot => {
-        const points = snapshot.val() || [];
-        const overlay = document.getElementById('map-overlay');
-
-        overlay.innerHTML = '';
-        window.lineupData = {};
-
-        points.forEach(p => {
-            const div = document.createElement('div');
-            div.className = 'map-hotspot';
-            div.dataset.id = p.id;
-            div.style.left = p.x + '%';
-            div.style.top = p.y + '%';
-            div.innerHTML = `
-            <div class="hotspot-label">${p.title}</div>
-            ${p.lineups && p.lineups.length > 1 ? `<div style="position:absolute;top:-8px;right:-8px;background:var(--molotov);color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700">${p.lineups.length}</div>` : ''}
-        `;
-            div.onclick = () => window.openPoint(p.id);
-            overlay.appendChild(div);
-
-            window.lineupData[p.id] = p;
-        });
-    });
+const MAP_NAME = 'mirage';
 </script>
+<script src="map-engine.js"></script>
 </body>
 </html>

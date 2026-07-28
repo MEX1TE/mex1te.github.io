@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>CS2NADES — Гранатные лайнапы CS2</title>
-    <meta name="description" content="База лайнапов гранат для CS2: смоки, флешки, молотовы.">
+    <meta name="description" content="База лайнапов гранат для CS2: смоки, флешки, молотовы для всех карт.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
@@ -19,7 +19,6 @@
             <li><a href="index.html" class="active">Главная</a></li>
             <li><a href="#maps">Карты</a></li>
             <li class="fav-counter"><a href="favorites.html">Избранное</a><span class="fav-badge"></span></li>
-            <li><a href="admin.html">Админ</a></li>
         </ul>
     </div>
 </header>
@@ -28,8 +27,8 @@
     <h1>Гранатные лайнапы для CS2</h1>
     <p>Идеальные раскидки смоков, флешек и молотовов. Учись у про-игроков, побеждай в ranked.</p>
     <div class="hero-stats">
-        <div><div class="stat-val" id="maps-count">2</div><div class="stat-lbl">Карты</div></div>
-        <div><div class="stat-val" id="lineups-count">0</div><div class="stat-lbl">Раскидок</div></div>
+        <div><div class="stat-val">7</div><div class="stat-lbl">Карт</div></div>
+        <div><div class="stat-val" id="total-lineups">0</div><div class="stat-lbl">Раскидок</div></div>
         <div><div class="stat-val">HD</div><div class="stat-lbl">Видео</div></div>
     </div>
 </section>
@@ -39,40 +38,84 @@
     <div class="maps-grid">
         <a href="mirage.html" class="map-card">
             <div class="map-thumb"><span class="map-emoji">🕌</span></div>
-            <div class="map-body"><h3>Mirage <span class="map-arrow">→</span></h3><p>Классическая карта с тактическими раскидками</p><span class="badge" id="mirage-count">0 раскидок</span></div>
+            <div class="map-body"><h3>Mirage <span class="map-arrow">→</span></h3><p>Классическая карта с тактическими раскидками</p><span class="badge" id="count-mirage">Загрузка...</span></div>
         </a>
         <a href="dust2.html" class="map-card">
             <div class="map-thumb"><span class="map-emoji">🏜️</span></div>
-            <div class="map-body"><h3>Dust II <span class="map-arrow">→</span></h3><p>Легендарная карта с длинными коридорами</p><span class="badge" id="dust2-count">0 раскидок</span></div>
+            <div class="map-body"><h3>Dust II <span class="map-arrow">→</span></h3><p>Легендарная карта с длинными коридорами</p><span class="badge" id="count-dust2">Загрузка...</span></div>
         </a>
-        <a href="#" class="map-card" style="pointer-events:none;opacity:.5">
+        <a href="inferno.html" class="map-card">
             <div class="map-thumb"><span class="map-emoji">🔥</span></div>
-            <div class="map-body"><h3>Inferno <span class="map-arrow">→</span></h3><p>Узкие улочки Италии</p><span class="badge soon">Скоро</span></div>
+            <div class="map-body"><h3>Inferno <span class="map-arrow">→</span></h3><p>Узкие улочки Италии — каждая граната на вес золота</p><span class="badge" id="count-inferno">Загрузка...</span></div>
+        </a>
+        <a href="ancient.html" class="map-card">
+            <div class="map-thumb"><span class="map-emoji">🏛️</span></div>
+            <div class="map-body"><h3>Ancient <span class="map-arrow">→</span></h3><p>Древние руины с уникальными позициями</p><span class="badge" id="count-ancient">Загрузка...</span></div>
+        </a>
+        <a href="anubis.html" class="map-card">
+            <div class="map-thumb"><span class="map-emoji">🐫</span></div>
+            <div class="map-body"><h3>Anubis <span class="map-arrow">→</span></h3><p>Египетская тематика с интересными раскидками</p><span class="badge" id="count-anubis">Загрузка...</span></div>
+        </a>
+        <a href="nuke.html" class="map-card">
+            <div class="map-thumb"><span class="map-emoji">☢️</span></div>
+            <div class="map-body"><h3>Nuke <span class="map-arrow">→</span></h3><p>Двухуровневая АЭС с вертикальными раскидками</p><span class="badge" id="count-nuke">Загрузка...</span></div>
+        </a>
+        <a href="overpass.html" class="map-card">
+            <div class="map-thumb"><span class="map-emoji">🌉</span></div>
+            <div class="map-body"><h3>Overpass <span class="map-arrow">→</span></h3><p>Парк с мостами и сложными смоками</p><span class="badge" id="count-overpass">Загрузка...</span></div>
+        </a>
+        <a href="vertigo.html" class="map-card">
+            <div class="map-thumb"><span class="map-emoji">🏗️</span></div>
+            <div class="map-body"><h3>Vertigo <span class="map-arrow">→</span></h3><p>Стройка на высоте с уникальными лайнапами</p><span class="badge" id="count-vertigo">Загрузка...</span></div>
         </a>
     </div>
 </section>
 
 <footer class="footer">
-    <div class="footer-inner">
-        <div class="footer-copy">© 2026 CS2NADES</div>
-        <ul class="footer-links"><li><a href="#">Discord</a></li><li><a href="#">Контакты</a></li></ul>
-    </div>
+    <div class="footer-inner"><div class="footer-copy">© 2026 CS2NADES</div><ul class="footer-links"><li><a href="#">Discord</a></li><li><a href="#">Контакты</a></li></ul></div>
 </footer>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-<script src="script.js"></script>
 <script>
-    // Загружаем количество раскидок из Firebase
-    db.ref('lineups').on('value', snapshot => {
-        const data = snapshot.val() || {};
-        const mirageCount = (data.mirage || []).length;
-        const dust2Count = (data.dust2 || []).length;
-        const total = mirageCount + dust2Count;
+    const firebaseConfig = {
+  apiKey: "AIzaSyAXNxDCdizaAB-3IJU65fLahDS_9ww6UWw",
+  authDomain: "cs2nades-1a910.firebaseapp.com",
+  databaseURL: "https://cs2nades-1a910-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "cs2nades-1a910",
+  storageBucket: "cs2nades-1a910.firebasestorage.app",
+  messagingSenderId: "497946011142",
+  appId: "1:497946011142:web:eea3fe5839ac4d23444587",
+  measurementId: "G-M14MZNH78P"
+};
 
-        document.getElementById('mirage-count').textContent = `${mirageCount} раскидок`;
-        document.getElementById('dust2-count').textContent = `${dust2Count} раскидок`;
-        document.getElementById('lineups-count').textContent = total;
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const maps = ['mirage', 'dust2', 'inferno', 'ancient', 'anubis', 'nuke', 'overpass', 'vertigo'];
+    let totalLineups = 0;
+
+    maps.forEach(map => {
+        db.ref(`lineups/${map}`).on('value', snapshot => {
+            const data = snapshot.val();
+            const targets = data ? Object.values(data) : [];
+            let count = 0;
+            targets.forEach(t => { count += t.sources ? t.sources.length : 0; });
+
+            const el = document.getElementById(`count-${map}`);
+            if (el) el.textContent = count > 0 ? `${count} раскидок` : 'Пока пусто';
+
+            // Пересчёт общего количества
+            totalLineups = 0;
+            maps.forEach(m => {
+                const badge = document.getElementById(`count-${m}`);
+                if (badge) {
+                    const match = badge.textContent.match(/(\d+)/);
+                    if (match) totalLineups += parseInt(match[1]);
+                }
+            });
+            document.getElementById('total-lineups').textContent = totalLineups;
+        });
     });
 </script>
 </body>

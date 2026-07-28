@@ -18,84 +18,105 @@
         .btn-save:hover{background:#2ea043;transform:translateY(-2px)}
         .btn-clear{background:var(--molotov);color:#fff}
         .btn-clear:hover{background:#da3633;transform:translateY(-2px)}
-        .btn-add{background:var(--smoke);color:#fff}
-        .btn-add:hover{background:#4a9eff;transform:translateY(-2px)}
 
-        .map-selector{margin-bottom:1.5rem}
+        .map-selector{margin-bottom:1rem}
         .map-selector label{display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2)}
         .map-selector select{width:100%;max-width:300px;padding:.7rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);font-family:inherit;font-size:.95rem;cursor:pointer}
-        .map-selector select:focus{outline:none;border-color:var(--accent)}
 
-        .admin-layout{display:grid;grid-template-columns:1fr 450px;gap:2rem}
+        .admin-layout{display:grid;grid-template-columns:1fr 400px;gap:2rem}
         @media(max-width:1024px){.admin-layout{grid-template-columns:1fr}}
 
         .admin-map-wrapper{position:relative;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:crosshair}
         .admin-map-image{width:100%;height:auto;display:block;pointer-events:none}
 
-        .admin-hotspot{position:absolute;width:28px;height:28px;transform:translate(-50%,-50%);cursor:pointer;transition:all var(--transition);z-index:10}
-        .admin-hotspot::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--accent);opacity:.4;animation:pulse 2s ease-in-out infinite}
-        .admin-hotspot::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent-glow)}
-        .admin-hotspot:hover{transform:translate(-50%,-50%) scale(1.3)}
-        .admin-hotspot-label{position:absolute;top:32px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:var(--text-1);padding:.4rem .8rem;border-radius:var(--radius-sm);font-size:.75rem;font-weight:600;white-space:nowrap;pointer-events:none}
-        .admin-hotspot-count{position:absolute;top:-8px;right:-8px;background:var(--molotov);color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
+        /* Mode indicator */
+        .mode-indicator{position:absolute;top:1rem;left:1rem;z-index:100;padding:.6rem 1rem;border-radius:var(--radius-sm);font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:.5rem;backdrop-filter:blur(8px)}
+        .mode-indicator.target-mode{background:rgba(245,166,35,.9);color:#000}
+        .mode-indicator.source-mode{background:rgba(88,166,255,.9);color:#fff}
+        .mode-indicator-icon{width:12px;height:12px;border-radius:50%}
+        .mode-indicator.target-mode .mode-indicator-icon{background:#000}
+        .mode-indicator.source-mode .mode-indicator-icon{background:#fff}
 
-        .admin-hotspot-preview{position:absolute;width:32px;height:32px;transform:translate(-50%,-50%);z-index:15;pointer-events:none;animation:previewAppear .3s ease}
-        .admin-hotspot-preview::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--smoke);opacity:.5;animation:previewPulse 1.5s ease-in-out infinite}
-        .admin-hotspot-preview::after{content:'';position:absolute;inset:6px;border-radius:50%;background:var(--smoke);box-shadow:0 0 15px rgba(88,166,255,.6)}
-        .admin-hotspot-preview-label{position:absolute;top:36px;left:50%;transform:translateX(-50%);background:rgba(88,166,255,.9);color:#fff;padding:.3rem .6rem;border-radius:var(--radius-sm);font-size:.7rem;font-weight:600;white-space:nowrap}
+        /* Target point */
+        .admin-hotspot-target{position:absolute;width:32px;height:32px;transform:translate(-50%,-50%);cursor:pointer;transition:all var(--transition);z-index:10}
+        .admin-hotspot-target::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--accent);opacity:.4;animation:pulse 2s ease-in-out infinite}
+        .admin-hotspot-target::after{content:'';position:absolute;inset:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent-glow)}
+        .admin-hotspot-target:hover{transform:translate(-50%,-50%) scale(1.2)}
+        .admin-hotspot-target.selected{transform:translate(-50%,-50%) scale(1.3);z-index:20}
+        .admin-hotspot-target.selected::before{background:var(--he);opacity:.6}
+        .admin-hotspot-target.selected::after{background:var(--he)}
+        .admin-hotspot-target-label{position:absolute;top:36px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:var(--text-1);padding:.4rem .8rem;border-radius:var(--radius-sm);font-size:.75rem;font-weight:600;white-space:nowrap;pointer-events:none}
+        .admin-hotspot-count{position:absolute;top:-8px;right:-8px;background:var(--molotov);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;border:2px solid var(--bg-secondary)}
+
+        /* Source point */
+        .admin-hotspot-source{position:absolute;width:26px;height:26px;transform:translate(-50%,-50%);cursor:pointer;transition:all var(--transition);z-index:15}
+        .admin-hotspot-source::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--smoke);opacity:.5;animation:pulse 2s ease-in-out infinite}
+        .admin-hotspot-source::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--smoke);box-shadow:0 0 10px rgba(88,166,255,.5)}
+        .admin-hotspot-source:hover{transform:translate(-50%,-50%) scale(1.2)}
+        .admin-hotspot-source-label{position:absolute;top:30px;left:50%;transform:translateX(-50%);background:rgba(88,166,255,.9);color:#fff;padding:.3rem .7rem;border-radius:var(--radius-sm);font-size:.7rem;font-weight:600;white-space:nowrap;pointer-events:none}
+
+        /* Connection line */
+        .connection-line{position:absolute;height:2px;background:linear-gradient(90deg,var(--smoke),var(--accent));transform-origin:0 50%;pointer-events:none;z-index:5;opacity:.6}
+
+        /* Preview */
+        .admin-hotspot-preview{position:absolute;width:36px;height:36px;transform:translate(-50%,-50%);z-index:25;pointer-events:none;animation:previewAppear .3s ease}
+        .admin-hotspot-preview::before{content:'';position:absolute;inset:0;border-radius:50%;opacity:.5;animation:previewPulse 1.5s ease-in-out infinite}
+        .admin-hotspot-preview::after{content:'';position:absolute;inset:6px;border-radius:50%}
+        .admin-hotspot-preview.target::before{background:var(--accent)}
+        .admin-hotspot-preview.target::after{background:var(--accent);box-shadow:0 0 15px var(--accent-glow)}
+        .admin-hotspot-preview.source::before{background:var(--smoke)}
+        .admin-hotspot-preview.source::after{background:var(--smoke);box-shadow:0 0 15px rgba(88,166,255,.6)}
+        .admin-hotspot-preview-label{position:absolute;top:40px;left:50%;transform:translateX(-50%);padding:.3rem .7rem;border-radius:var(--radius-sm);font-size:.72rem;font-weight:600;white-space:nowrap}
+        .admin-hotspot-preview.target .admin-hotspot-preview-label{background:var(--accent);color:#000}
+        .admin-hotspot-preview.source .admin-hotspot-preview-label{background:var(--smoke);color:#fff}
 
         @keyframes previewAppear{from{opacity:0;transform:translate(-50%,-50%) scale(0.5)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-        @keyframes previewPulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.5);opacity:.2}}
+        @keyframes previewPulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.6);opacity:.15}}
 
+        /* Right panel */
         .admin-form{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;height:fit-content;position:sticky;top:80px;max-height:calc(100vh - 100px);overflow-y:auto}
-        .form-title{font-size:1.3rem;font-weight:700;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem}
-        .form-group{margin-bottom:1.25rem}
-        .form-group label{display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2);font-size:.9rem}
-        .form-group input,.form-group select,.form-group textarea{width:100%;padding:.7rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);font-family:inherit;font-size:.95rem;transition:all var(--transition)}
+        .form-title{font-size:1.2rem;font-weight:700;margin-bottom:1.25rem;display:flex;align-items:center;gap:.5rem}
+        .form-group{margin-bottom:1rem}
+        .form-group label{display:block;margin-bottom:.4rem;font-weight:600;color:var(--text-2);font-size:.85rem}
+        .form-group input,.form-group select,.form-group textarea{width:100%;padding:.65rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);font-family:inherit;font-size:.9rem;transition:all var(--transition)}
         .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
-        .form-group textarea{resize:vertical;min-height:100px;font-family:'JetBrains Mono','Courier New',monospace}
-        .form-coords{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-        .coord-display{background:var(--bg-tertiary);padding:.7rem;border-radius:var(--radius-sm);font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--accent);text-align:center}
+        .form-group textarea{resize:vertical;min-height:80px;font-family:'JetBrains Mono','Courier New',monospace}
+        .form-coords{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem}
+        .coord-display{background:var(--bg-tertiary);padding:.6rem;border-radius:var(--radius-sm);font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--accent);text-align:center}
 
-        .hotspot-list{margin-top:2rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem}
-        .hotspot-list-title{font-size:1.2rem;font-weight:700;margin-bottom:1rem}
-        .hotspot-item{display:flex;justify-content:space-between;align-items:center;padding:.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:.5rem;transition:all var(--transition)}
-        .hotspot-item:hover{border-color:var(--border-hover)}
-        .hotspot-item-info{display:flex;align-items:center;gap:.75rem;flex:1}
-        .hotspot-item-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
-        .hotspot-item-icon.smoke{background:rgba(88,166,255,.15);color:var(--smoke)}
-        .hotspot-item-icon.flash{background:rgba(210,153,34,.15);color:var(--flash)}
-        .hotspot-item-icon.molotov{background:rgba(248,81,73,.15);color:var(--molotov)}
-        .hotspot-item-icon.he{background:rgba(63,185,80,.15);color:var(--he)}
-        .hotspot-item-name{font-weight:600;font-size:.95rem}
-        .hotspot-item-count{font-size:.75rem;color:var(--text-3);margin-left:.5rem}
-        .hotspot-item-actions{display:flex;gap:.5rem}
-        .btn-sm{padding:.4rem .8rem;border-radius:var(--radius-sm);font-size:.8rem;font-weight:600;cursor:pointer;border:none;transition:all var(--transition)}
+        .status-bar{padding:.65rem 1rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);margin-bottom:1rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem}
+        .status-dot{width:8px;height:8px;border-radius:50%;background:var(--he);animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+        .hint-box{padding:.85rem;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.25);border-radius:var(--radius-sm);margin-bottom:1rem;font-size:.85rem;color:var(--text-2);display:flex;align-items:flex-start;gap:.6rem}
+        .hint-box-icon{font-size:1.2rem;flex-shrink:0}
+
+        .sources-section{margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+        .sources-title{font-size:.95rem;font-weight:700;margin-bottom:.75rem;display:flex;align-items:center;justify-content:space-between}
+        .source-item{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.85rem;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center}
+        .source-item-info{display:flex;align-items:center;gap:.6rem;flex:1;min-width:0}
+        .source-item-icon{font-size:1.1rem}
+        .source-item-name{font-weight:600;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .source-item-actions{display:flex;gap:.4rem;flex-shrink:0}
+        .btn-sm{padding:.35rem .65rem;border-radius:var(--radius-sm);font-size:.75rem;font-weight:600;cursor:pointer;border:none;transition:all var(--transition)}
         .btn-edit{background:var(--accent);color:#000}
         .btn-delete{background:var(--molotov);color:#fff}
 
-        .empty-state{text-align:center;padding:3rem;color:var(--text-3)}
-        .empty-state-icon{font-size:3rem;margin-bottom:1rem;opacity:.3}
+        .empty-state{text-align:center;padding:2rem;color:var(--text-3);font-size:.85rem}
 
-        .status-bar{padding:.75rem 1rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem;font-size:.9rem}
-        .status-dot{width:10px;height:10px;border-radius:50%;background:var(--he);animation:pulse 2s infinite}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+        .btn-cancel{width:100%;padding:.65rem;background:var(--bg-card);color:var(--text-2);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;transition:all var(--transition);margin-top:.5rem}
+        .btn-cancel:hover{background:var(--bg-card-hover);color:var(--text-1)}
 
-        .hint-box{padding:1rem;background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.3);border-radius:var(--radius-sm);margin-bottom:1.5rem;font-size:.88rem;color:var(--text-2);display:flex;align-items:center;gap:.75rem}
-        .hint-box-icon{font-size:1.5rem}
-
-        .lineups-section{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
-        .lineups-title{font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between}
-        .lineup-item{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;margin-bottom:.75rem}
-        .lineup-item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
-        .lineup-item-title{font-weight:600;font-size:.9rem}
-        .lineup-item-actions{display:flex;gap:.5rem}
-        .lineup-item-details{font-size:.85rem;color:var(--text-2)}
-
-        .tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border)}
-        .tab{padding:.7rem 1.2rem;background:transparent;border:none;color:var(--text-2);font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all var(--transition)}
-        .tab:hover{color:var(--text-1)}
-        .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+        .targets-list{margin-top:1.5rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
+        .targets-list-title{font-size:1rem;font-weight:700;margin-bottom:.75rem}
+        .target-item{display:flex;justify-content:space-between;align-items:center;padding:.65rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:.4rem;cursor:pointer;transition:all var(--transition)}
+        .target-item:hover{border-color:var(--border-hover)}
+        .target-item.selected{border-color:var(--he);background:rgba(63,185,80,.05)}
+        .target-item-info{display:flex;align-items:center;gap:.6rem}
+        .target-item-icon{font-size:1rem}
+        .target-item-name{font-weight:600;font-size:.85rem}
+        .target-item-count{font-size:.7rem;color:var(--text-3);margin-left:.4rem}
+        .target-item-actions{display:flex;gap:.4rem}
     </style>
 </head>
 <body>
@@ -121,126 +142,47 @@
 
     <div class="status-bar">
         <div class="status-dot"></div>
-        <span>Подключено к Firebase — изменения сохраняются автоматически</span>
+        <span>Подключено к Firebase — всё сохраняется автоматически</span>
     </div>
 
     <div class="map-selector">
-        <label>Выберите карту:</label>
-        <select id="map-select" onchange="switchMap()">
-            <option value="mirage">Mirage</option>
-            <option value="dust2">Dust II</option>
-        </select>
+        <label>Карта:</label>
+        <<select id="map-select" onchange="switchMap()">
+        <option value="mirage">Mirage</option>
+        <option value="dust2">Dust II</option>
+        <option value="inferno">Inferno</option>
+        <option value="ancient">Ancient</option>
+        <option value="anubis">Anubis</option>
+        <option value="nuke">Nuke</option>
+        <option value="overpass">Overpass</option>
+        <option value="vertigo">Vertigo</option>
+    </select>
     </div>
 
     <div class="admin-layout">
         <div>
-            <div class="hint-box">
+            <div class="hint-box" id="hint-box">
                 <div class="hint-box-icon">💡</div>
-                <div>Кликните на карту, чтобы добавить точку. Одна точка может иметь несколько раскидок из разных позиций.</div>
+                <div id="hint-text">Кликните на пустое место карты, чтобы создать <strong>точку-цель</strong> (куда прилетает граната).</div>
             </div>
 
             <div class="admin-map-wrapper" id="map-wrapper">
                 <img src="images/mirage-radar.webp" alt="Map" class="admin-map-image" id="map-image" onerror="this.style.background='var(--bg-tertiary)';this.style.minHeight='500px'">
+                <div class="mode-indicator target-mode" id="mode-indicator">
+                    <div class="mode-indicator-icon"></div>
+                    <span id="mode-text">Режим: Цель</span>
+                </div>
             </div>
 
-            <div class="hotspot-list">
-                <h3 class="hotspot-list-title">📍 Точки на карте (<span id="hotspot-count">0</span>)</h3>
-                <div id="hotspot-items"></div>
+            <div class="targets-list">
+                <h3 class="targets-list-title">🎯 Все цели (<span id="target-count">0</span>)</h3>
+                <div id="target-items"></div>
             </div>
         </div>
 
         <div class="admin-form" id="admin-form">
-            <div class="tabs">
-                <button class="tab active" onclick="switchTab('point')">📍 Точка</button>
-                <button class="tab" onclick="switchTab('lineup')">🎯 Раскидка</button>
-            </div>
-
-            <!-- Point Tab -->
-            <div id="tab-point">
-                <h3 class="form-title">✏️ <span id="form-title-text">Добавить точку</span></h3>
-
-                <div class="form-group">
-                    <label>Название точки:</label>
-                    <input type="text" id="input-title" placeholder="Например: Окно Mid">
-                </div>
-
-                <div class="form-coords">
-                    <div>
-                        <label style="display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2);font-size:.9rem">X (%):</label>
-                        <div class="coord-display" id="coord-x">—</div>
-                    </div>
-                    <div>
-                        <label style="display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2);font-size:.9rem">Y (%):</label>
-                        <div class="coord-display" id="coord-y">—</div>
-                    </div>
-                </div>
-
-                <button class="btn-admin btn-save" style="width:100%;margin-top:1.5rem;justify-content:center" onclick="savePoint()">
-                    💾 Сохранить точку
-                </button>
-                <button class="btn-admin btn-clear" style="width:100%;margin-top:.5rem;justify-content:center" onclick="cancelEdit()">
-                    ❌ Отмена
-                </button>
-
-                <div class="lineups-section" id="lineups-section" style="display:none">
-                    <div class="lineups-title">
-                        <span>🎯 Раскидки для этой точки</span>
-                        <button class="btn-admin btn-add" style="padding:.4rem .8rem;font-size:.8rem" onclick="addNewLineup()">+ Добавить</button>
-                    </div>
-                    <div id="lineups-list"></div>
-                </div>
-            </div>
-
-            <!-- Lineup Tab -->
-            <div id="tab-lineup" style="display:none">
-                <h3 class="form-title">🎯 <span id="lineup-form-title">Добавить раскидку</span></h3>
-
-                <div class="form-group">
-                    <label>Название раскидки:</label>
-                    <input type="text" id="input-lineup-title" placeholder="Например: Из T-spawn #1">
-                </div>
-
-                <div class="form-group">
-                    <label>Описание:</label>
-                    <input type="text" id="input-lineup-desc" placeholder="Краткое описание">
-                </div>
-
-                <div class="form-group">
-                    <label>Тип гранаты:</label>
-                    <select id="input-lineup-type">
-                        <option value="smoke">💨 Smoke</option>
-                        <option value="flash">⚡ Flash</option>
-                        <option value="molotov">🔥 Molotov</option>
-                        <option value="he">💥 HE</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Позиция (откуда кидать):</label>
-                    <input type="text" id="input-lineup-pos" placeholder="Например: T-spawn у стены">
-                </div>
-
-                <div class="form-group">
-                    <label>Прицел:</label>
-                    <input type="text" id="input-lineup-aim" placeholder="Например: На раму окна">
-                </div>
-
-                <div class="form-group">
-                    <label>Инструкция:</label>
-                    <textarea id="input-lineup-inst" placeholder="Пошаговая инструкция..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Видео (путь к файлу):</label>
-                    <input type="text" id="input-lineup-video" placeholder="videos/mirage-window-1.mp4">
-                </div>
-
-                <button class="btn-admin btn-save" style="width:100%;margin-top:1.5rem;justify-content:center" onclick="saveLineup()">
-                    💾 Сохранить раскидку
-                </button>
-                <button class="btn-admin btn-clear" style="width:100%;margin-top:.5rem;justify-content:center" onclick="cancelLineupEdit()">
-                    ❌ Отмена
-                </button>
+            <div id="form-content">
+                <!-- Динамический контент формы -->
             </div>
         </div>
     </div>
@@ -250,330 +192,523 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script>
     const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "cs2nades.firebaseapp.com",
-        databaseURL: "https://cs2nades-default-rtdb.firebaseio.com",
-        projectId: "cs2nades",
-        storageBucket: "cs2nades.appspot.com",
-        messagingSenderId: "123456789",
-        appId: "1:123456789:web:abcdef"
+        apiKey: "AIzaSyAXNxDCdizaAB-3IJU65fLahDS_9ww6UWw",
+        authDomain: "cs2nades-1a910.firebaseapp.com",
+        databaseURL: "https://cs2nades-1a910-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "cs2nades-1a910",
+        storageBucket: "cs2nades-1a910.firebasestorage.app",
+        messagingSenderId: "497946011142",
+        appId: "1:497946011142:web:eea3fe5839ac4d23444587",
+        measurementId: "G-M14MZNH78P"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     let currentMap = 'mirage';
-    let hotspots = { mirage: [], dust2: [] };
-    let editingPointId = null;
-    let editingLineupId = null;
+    let targets = { mirage: [], dust2: [] };
+    let selectedTargetId = null;
+    let editingSourceId = null;
     let tempCoords = { x: 0, y: 0 };
     let previewElement = null;
 
+    // Режимы: 'target' (создание цели) или 'source' (создание/редактирование источника)
+    let mode = 'target';
+
     db.ref('lineups').on('value', snapshot => {
         const data = snapshot.val() || {};
-        hotspots = { mirage: data.mirage || [], dust2: data.dust2 || [] };
-        renderHotspots();
+        targets = { mirage: data.mirage || [], dust2: data.dust2 || [] };
+        renderAll();
     });
 
     function switchMap() {
         currentMap = document.getElementById('map-select').value;
         document.getElementById('map-image').src = `images/${currentMap}-radar.webp`;
+        selectedTargetId = null;
+        editingSourceId = null;
+        mode = 'target';
         removePreview();
-        renderHotspots();
-    }
-
-    function switchTab(tab) {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        event.target.classList.add('active');
-        document.getElementById('tab-point').style.display = tab === 'point' ? 'block' : 'none';
-        document.getElementById('tab-lineup').style.display = tab === 'lineup' ? 'block' : 'none';
+        renderAll();
+        updateModeUI();
     }
 
     function removePreview() {
         if (previewElement) { previewElement.remove(); previewElement = null; }
     }
 
-    function createPreview(x, y) {
+    function createPreview(x, y, type) {
         removePreview();
         previewElement = document.createElement('div');
-        previewElement.className = 'admin-hotspot-preview';
+        previewElement.className = `admin-hotspot-preview ${type}`;
         previewElement.style.left = x + '%';
         previewElement.style.top = y + '%';
-        previewElement.innerHTML = '<div class="admin-hotspot-preview-label">Новая точка</div>';
+        const label = type === 'target' ? '🎯 Новая цель' : '📍 Новый источник';
+        previewElement.innerHTML = `<div class="admin-hotspot-preview-label">${label}</div>`;
         document.getElementById('map-wrapper').appendChild(previewElement);
     }
 
+    function updateModeUI() {
+        const indicator = document.getElementById('mode-indicator');
+        const modeText = document.getElementById('mode-text');
+        const hintText = document.getElementById('hint-text');
+
+        if (mode === 'target') {
+            indicator.className = 'mode-indicator target-mode';
+            modeText.textContent = 'Режим: Цель';
+            hintText.innerHTML = 'Кликните на пустое место карты, чтобы создать <strong>точку-цель</strong> (куда прилетает граната).';
+        } else {
+            const target = targets[currentMap].find(t => t.id === selectedTargetId);
+            indicator.className = 'mode-indicator source-mode';
+            modeText.textContent = `Режим: Источник → ${target ? target.title : '?'}`;
+            hintText.innerHTML = `Кликните на карту, чтобы создать <strong>источник</strong> для цели "<strong>${target ? target.title : '?'}</strong>". <button onclick="exitSourceMode()" style="background:var(--molotov);color:#fff;border:none;padding:.3rem .7rem;border-radius:4px;font-size:.75rem;cursor:pointer;margin-left:.5rem">Выйти</button>`;
+        }
+    }
+
+    function exitSourceMode() {
+        mode = 'target';
+        selectedTargetId = null;
+        editingSourceId = null;
+        removePreview();
+        renderAll();
+        updateModeUI();
+        renderForm();
+    }
+
+    // Map click handler
     document.getElementById('map-wrapper').addEventListener('click', function(event) {
-        if (event.target.classList.contains('admin-hotspot') || event.target.closest('.admin-hotspot')) return;
+        if (event.target.closest('.admin-hotspot-target') || event.target.closest('.admin-hotspot-source')) return;
 
         const rect = this.getBoundingClientRect();
         const x = ((event.clientX - rect.left) / rect.width) * 100;
         const y = ((event.clientY - rect.top) / rect.height) * 100;
 
         tempCoords = { x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
-        createPreview(tempCoords.x, tempCoords.y);
 
-        document.getElementById('coord-x').textContent = tempCoords.x + '%';
-        document.getElementById('coord-y').textContent = tempCoords.y + '%';
+        if (mode === 'target') {
+            createPreview(tempCoords.x, tempCoords.y, 'target');
+            showTargetForm();
+        } else if (mode === 'source') {
+            createPreview(tempCoords.x, tempCoords.y, 'source');
+            showSourceForm();
+        }
 
-        editingPointId = null;
-        document.getElementById('form-title-text').textContent = 'Добавить точку';
-        document.getElementById('lineups-section').style.display = 'none';
-        clearPointForm();
-
-        document.getElementById('coord-x').textContent = tempCoords.x + '%';
-        document.getElementById('coord-y').textContent = tempCoords.y + '%';
         document.getElementById('admin-form').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
 
-    function savePoint() {
-        const title = document.getElementById('input-title').value.trim();
+    // Select target
+    function selectTarget(id) {
+        selectedTargetId = id;
+        mode = 'source';
+        editingSourceId = null;
+        removePreview();
+        renderAll();
+        updateModeUI();
+        showTargetDetailsForm();
+    }
 
-        if (!title || tempCoords.x === 0) {
-            alert('Заполните название и кликните на карту!');
-            return;
+    // Show target creation form
+    function showTargetForm() {
+        const form = document.getElementById('form-content');
+        form.innerHTML = `
+        <h3 class="form-title">🎯 Новая точка-цель</h3>
+        <div class="form-group">
+            <label>Название (куда прилетает):</label>
+            <input type="text" id="input-title" placeholder="Например: Окно Mid" autofocus>
+        </div>
+        <div class="form-coords">
+            <div>
+                <label>X (%):</label>
+                <div class="coord-display" id="coord-x">${tempCoords.x}%</div>
+            </div>
+            <div>
+                <label>Y (%):</label>
+                <div class="coord-display" id="coord-y">${tempCoords.y}%</div>
+            </div>
+        </div>
+        <button class="btn-admin btn-save" style="width:100%;justify-content:center" onclick="saveNewTarget()">💾 Создать цель</button>
+        <button class="btn-cancel" onclick="cancelAction()">❌ Отмена</button>
+    `;
+    }
+
+    // Show source creation form
+    function showSourceForm() {
+        const target = targets[currentMap].find(t => t.id === selectedTargetId);
+        if (!target) return;
+
+        const form = document.getElementById('form-content');
+        form.innerHTML = `
+        <h3 class="form-title">📍 Новый источник</h3>
+        <p style="color:var(--text-2);font-size:.85rem;margin-bottom:1rem">Для цели: <strong style="color:var(--accent)">${target.title}</strong></p>
+        <div class="form-group">
+            <label>Название (откуда кидать):</label>
+            <input type="text" id="input-source-title" placeholder="Например: T-spawn #1" autofocus>
+        </div>
+        <div class="form-group">
+            <label>Тип гранаты:</label>
+            <select id="input-source-type">
+                <option value="smoke">💨 Smoke</option>
+                <option value="flash">⚡ Flash</option>
+                <option value="molotov">🔥 Molotov</option>
+                <option value="he">💥 HE</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Прицел:</label>
+            <input type="text" id="input-source-aim" placeholder="Например: На раму окна">
+        </div>
+        <div class="form-group">
+            <label>Инструкция:</label>
+            <textarea id="input-source-inst" placeholder="1. Встань...&#10;2. Прицел...&#10;3. Jump throw"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Видео:</label>
+            <input type="text" id="input-source-video" placeholder="videos/mirage-window-1.mp4">
+        </div>
+        <div class="form-coords">
+            <div>
+                <label>X (%):</label>
+                <div class="coord-display">${tempCoords.x}%</div>
+            </div>
+            <div>
+                <label>Y (%):</label>
+                <div class="coord-display">${tempCoords.y}%</div>
+            </div>
+        </div>
+        <button class="btn-admin btn-save" style="width:100%;justify-content:center" onclick="saveNewSource()">💾 Создать источник</button>
+        <button class="btn-cancel" onclick="cancelAction()">❌ Отмена</button>
+    `;
+    }
+
+    // Show target details form (with sources list)
+    function showTargetDetailsForm() {
+        const target = targets[currentMap].find(t => t.id === selectedTargetId);
+        if (!target) return;
+
+        const icons = { smoke: '💨', flash: '⚡', molotov: '🔥', he: '💥' };
+        const form = document.getElementById('form-content');
+
+        let sourcesHTML = '';
+        if (target.sources && target.sources.length > 0) {
+            sourcesHTML = target.sources.map(s => `
+            <div class="source-item">
+                <div class="source-item-info">
+                    <span class="source-item-icon">${icons[s.type]}</span>
+                    <span class="source-item-name">${s.title}</span>
+                </div>
+                <div class="source-item-actions">
+                    <button class="btn-sm btn-edit" onclick="editSource('${s.id}')">✏️</button>
+                    <button class="btn-sm btn-delete" onclick="deleteSource('${s.id}')">🗑</button>
+                </div>
+            </div>
+        `).join('');
+        } else {
+            sourcesHTML = '<div class="empty-state">Нет источников. Кликните на карту, чтобы добавить.</div>';
         }
 
-        if (editingPointId) {
-            const point = hotspots[currentMap].find(h => h.id === editingPointId);
-            if (point) {
-                point.title = title;
-                point.x = tempCoords.x;
-                point.y = tempCoords.y;
+        form.innerHTML = `
+        <h3 class="form-title">🎯 ${target.title}</h3>
+        <div class="form-coords">
+            <div>
+                <label>X:</label>
+                <div class="coord-display">${target.x}%</div>
+            </div>
+            <div>
+                <label>Y:</label>
+                <div class="coord-display">${target.y}%</div>
+            </div>
+        </div>
+        <button class="btn-admin btn-clear" style="width:100%;justify-content:center;margin-bottom:.5rem" onclick="deleteTarget('${target.id}')">🗑 Удалить цель</button>
+        <button class="btn-cancel" onclick="exitSourceMode()">← Назад к целям</button>
+
+        <div class="sources-section">
+            <div class="sources-title">
+                <span>📍 Источники (${target.sources ? target.sources.length : 0})</span>
+            </div>
+            ${sourcesHTML}
+            <p style="color:var(--text-3);font-size:.8rem;text-align:center;margin-top:.75rem">💡 Кликните на карту, чтобы добавить источник</p>
+        </div>
+    `;
+    }
+
+    // Render form based on current state
+    function renderForm() {
+        if (selectedTargetId && mode === 'source') {
+            showTargetDetailsForm();
+        } else {
+            const form = document.getElementById('form-content');
+            form.innerHTML = `
+            <h3 class="form-title">🎯 Выберите действие</h3>
+            <div class="empty-state">
+                <div style="font-size:2.5rem;margin-bottom:.75rem;opacity:.3">🗺️</div>
+                <p>Кликните на карту, чтобы создать цель,<br>или выберите существующую из списка ниже.</p>
+            </div>
+        `;
+        }
+    }
+
+    // Save new target
+    function saveNewTarget() {
+        const title = document.getElementById('input-title').value.trim();
+        if (!title) { alert('Введите название!'); return; }
+
+        targets[currentMap].push({
+            id: `${currentMap}-${Date.now()}`,
+            title,
+            x: tempCoords.x,
+            y: tempCoords.y,
+            sources: []
+        });
+
+        db.ref(`lineups/${currentMap}`).set(targets[currentMap])
+            .then(() => {
+                removePreview();
+                renderAll();
+                mode = 'target';
+                updateModeUI();
+                renderForm();
+            })
+            .catch(err => alert('❌ Ошибка: ' + err.message));
+    }
+
+    // Save new source
+    function saveNewSource() {
+        const title = document.getElementById('input-source-title').value.trim();
+        const type = document.getElementById('input-source-type').value;
+        const aim = document.getElementById('input-source-aim').value.trim();
+        const inst = document.getElementById('input-source-inst').value.trim();
+        const video = document.getElementById('input-source-video').value.trim();
+
+        if (!title) { alert('Введите название!'); return; }
+
+        const target = targets[currentMap].find(t => t.id === selectedTargetId);
+        if (!target) return;
+
+        if (!target.sources) target.sources = [];
+
+        if (editingSourceId) {
+            const index = target.sources.findIndex(s => s.id === editingSourceId);
+            if (index > -1) {
+                target.sources[index] = { ...target.sources[index], title, type, aim, inst, video, x: tempCoords.x, y: tempCoords.y };
             }
         } else {
-            hotspots[currentMap].push({
-                id: `${currentMap}-${Date.now()}`,
-                title,
+            target.sources.push({
+                id: `source-${Date.now()}`,
+                title, type, aim, inst, video,
                 x: tempCoords.x,
-                y: tempCoords.y,
-                lineups: []
+                y: tempCoords.y
             });
         }
 
-        db.ref(`lineups/${currentMap}`).set(hotspots[currentMap])
+        db.ref(`lineups/${currentMap}`).set(targets[currentMap])
             .then(() => {
                 removePreview();
-                clearPointForm();
-                editingPointId = null;
-                document.getElementById('form-title-text').textContent = 'Добавить точку';
+                editingSourceId = null;
+                renderAll();
+                showTargetDetailsForm();
             })
             .catch(err => alert('❌ Ошибка: ' + err.message));
     }
 
-    function editPoint(id) {
-        const point = hotspots[currentMap].find(h => h.id === id);
-        if (!point) return;
+    // Edit source
+    function editSource(sourceId) {
+        const target = targets[currentMap].find(t => t.id === selectedTargetId);
+        if (!target) return;
+        const source = target.sources.find(s => s.id === sourceId);
+        if (!source) return;
 
-        editingPointId = id;
-        tempCoords = { x: point.x, y: point.y };
+        editingSourceId = sourceId;
+        tempCoords = { x: source.x, y: source.y };
+        createPreview(source.x, source.y, 'source');
 
-        document.getElementById('input-title').value = point.title;
-        document.getElementById('coord-x').textContent = point.x + '%';
-        document.getElementById('coord-y').textContent = point.y + '%';
-        document.getElementById('form-title-text').textContent = 'Редактировать точку';
+        const form = document.getElementById('form-content');
+        form.innerHTML = `
+        <h3 class="form-title">✏️ Редактировать источник</h3>
+        <p style="color:var(--text-2);font-size:.85rem;margin-bottom:1rem">Для цели: <strong style="color:var(--accent)">${target.title}</strong></p>
+        <div class="form-group">
+            <label>Название:</label>
+            <input type="text" id="input-source-title" value="${source.title}">
+        </div>
+        <div class="form-group">
+            <label>Тип гранаты:</label>
+            <select id="input-source-type">
+                <option value="smoke" ${source.type==='smoke'?'selected':''}>💨 Smoke</option>
+                <option value="flash" ${source.type==='flash'?'selected':''}>⚡ Flash</option>
+                <option value="molotov" ${source.type==='molotov'?'selected':''}>🔥 Molotov</option>
+                <option value="he" ${source.type==='he'?'selected':''}>💥 HE</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Прицел:</label>
+            <input type="text" id="input-source-aim" value="${source.aim || ''}">
+        </div>
+        <div class="form-group">
+            <label>Инструкция:</label>
+            <textarea id="input-source-inst">${source.inst || ''}</textarea>
+        </div>
+        <div class="form-group">
+            <label>Видео:</label>
+            <input type="text" id="input-source-video" value="${source.video || ''}">
+        </div>
+        <div class="form-coords">
+            <div>
+                <label>X (%):</label>
+                <div class="coord-display">${source.x}%</div>
+            </div>
+            <div>
+                <label>Y (%):</label>
+                <div class="coord-display">${source.y}%</div>
+            </div>
+        </div>
+        <p style="color:var(--text-3);font-size:.8rem;margin-bottom:.75rem">💡 Кликните на другое место карты, чтобы переместить точку</p>
+        <button class="btn-admin btn-save" style="width:100%;justify-content:center" onclick="saveNewSource()">💾 Сохранить</button>
+        <button class="btn-cancel" onclick="cancelEditSource()">❌ Отмена</button>
+    `;
 
-        createPreview(point.x, point.y);
-        renderLineupsList(point);
-        document.getElementById('lineups-section').style.display = 'block';
         document.getElementById('admin-form').scrollIntoView({ behavior: 'smooth' });
     }
 
-    function deletePoint(id) {
-        if (!confirm('Удалить эту точку и все её раскидки?')) return;
-        hotspots[currentMap] = hotspots[currentMap].filter(h => h.id !== id);
-        db.ref(`lineups/${currentMap}`).set(hotspots[currentMap])
-            .then(() => removePreview())
-            .catch(err => alert('❌ Ошибка: ' + err.message));
-    }
-
-    function addNewLineup() {
-        if (!editingPointId) {
-            alert('Сначала сохраните точку!');
-            return;
-        }
-        editingLineupId = null;
-        document.getElementById('lineup-form-title').textContent = 'Добавить раскидку';
-        clearLineupForm();
-        switchTab('lineup');
-        document.querySelectorAll('.tab')[1].classList.add('active');
-        document.querySelectorAll('.tab')[0].classList.remove('active');
-    }
-
-    function editLineup(pointId, lineupId) {
-        const point = hotspots[currentMap].find(h => h.id === pointId);
-        if (!point) return;
-        const lineup = point.lineups.find(l => l.id === lineupId);
-        if (!lineup) return;
-
-        editingPointId = pointId;
-        editingLineupId = lineupId;
-
-        document.getElementById('input-lineup-title').value = lineup.title;
-        document.getElementById('input-lineup-desc').value = lineup.desc;
-        document.getElementById('input-lineup-type').value = lineup.type;
-        document.getElementById('input-lineup-pos').value = lineup.pos;
-        document.getElementById('input-lineup-aim').value = lineup.aim;
-        document.getElementById('input-lineup-inst').value = lineup.inst;
-        document.getElementById('input-lineup-video').value = lineup.video;
-        document.getElementById('lineup-form-title').textContent = 'Редактировать раскидку';
-
-        switchTab('lineup');
-        document.querySelectorAll('.tab')[1].classList.add('active');
-        document.querySelectorAll('.tab')[0].classList.remove('active');
-    }
-
-    function deleteLineup(pointId, lineupId) {
-        if (!confirm('Удалить эту раскидку?')) return;
-        const point = hotspots[currentMap].find(h => h.id === pointId);
-        if (!point) return;
-        point.lineups = point.lineups.filter(l => l.id !== lineupId);
-        db.ref(`lineups/${currentMap}`).set(hotspots[currentMap])
-            .then(() => renderLineupsList(point));
-    }
-
-    function saveLineup() {
-        const title = document.getElementById('input-lineup-title').value.trim();
-        const desc = document.getElementById('input-lineup-desc').value.trim();
-        const type = document.getElementById('input-lineup-type').value;
-        const pos = document.getElementById('input-lineup-pos').value.trim();
-        const aim = document.getElementById('input-lineup-aim').value.trim();
-        const inst = document.getElementById('input-lineup-inst').value.trim();
-        const video = document.getElementById('input-lineup-video').value.trim();
-
-        if (!title || !type) {
-            alert('Заполните обязательные поля!');
-            return;
-        }
-
-        const point = hotspots[currentMap].find(h => h.id === editingPointId);
-        if (!point) return;
-
-        const lineup = {
-            id: editingLineupId || `lineup-${Date.now()}`,
-            title, desc, type, pos, aim, inst, video
-        };
-
-        if (editingLineupId) {
-            const index = point.lineups.findIndex(l => l.id === editingLineupId);
-            if (index > -1) point.lineups[index] = lineup;
-        } else {
-            point.lineups.push(lineup);
-        }
-
-        db.ref(`lineups/${currentMap}`).set(hotspots[currentMap])
-            .then(() => {
-                clearLineupForm();
-                editingLineupId = null;
-                document.getElementById('lineup-form-title').textContent = 'Добавить раскидку';
-                switchTab('point');
-                document.querySelectorAll('.tab')[0].classList.add('active');
-                document.querySelectorAll('.tab')[1].classList.remove('active');
-                renderLineupsList(point);
-            })
-            .catch(err => alert('❌ Ошибка: ' + err.message));
-    }
-
-    function renderLineupsList(point) {
-        const list = document.getElementById('lineups-list');
-        const icons = { smoke: '💨', flash: '⚡', molotov: '🔥', he: '💥' };
-
-        if (point.lineups.length === 0) {
-            list.innerHTML = '<p style="color:var(--text-3);font-size:.9rem;text-align:center;padding:1rem">Нет раскидок. Нажмите "+ Добавить"</p>';
-        } else {
-            list.innerHTML = point.lineups.map(l => `
-            <div class="lineup-item">
-                <div class="lineup-item-header">
-                    <div class="lineup-item-title">${icons[l.type]} ${l.title}</div>
-                    <div class="lineup-item-actions">
-                        <button class="btn-sm btn-edit" onclick="editLineup('${point.id}','${l.id}')">✏️</button>
-                        <button class="btn-sm btn-delete" onclick="deleteLineup('${point.id}','${l.id}')">🗑</button>
-                    </div>
-                </div>
-                <div class="lineup-item-details">${l.pos || 'Позиция не указана'}</div>
-            </div>
-        `).join('');
-        }
-    }
-
-    function clearAll() {
-        if (!confirm('Удалить ВСЕ точки на этой карте?')) return;
-        hotspots[currentMap] = [];
-        db.ref(`lineups/${currentMap}`).set([])
-            .then(() => removePreview());
-    }
-
-    function renderHotspots() {
-        const wrapper = document.getElementById('map-wrapper');
-        wrapper.querySelectorAll('.admin-hotspot').forEach(h => h.remove());
-
-        hotspots[currentMap].forEach(h => {
-            const div = document.createElement('div');
-            div.className = 'admin-hotspot';
-            div.style.left = h.x + '%';
-            div.style.top = h.y + '%';
-            div.innerHTML = `
-            <div class="admin-hotspot-label">${h.title}</div>
-            ${h.lineups && h.lineups.length > 0 ? `<div class="admin-hotspot-count">${h.lineups.length}</div>` : ''}
-        `;
-            div.onclick = (e) => { e.stopPropagation(); editPoint(h.id); };
-            wrapper.appendChild(div);
-        });
-
-        const items = document.getElementById('hotspot-items');
-        const icons = { smoke: '💨', flash: '⚡', molotov: '🔥', he: '💥' };
-
-        if (hotspots[currentMap].length === 0) {
-            items.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📍</div><p>Кликните на карту, чтобы добавить точку</p></div>';
-        } else {
-            items.innerHTML = hotspots[currentMap].map(h => `
-            <div class="hotspot-item">
-                <div class="hotspot-item-info">
-                    <div class="hotspot-item-icon ${h.lineups[0]?.type || 'smoke'}">${icons[h.lineups[0]?.type] || '💣'}</div>
-                    <div>
-                        <div class="hotspot-item-name">${h.title}</div>
-                        ${h.lineups && h.lineups.length > 0 ? `<div class="hotspot-item-count">${h.lineups.length} раскидок</div>` : ''}
-                    </div>
-                </div>
-                <div class="hotspot-item-actions">
-                    <button class="btn-sm btn-edit" onclick="editPoint('${h.id}')">✏️</button>
-                    <button class="btn-sm btn-delete" onclick="deletePoint('${h.id}')">🗑</button>
-                </div>
-            </div>
-        `).join('');
-        }
-
-        document.getElementById('hotspot-count').textContent = hotspots[currentMap].length;
-    }
-
-    function clearPointForm() {
-        document.getElementById('input-title').value = '';
-        document.getElementById('coord-x').textContent = '—';
-        document.getElementById('coord-y').textContent = '—';
-    }
-
-    function clearLineupForm() {
-        ['input-lineup-title', 'input-lineup-desc', 'input-lineup-pos', 'input-lineup-aim', 'input-lineup-inst', 'input-lineup-video'].forEach(id => {
-            document.getElementById(id).value = '';
-        });
-    }
-
-    function cancelEdit() {
-        editingPointId = null;
-        document.getElementById('form-title-text').textContent = 'Добавить точку';
+    function cancelEditSource() {
+        editingSourceId = null;
         removePreview();
-        clearPointForm();
-        document.getElementById('lineups-section').style.display = 'none';
+        showTargetDetailsForm();
     }
 
-    function cancelLineupEdit() {
-        editingLineupId = null;
-        document.getElementById('lineup-form-title').textContent = 'Добавить раскидку';
-        clearLineupForm();
-        switchTab('point');
-        document.querySelectorAll('.tab')[0].classList.add('active');
-        document.querySelectorAll('.tab')[1].classList.remove('active');
+    // Delete source
+    function deleteSource(sourceId) {
+        if (!confirm('Удалить этот источник?')) return;
+        const target = targets[currentMap].find(t => t.id === selectedTargetId);
+        if (!target) return;
+        target.sources = target.sources.filter(s => s.id !== sourceId);
+        db.ref(`lineups/${currentMap}`).set(targets[currentMap])
+            .then(() => {
+                renderAll();
+                showTargetDetailsForm();
+            });
     }
+
+    // Delete target
+    function deleteTarget(id) {
+        if (!confirm('Удалить эту цель и все её источники?')) return;
+        targets[currentMap] = targets[currentMap].filter(t => t.id !== id);
+        selectedTargetId = null;
+        mode = 'target';
+        db.ref(`lineups/${currentMap}`).set(targets[currentMap])
+            .then(() => {
+                removePreview();
+                renderAll();
+                updateModeUI();
+                renderForm();
+            });
+    }
+
+    // Clear all
+    function clearAll() {
+        if (!confirm('Удалить ВСЁ на этой карте?')) return;
+        targets[currentMap] = [];
+        selectedTargetId = null;
+        mode = 'target';
+        db.ref(`lineups/${currentMap}`).set([])
+            .then(() => {
+                removePreview();
+                renderAll();
+                updateModeUI();
+                renderForm();
+            });
+    }
+
+    function cancelAction() {
+        removePreview();
+        if (selectedTargetId) {
+            showTargetDetailsForm();
+        } else {
+            renderForm();
+        }
+    }
+
+    // Render all
+    function renderAll() {
+        const wrapper = document.getElementById('map-wrapper');
+        wrapper.querySelectorAll('.admin-hotspot-target, .admin-hotspot-source, .connection-line').forEach(h => h.remove());
+
+        // Render targets
+        targets[currentMap].forEach(t => {
+            const div = document.createElement('div');
+            div.className = 'admin-hotspot-target' + (t.id === selectedTargetId ? ' selected' : '');
+            div.style.left = t.x + '%';
+            div.style.top = t.y + '%';
+            const count = t.sources ? t.sources.length : 0;
+            div.innerHTML = `
+            <div class="admin-hotspot-target-label">${t.title}</div>
+            ${count > 0 ? `<div class="admin-hotspot-count">${count}</div>` : ''}
+        `;
+            div.onclick = (e) => { e.stopPropagation(); selectTarget(t.id); };
+            wrapper.appendChild(div);
+
+            // Render sources if this target is selected
+            if (t.id === selectedTargetId && t.sources) {
+                t.sources.forEach(s => {
+                    const sDiv = document.createElement('div');
+                    sDiv.className = 'admin-hotspot-source';
+                    sDiv.style.left = s.x + '%';
+                    sDiv.style.top = s.y + '%';
+                    sDiv.innerHTML = `<div class="admin-hotspot-source-label">${s.title}</div>`;
+                    sDiv.onclick = (e) => { e.stopPropagation(); editSource(s.id); };
+                    wrapper.appendChild(sDiv);
+
+                    // Draw connection line
+                    drawConnection(t.x, t.y, s.x, s.y);
+                });
+            }
+        });
+
+        // Render targets list
+        const items = document.getElementById('target-items');
+        if (targets[currentMap].length === 0) {
+            items.innerHTML = '<div class="empty-state">Нет целей. Кликните на карту, чтобы создать.</div>';
+        } else {
+            items.innerHTML = targets[currentMap].map(t => {
+                const count = t.sources ? t.sources.length : 0;
+                return `
+                <div class="target-item ${t.id === selectedTargetId ? 'selected' : ''}" onclick="selectTarget('${t.id}')">
+                    <div class="target-item-info">
+                        <span class="target-item-icon">🎯</span>
+                        <span class="target-item-name">${t.title}</span>
+                        ${count > 0 ? `<span class="target-item-count">(${count})</span>` : ''}
+                    </div>
+                    <div class="target-item-actions">
+                        <button class="btn-sm btn-delete" onclick="event.stopPropagation();deleteTarget('${t.id}')">🗑</button>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        document.getElementById('target-count').textContent = targets[currentMap].length;
+    }
+
+    // Draw connection line between target and source
+    function drawConnection(x1, y1, x2, y2) {
+        const wrapper = document.getElementById('map-wrapper');
+        const line = document.createElement('div');
+        line.className = 'connection-line';
+
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const length = Math.sqrt(dx * dx + dy * dy);
+        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+        line.style.left = x1 + '%';
+        line.style.top = y1 + '%';
+        line.style.width = length + '%';
+        line.style.transform = `rotate(${angle}deg)`;
+
+        wrapper.appendChild(line);
+    }
+
+    // Init
+    renderAll();
+    updateModeUI();
+    renderForm();
 </script>
 
 </body>
