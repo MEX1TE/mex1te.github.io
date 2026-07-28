@@ -81,30 +81,29 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="script.js"></script>
 <script>
-    // Инициализируем lineupData
     window.lineupData = {};
 
-    // Слушаем изменения в Firebase в реальном времени
-    db.ref('lineups/dust2').on('value', snapshot => {
-        const hotspots = snapshot.val() || [];
+    db.ref('lineups/mirage').on('value', snapshot => {
+        const points = snapshot.val() || [];
         const overlay = document.getElementById('map-overlay');
 
-        // Очищаем старые точки
         overlay.innerHTML = '';
         window.lineupData = {};
 
-        // Создаём новые точки
-        hotspots.forEach(h => {
+        points.forEach(p => {
             const div = document.createElement('div');
             div.className = 'map-hotspot';
-            div.dataset.id = h.id;
-            div.style.left = h.x + '%';
-            div.style.top = h.y + '%';
-            div.innerHTML = `<div class="hotspot-label">${h.title}</div>`;
-            div.onclick = () => window.openLineup(h.id);
+            div.dataset.id = p.id;
+            div.style.left = p.x + '%';
+            div.style.top = p.y + '%';
+            div.innerHTML = `
+            <div class="hotspot-label">${p.title}</div>
+            ${p.lineups && p.lineups.length > 1 ? `<div style="position:absolute;top:-8px;right:-8px;background:var(--molotov);color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700">${p.lineups.length}</div>` : ''}
+        `;
+            div.onclick = () => window.openPoint(p.id);
             overlay.appendChild(div);
 
-            window.lineupData[h.id] = h;
+            window.lineupData[p.id] = p;
         });
     });
 </script>

@@ -1,16 +1,13 @@
-// Firebase конфигурация — ЗАМЕНИ НА СВОЮ!
 const firebaseConfig = {
-    apiKey: "AIzaSyAXNxDCdizaAB-3IJU65fLahDS_9ww6UWw",
-    authDomain: "cs2nades-1a910.firebaseapp.com",
-    databaseURL: "https://cs2nades-1a910-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "cs2nades-1a910",
-    storageBucket: "cs2nades-1a910.firebasestorage.app",
-    messagingSenderId: "497946011142",
-    appId: "1:497946011142:web:eea3fe5839ac4d23444587",
-    measurementId: "G-M14MZNH78P"
+    apiKey: "YOUR_API_KEY",
+    authDomain: "cs2nades.firebaseapp.com",
+    databaseURL: "https://cs2nades-default-rtdb.firebaseio.com",
+    projectId: "cs2nades",
+    storageBucket: "cs2nades.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:123456789:web:abcdef"
 };
 
-// Инициализация Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
@@ -36,28 +33,52 @@ document.addEventListener('DOMContentLoaded', () => {
         if (badge) badge.textContent = Storage.getFavorites().length > 0 ? Storage.getFavorites().length : '';
     };
 
-    // Interactive Map Logic
     const panel = document.getElementById('lineup-panel');
     const overlay = document.getElementById('overlay-active');
 
     if (panel) {
-        let currentId = null;
+        let currentPointId = null;
+        let currentLineupId = null;
 
-        function openLineup(id) {
-            const data = window.lineupData[id];
-            if (!data) return;
-            currentId = id;
+        function openPoint(pointId) {
+            const point = window.lineupData[pointId];
+            if (!point || !point.lineups || point.lineups.length === 0) return;
 
-            document.querySelector('.lineup-panel-title').textContent = data.title;
-            document.querySelector('.lineup-panel-subtitle').textContent = data.desc;
-            document.getElementById('panel-pos').textContent = data.pos;
-            document.getElementById('panel-aim').textContent = data.aim;
-            document.getElementById('panel-inst').textContent = data.inst;
+            currentPointId = pointId;
 
-            const vidBox = document.getElementById('panel-video');
-            vidBox.innerHTML = data.video
-                ? `<video controls autoplay loop playsinline><source src="${data.video}" type="video/mp4"></video>`
-                : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3)">Видео скоро</div>`;
+            if (point.lineups.length === 1) {
+                openLineup(pointId, point.lineups[0].id);
+            } else {
+                showLineupSelector(point);
+            }
+        }
+
+        function showLineupSelector(point) {
+            const icons = { smoke: '💨', flash: '⚡', molotov: '🔥', he: '💥' };
+
+            document.querySelector('.lineup-panel-title').textContent = point.title;
+            document.querySelector('.lineup-panel-subtitle').textContent = `Выберите раскидку (${point.lineups.length} вариантов)`;
+            document.getElementById('panel-pos').textContent = '';
+            document.getElementById('panel-aim').textContent = '';
+            document.getElementById('panel-inst').textContent = '';
+
+            const videoBox = document.getElementById('panel-video');
+            videoBox.innerHTML = `
+                <div style="padding:1rem;overflow-y:auto;max-height:100%">
+                    ${point.lineups.map(l => `
+                        <div class="lineup-selector-item" onclick="window.openLineup('${currentPointId}','${l.id}')" style="padding:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:.75rem;cursor:pointer;transition:all var(--transition)">
+                            <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem">
+                                <span style="font-size:1.5rem">${icons[l.type]}</span>
+                                <div>
+                                    <div style="font-weight:600;font-size:.95rem">${l.title}</div>
+                                    <div style="font-size:.8rem;color:var(--text-2)">${l.desc || ''}</div>
+                                </div>
+                            </div>
+                            <div style="font-size:.85rem;color:var(--text-3)">📍 ${l.pos || 'Позиция не указана'}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
 
             updateFavBtn();
             panel.classList.add('open');
@@ -65,10 +86,36 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.overflow = 'hidden';
 
             document.querySelectorAll('.map-hotspot').forEach(h => h.classList.remove('active'));
-            const activeHotspot = document.querySelector(`.map-hotspot[data-id="${id}"]`);
+            const activeHotspot = document.querySelector(`.map-hotspot[data-id="${currentPointId}"]`);
             if (activeHotspot) activeHotspot.classList.add('active');
+        }
 
-            Storage.addToHistory({ id, title: data.title, type: data.type });
+        function openLineup(pointId, lineupId) {
+            const point = window.lineupData[pointId];
+            if (!point) return;
+            const lineup = point.lineups.find(l => l.id === lineupId);
+            if (!lineup) return;
+
+            currentPointId = pointId;
+            currentLineupId = lineupId;
+
+            document.querySelector('.lineup-panel-title').textContent = `${point.title} — ${lineup.title}`;
+            document.querySelector('.lineup-panel-subtitle').textContent = lineup.desc;
+            document.getElementById('panel-pos').textContent = lineup.pos;
+            document.getElementById('panel-aim').textContent = lineup.aim;
+            document.getElementById('panel-inst').textContent = lineup.inst;
+
+            const vidBox = document.getElementById('panel-video');
+            vidBox.innerHTML = lineup.video
+                ? `<video controls autoplay loop playsinline><source src="${lineup.video}" type="video/mp4"></video>`
+                : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3)">Видео скоро</div>`;
+
+            updateFavBtn();
+            panel.classList.add('open');
+            overlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+
+            Storage.addToHistory({ id: `${pointId}-${lineupId}`, title: `${point.title} — ${lineup.title}`, type: lineup.type });
             renderHistory();
         }
 
@@ -77,7 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
             overlay.classList.remove('show');
             document.body.style.overflow = '';
             document.querySelectorAll('.map-hotspot').forEach(h => h.classList.remove('active'));
-            currentId = null;
+            currentPointId = null;
+            currentLineupId = null;
         }
 
         document.getElementById('panel-close')?.addEventListener('click', closePanel);
@@ -99,25 +147,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.getElementById('fav-btn')?.addEventListener('click', () => {
-            if (!currentId) return;
-            Storage.isFavorite(currentId) ? Storage.removeFavorite(currentId) : Storage.addFavorite(currentId);
+            if (!currentLineupId) return;
+            const favId = `${currentPointId}-${currentLineupId}`;
+            Storage.isFavorite(favId) ? Storage.removeFavorite(favId) : Storage.addFavorite(favId);
             updateFavBtn();
         });
 
         function updateFavBtn() {
             const btn = document.getElementById('fav-btn');
-            const isFav = Storage.isFavorite(currentId);
+            if (!currentLineupId) return;
+            const favId = `${currentPointId}-${currentLineupId}`;
+            const isFav = Storage.isFavorite(favId);
             btn.innerHTML = isFav
                 ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" stroke="#fff" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> В избранном`
                 : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> В избранное`;
             btn.className = `btn ${isFav ? 'btn-secondary' : 'btn-primary'}`;
         }
 
-        // Делаем функцию глобальной для вызова из Firebase listener
+        window.openPoint = openPoint;
         window.openLineup = openLineup;
     }
 
-    // History Logic
     window.renderHistory = function() {
         const section = document.getElementById('history-section');
         if (!section) return;
@@ -131,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
             grid.innerHTML = hist.map(item => {
                 const mins = Math.floor((Date.now() - item.timestamp) / 60000);
                 const time = mins < 1 ? 'Только что' : mins < 60 ? `${mins} мин назад` : `${Math.floor(mins/60)} ч назад`;
-                return `<div class="history-card" onclick="window.openLineup('${item.id}')">
+                return `<div class="history-card" onclick="window.openPoint('${item.id.split('-')[0]}-${item.id.split('-')[1]}')">
                     <div class="history-card-title"><span>${icons[item.type]||'💣'}</span> ${item.title}</div>
                     <div class="history-card-meta">${time}</div>
                 </div>`;

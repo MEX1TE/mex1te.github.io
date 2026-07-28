@@ -18,13 +18,15 @@
         .btn-save:hover{background:#2ea043;transform:translateY(-2px)}
         .btn-clear{background:var(--molotov);color:#fff}
         .btn-clear:hover{background:#da3633;transform:translateY(-2px)}
+        .btn-add{background:var(--smoke);color:#fff}
+        .btn-add:hover{background:#4a9eff;transform:translateY(-2px)}
 
         .map-selector{margin-bottom:1.5rem}
         .map-selector label{display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2)}
         .map-selector select{width:100%;max-width:300px;padding:.7rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);font-family:inherit;font-size:.95rem;cursor:pointer}
         .map-selector select:focus{outline:none;border-color:var(--accent)}
 
-        .admin-layout{display:grid;grid-template-columns:1fr 400px;gap:2rem}
+        .admin-layout{display:grid;grid-template-columns:1fr 450px;gap:2rem}
         @media(max-width:1024px){.admin-layout{grid-template-columns:1fr}}
 
         .admin-map-wrapper{position:relative;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:crosshair}
@@ -35,23 +37,17 @@
         .admin-hotspot::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent-glow)}
         .admin-hotspot:hover{transform:translate(-50%,-50%) scale(1.3)}
         .admin-hotspot-label{position:absolute;top:32px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:var(--text-1);padding:.4rem .8rem;border-radius:var(--radius-sm);font-size:.75rem;font-weight:600;white-space:nowrap;pointer-events:none}
+        .admin-hotspot-count{position:absolute;top:-8px;right:-8px;background:var(--molotov);color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
 
-        /* Preview точка - появляется сразу после клика */
         .admin-hotspot-preview{position:absolute;width:32px;height:32px;transform:translate(-50%,-50%);z-index:15;pointer-events:none;animation:previewAppear .3s ease}
         .admin-hotspot-preview::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--smoke);opacity:.5;animation:previewPulse 1.5s ease-in-out infinite}
         .admin-hotspot-preview::after{content:'';position:absolute;inset:6px;border-radius:50%;background:var(--smoke);box-shadow:0 0 15px rgba(88,166,255,.6)}
         .admin-hotspot-preview-label{position:absolute;top:36px;left:50%;transform:translateX(-50%);background:rgba(88,166,255,.9);color:#fff;padding:.3rem .6rem;border-radius:var(--radius-sm);font-size:.7rem;font-weight:600;white-space:nowrap}
 
-        @keyframes previewAppear{
-            from{opacity:0;transform:translate(-50%,-50%) scale(0.5)}
-            to{opacity:1;transform:translate(-50%,-50%) scale(1)}
-        }
-        @keyframes previewPulse{
-            0%,100%{transform:scale(1);opacity:.5}
-            50%{transform:scale(1.5);opacity:.2}
-        }
+        @keyframes previewAppear{from{opacity:0;transform:translate(-50%,-50%) scale(0.5)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+        @keyframes previewPulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.5);opacity:.2}}
 
-        .admin-form{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;height:fit-content;position:sticky;top:80px}
+        .admin-form{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;height:fit-content;position:sticky;top:80px;max-height:calc(100vh - 100px);overflow-y:auto}
         .form-title{font-size:1.3rem;font-weight:700;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem}
         .form-group{margin-bottom:1.25rem}
         .form-group label{display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2);font-size:.9rem}
@@ -65,13 +61,14 @@
         .hotspot-list-title{font-size:1.2rem;font-weight:700;margin-bottom:1rem}
         .hotspot-item{display:flex;justify-content:space-between;align-items:center;padding:.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:.5rem;transition:all var(--transition)}
         .hotspot-item:hover{border-color:var(--border-hover)}
-        .hotspot-item-info{display:flex;align-items:center;gap:.75rem}
+        .hotspot-item-info{display:flex;align-items:center;gap:.75rem;flex:1}
         .hotspot-item-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
         .hotspot-item-icon.smoke{background:rgba(88,166,255,.15);color:var(--smoke)}
         .hotspot-item-icon.flash{background:rgba(210,153,34,.15);color:var(--flash)}
         .hotspot-item-icon.molotov{background:rgba(248,81,73,.15);color:var(--molotov)}
         .hotspot-item-icon.he{background:rgba(63,185,80,.15);color:var(--he)}
         .hotspot-item-name{font-weight:600;font-size:.95rem}
+        .hotspot-item-count{font-size:.75rem;color:var(--text-3);margin-left:.5rem}
         .hotspot-item-actions{display:flex;gap:.5rem}
         .btn-sm{padding:.4rem .8rem;border-radius:var(--radius-sm);font-size:.8rem;font-weight:600;cursor:pointer;border:none;transition:all var(--transition)}
         .btn-edit{background:var(--accent);color:#000}
@@ -86,17 +83,23 @@
 
         .hint-box{padding:1rem;background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.3);border-radius:var(--radius-sm);margin-bottom:1.5rem;font-size:.88rem;color:var(--text-2);display:flex;align-items:center;gap:.75rem}
         .hint-box-icon{font-size:1.5rem}
+
+        .lineups-section{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+        .lineups-title{font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between}
+        .lineup-item{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;margin-bottom:.75rem}
+        .lineup-item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+        .lineup-item-title{font-weight:600;font-size:.9rem}
+        .lineup-item-actions{display:flex;gap:.5rem}
+        .lineup-item-details{font-size:.85rem;color:var(--text-2)}
+
+        .tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border)}
+        .tab{padding:.7rem 1.2rem;background:transparent;border:none;color:var(--text-2);font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all var(--transition)}
+        .tab:hover{color:var(--text-1)}
+        .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
     </style>
 </head>
 <body>
-<script>
-    (function() {
-        const auth = localStorage.getItem('admin_auth');
-        if (!auth) {
-            window.location.href = 'admin-login.html';
-        }
-    })();
-</script>
+
 <header class="header">
     <div class="header-inner">
         <a href="index.html" class="logo"><div class="logo-icon">💣</div><div>CS2<span>NADES</span></div></a>
@@ -133,7 +136,7 @@
         <div>
             <div class="hint-box">
                 <div class="hint-box-icon">💡</div>
-                <div>Кликните на карту, чтобы добавить точку. Синяя точка — это место, куда вы кликнули. Заполните форму справа и нажмите "Сохранить".</div>
+                <div>Кликните на карту, чтобы добавить точку. Одна точка может иметь несколько раскидок из разных позиций.</div>
             </div>
 
             <div class="admin-map-wrapper" id="map-wrapper">
@@ -147,66 +150,98 @@
         </div>
 
         <div class="admin-form" id="admin-form">
-            <h3 class="form-title">✏️ <span id="form-title-text">Добавить раскидку</span></h3>
-
-            <div class="form-group">
-                <label>Название:</label>
-                <input type="text" id="input-title" placeholder="Например: A-site Smoke">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('point')">📍 Точка</button>
+                <button class="tab" onclick="switchTab('lineup')">🎯 Раскидка</button>
             </div>
 
-            <div class="form-group">
-                <label>Описание:</label>
-                <input type="text" id="input-desc" placeholder="Краткое описание раскидки">
-            </div>
+            <!-- Point Tab -->
+            <div id="tab-point">
+                <h3 class="form-title">✏️ <span id="form-title-text">Добавить точку</span></h3>
 
-            <div class="form-group">
-                <label>Тип гранаты:</label>
-                <select id="input-type">
-                    <option value="smoke">💨 Smoke</option>
-                    <option value="flash">⚡ Flash</option>
-                    <option value="molotov">🔥 Molotov</option>
-                    <option value="he">💥 HE</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Позиция:</label>
-                <input type="text" id="input-pos" placeholder="Где стоять (например: T-spawn у ящиков)">
-            </div>
-
-            <div class="form-group">
-                <label>Прицел:</label>
-                <input type="text" id="input-aim" placeholder="Куда целиться (например: На угол здания)">
-            </div>
-
-            <div class="form-group">
-                <label>Инструкция:</label>
-                <textarea id="input-inst" placeholder="Пошаговая инструкция..."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Видео (путь к файлу):</label>
-                <input type="text" id="input-video" placeholder="videos/mirage-a-smoke.mp4">
-                <small style="color:var(--text-3);margin-top:.3rem;display:block">Загрузи видео в папку videos/ на GitHub</small>
-            </div>
-
-            <div class="form-coords">
-                <div>
-                    <label style="display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2);font-size:.9rem">X (%):</label>
-                    <div class="coord-display" id="coord-x">—</div>
+                <div class="form-group">
+                    <label>Название точки:</label>
+                    <input type="text" id="input-title" placeholder="Например: Окно Mid">
                 </div>
-                <div>
-                    <label style="display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2);font-size:.9rem">Y (%):</label>
-                    <div class="coord-display" id="coord-y">—</div>
+
+                <div class="form-coords">
+                    <div>
+                        <label style="display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2);font-size:.9rem">X (%):</label>
+                        <div class="coord-display" id="coord-x">—</div>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2);font-size:.9rem">Y (%):</label>
+                        <div class="coord-display" id="coord-y">—</div>
+                    </div>
+                </div>
+
+                <button class="btn-admin btn-save" style="width:100%;margin-top:1.5rem;justify-content:center" onclick="savePoint()">
+                    💾 Сохранить точку
+                </button>
+                <button class="btn-admin btn-clear" style="width:100%;margin-top:.5rem;justify-content:center" onclick="cancelEdit()">
+                    ❌ Отмена
+                </button>
+
+                <div class="lineups-section" id="lineups-section" style="display:none">
+                    <div class="lineups-title">
+                        <span>🎯 Раскидки для этой точки</span>
+                        <button class="btn-admin btn-add" style="padding:.4rem .8rem;font-size:.8rem" onclick="addNewLineup()">+ Добавить</button>
+                    </div>
+                    <div id="lineups-list"></div>
                 </div>
             </div>
 
-            <button class="btn-admin btn-save" style="width:100%;margin-top:1.5rem;justify-content:center" onclick="saveHotspot()">
-                💾 Сохранить точку
-            </button>
-            <button class="btn-admin btn-clear" style="width:100%;margin-top:.5rem;justify-content:center" onclick="cancelEdit()">
-                ❌ Отмена
-            </button>
+            <!-- Lineup Tab -->
+            <div id="tab-lineup" style="display:none">
+                <h3 class="form-title">🎯 <span id="lineup-form-title">Добавить раскидку</span></h3>
+
+                <div class="form-group">
+                    <label>Название раскидки:</label>
+                    <input type="text" id="input-lineup-title" placeholder="Например: Из T-spawn #1">
+                </div>
+
+                <div class="form-group">
+                    <label>Описание:</label>
+                    <input type="text" id="input-lineup-desc" placeholder="Краткое описание">
+                </div>
+
+                <div class="form-group">
+                    <label>Тип гранаты:</label>
+                    <select id="input-lineup-type">
+                        <option value="smoke">💨 Smoke</option>
+                        <option value="flash">⚡ Flash</option>
+                        <option value="molotov">🔥 Molotov</option>
+                        <option value="he">💥 HE</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Позиция (откуда кидать):</label>
+                    <input type="text" id="input-lineup-pos" placeholder="Например: T-spawn у стены">
+                </div>
+
+                <div class="form-group">
+                    <label>Прицел:</label>
+                    <input type="text" id="input-lineup-aim" placeholder="Например: На раму окна">
+                </div>
+
+                <div class="form-group">
+                    <label>Инструкция:</label>
+                    <textarea id="input-lineup-inst" placeholder="Пошаговая инструкция..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Видео (путь к файлу):</label>
+                    <input type="text" id="input-lineup-video" placeholder="videos/mirage-window-1.mp4">
+                </div>
+
+                <button class="btn-admin btn-save" style="width:100%;margin-top:1.5rem;justify-content:center" onclick="saveLineup()">
+                    💾 Сохранить раскидку
+                </button>
+                <button class="btn-admin btn-clear" style="width:100%;margin-top:.5rem;justify-content:center" onclick="cancelLineupEdit()">
+                    ❌ Отмена
+                </button>
+            </div>
         </div>
     </div>
 </section>
@@ -214,16 +249,14 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script>
-    // Firebase конфигурация — ЗАМЕНИ НА СВОЮ!
     const firebaseConfig = {
-        apiKey: "AIzaSyAXNxDCdizaAB-3IJU65fLahDS_9ww6UWw",
-        authDomain: "cs2nades-1a910.firebaseapp.com",
-        databaseURL: "https://cs2nades-1a910-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "cs2nades-1a910",
-        storageBucket: "cs2nades-1a910.firebasestorage.app",
-        messagingSenderId: "497946011142",
-        appId: "1:497946011142:web:eea3fe5839ac4d23444587",
-        measurementId: "G-M14MZNH78P"
+        apiKey: "YOUR_API_KEY",
+        authDomain: "cs2nades.firebaseapp.com",
+        databaseURL: "https://cs2nades-default-rtdb.firebaseio.com",
+        projectId: "cs2nades",
+        storageBucket: "cs2nades.appspot.com",
+        messagingSenderId: "123456789",
+        appId: "1:123456789:web:abcdef"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -231,174 +264,245 @@
 
     let currentMap = 'mirage';
     let hotspots = { mirage: [], dust2: [] };
-    let editingId = null;
+    let editingPointId = null;
+    let editingLineupId = null;
     let tempCoords = { x: 0, y: 0 };
     let previewElement = null;
 
-    // Загружаем данные из Firebase
     db.ref('lineups').on('value', snapshot => {
         const data = snapshot.val() || {};
-        hotspots = {
-            mirage: data.mirage || [],
-            dust2: data.dust2 || []
-        };
+        hotspots = { mirage: data.mirage || [], dust2: data.dust2 || [] };
         renderHotspots();
     });
 
-    // Переключение карты
     function switchMap() {
         currentMap = document.getElementById('map-select').value;
-        const img = document.getElementById('map-image');
-        img.src = `images/${currentMap}-radar.webp`;
+        document.getElementById('map-image').src = `images/${currentMap}-radar.webp`;
         removePreview();
         renderHotspots();
     }
 
-    // Удаление preview точки
-    function removePreview() {
-        if (previewElement) {
-            previewElement.remove();
-            previewElement = null;
-        }
+    function switchTab(tab) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById('tab-point').style.display = tab === 'point' ? 'block' : 'none';
+        document.getElementById('tab-lineup').style.display = tab === 'lineup' ? 'block' : 'none';
     }
 
-    // Создание preview точки
+    function removePreview() {
+        if (previewElement) { previewElement.remove(); previewElement = null; }
+    }
+
     function createPreview(x, y) {
         removePreview();
-
         previewElement = document.createElement('div');
         previewElement.className = 'admin-hotspot-preview';
         previewElement.style.left = x + '%';
         previewElement.style.top = y + '%';
         previewElement.innerHTML = '<div class="admin-hotspot-preview-label">Новая точка</div>';
-
         document.getElementById('map-wrapper').appendChild(previewElement);
     }
 
-    // Добавление точки кликом на карту
     document.getElementById('map-wrapper').addEventListener('click', function(event) {
-        // Игнорируем клики на существующие точки
-        if (event.target.classList.contains('admin-hotspot') || event.target.closest('.admin-hotspot')) {
-            return;
-        }
+        if (event.target.classList.contains('admin-hotspot') || event.target.closest('.admin-hotspot')) return;
 
         const rect = this.getBoundingClientRect();
         const x = ((event.clientX - rect.left) / rect.width) * 100;
         const y = ((event.clientY - rect.top) / rect.height) * 100;
 
         tempCoords = { x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
-
-        // Создаём preview точку
         createPreview(tempCoords.x, tempCoords.y);
 
         document.getElementById('coord-x').textContent = tempCoords.x + '%';
         document.getElementById('coord-y').textContent = tempCoords.y + '%';
 
-        editingId = null;
-        document.getElementById('form-title-text').textContent = 'Добавить раскидку';
-        clearForm();
+        editingPointId = null;
+        document.getElementById('form-title-text').textContent = 'Добавить точку';
+        document.getElementById('lineups-section').style.display = 'none';
+        clearPointForm();
 
-        // Восстанавливаем координаты после clearForm
         document.getElementById('coord-x').textContent = tempCoords.x + '%';
         document.getElementById('coord-y').textContent = tempCoords.y + '%';
-
-        // Скроллим к форме
         document.getElementById('admin-form').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
 
-    // Сохранение точки в Firebase
-    function saveHotspot() {
+    function savePoint() {
         const title = document.getElementById('input-title').value.trim();
-        const desc = document.getElementById('input-desc').value.trim();
-        const type = document.getElementById('input-type').value;
-        const pos = document.getElementById('input-pos').value.trim();
-        const aim = document.getElementById('input-aim').value.trim();
-        const inst = document.getElementById('input-inst').value.trim();
-        const video = document.getElementById('input-video').value.trim();
 
-        if (!title || !type || tempCoords.x === 0) {
-            alert('Заполните обязательные поля и кликните на карту!');
+        if (!title || tempCoords.x === 0) {
+            alert('Заполните название и кликните на карту!');
             return;
         }
 
-        const hotspot = {
-            id: editingId || `${currentMap}-${Date.now()}`,
-            title, desc, type, pos, aim, inst, video,
-            x: tempCoords.x,
-            y: tempCoords.y
-        };
-
-        if (editingId) {
-            const index = hotspots[currentMap].findIndex(h => h.id === editingId);
-            if (index > -1) hotspots[currentMap][index] = hotspot;
+        if (editingPointId) {
+            const point = hotspots[currentMap].find(h => h.id === editingPointId);
+            if (point) {
+                point.title = title;
+                point.x = tempCoords.x;
+                point.y = tempCoords.y;
+            }
         } else {
-            hotspots[currentMap].push(hotspot);
+            hotspots[currentMap].push({
+                id: `${currentMap}-${Date.now()}`,
+                title,
+                x: tempCoords.x,
+                y: tempCoords.y,
+                lineups: []
+            });
         }
 
-        // Сохраняем в Firebase
         db.ref(`lineups/${currentMap}`).set(hotspots[currentMap])
             .then(() => {
-                console.log('✅ Сохранено в Firebase');
                 removePreview();
-                clearForm();
-                editingId = null;
-                document.getElementById('form-title-text').textContent = 'Добавить раскидку';
+                clearPointForm();
+                editingPointId = null;
+                document.getElementById('form-title-text').textContent = 'Добавить точку';
             })
-            .catch(err => alert('❌ Ошибка сохранения: ' + err.message));
+            .catch(err => alert('❌ Ошибка: ' + err.message));
     }
 
-    // Редактирование точки
-    function editHotspot(id) {
-        const hotspot = hotspots[currentMap].find(h => h.id === id);
-        if (!hotspot) return;
+    function editPoint(id) {
+        const point = hotspots[currentMap].find(h => h.id === id);
+        if (!point) return;
 
-        editingId = id;
-        tempCoords = { x: hotspot.x, y: hotspot.y };
+        editingPointId = id;
+        tempCoords = { x: point.x, y: point.y };
 
-        // Показываем preview на позиции редактируемой точки
-        createPreview(hotspot.x, hotspot.y);
+        document.getElementById('input-title').value = point.title;
+        document.getElementById('coord-x').textContent = point.x + '%';
+        document.getElementById('coord-y').textContent = point.y + '%';
+        document.getElementById('form-title-text').textContent = 'Редактировать точку';
 
-        document.getElementById('input-title').value = hotspot.title;
-        document.getElementById('input-desc').value = hotspot.desc;
-        document.getElementById('input-type').value = hotspot.type;
-        document.getElementById('input-pos').value = hotspot.pos;
-        document.getElementById('input-aim').value = hotspot.aim;
-        document.getElementById('input-inst').value = hotspot.inst;
-        document.getElementById('input-video').value = hotspot.video;
-        document.getElementById('coord-x').textContent = hotspot.x + '%';
-        document.getElementById('coord-y').textContent = hotspot.y + '%';
-
-        document.getElementById('form-title-text').textContent = 'Редактировать раскидку';
+        createPreview(point.x, point.y);
+        renderLineupsList(point);
+        document.getElementById('lineups-section').style.display = 'block';
         document.getElementById('admin-form').scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Удаление точки
-    function deleteHotspot(id) {
-        if (!confirm('Удалить эту точку?')) return;
+    function deletePoint(id) {
+        if (!confirm('Удалить эту точку и все её раскидки?')) return;
         hotspots[currentMap] = hotspots[currentMap].filter(h => h.id !== id);
+        db.ref(`lineups/${currentMap}`).set(hotspots[currentMap])
+            .then(() => removePreview())
+            .catch(err => alert('❌ Ошибка: ' + err.message));
+    }
+
+    function addNewLineup() {
+        if (!editingPointId) {
+            alert('Сначала сохраните точку!');
+            return;
+        }
+        editingLineupId = null;
+        document.getElementById('lineup-form-title').textContent = 'Добавить раскидку';
+        clearLineupForm();
+        switchTab('lineup');
+        document.querySelectorAll('.tab')[1].classList.add('active');
+        document.querySelectorAll('.tab')[0].classList.remove('active');
+    }
+
+    function editLineup(pointId, lineupId) {
+        const point = hotspots[currentMap].find(h => h.id === pointId);
+        if (!point) return;
+        const lineup = point.lineups.find(l => l.id === lineupId);
+        if (!lineup) return;
+
+        editingPointId = pointId;
+        editingLineupId = lineupId;
+
+        document.getElementById('input-lineup-title').value = lineup.title;
+        document.getElementById('input-lineup-desc').value = lineup.desc;
+        document.getElementById('input-lineup-type').value = lineup.type;
+        document.getElementById('input-lineup-pos').value = lineup.pos;
+        document.getElementById('input-lineup-aim').value = lineup.aim;
+        document.getElementById('input-lineup-inst').value = lineup.inst;
+        document.getElementById('input-lineup-video').value = lineup.video;
+        document.getElementById('lineup-form-title').textContent = 'Редактировать раскидку';
+
+        switchTab('lineup');
+        document.querySelectorAll('.tab')[1].classList.add('active');
+        document.querySelectorAll('.tab')[0].classList.remove('active');
+    }
+
+    function deleteLineup(pointId, lineupId) {
+        if (!confirm('Удалить эту раскидку?')) return;
+        const point = hotspots[currentMap].find(h => h.id === pointId);
+        if (!point) return;
+        point.lineups = point.lineups.filter(l => l.id !== lineupId);
+        db.ref(`lineups/${currentMap}`).set(hotspots[currentMap])
+            .then(() => renderLineupsList(point));
+    }
+
+    function saveLineup() {
+        const title = document.getElementById('input-lineup-title').value.trim();
+        const desc = document.getElementById('input-lineup-desc').value.trim();
+        const type = document.getElementById('input-lineup-type').value;
+        const pos = document.getElementById('input-lineup-pos').value.trim();
+        const aim = document.getElementById('input-lineup-aim').value.trim();
+        const inst = document.getElementById('input-lineup-inst').value.trim();
+        const video = document.getElementById('input-lineup-video').value.trim();
+
+        if (!title || !type) {
+            alert('Заполните обязательные поля!');
+            return;
+        }
+
+        const point = hotspots[currentMap].find(h => h.id === editingPointId);
+        if (!point) return;
+
+        const lineup = {
+            id: editingLineupId || `lineup-${Date.now()}`,
+            title, desc, type, pos, aim, inst, video
+        };
+
+        if (editingLineupId) {
+            const index = point.lineups.findIndex(l => l.id === editingLineupId);
+            if (index > -1) point.lineups[index] = lineup;
+        } else {
+            point.lineups.push(lineup);
+        }
 
         db.ref(`lineups/${currentMap}`).set(hotspots[currentMap])
             .then(() => {
-                console.log('✅ Удалено');
-                removePreview();
+                clearLineupForm();
+                editingLineupId = null;
+                document.getElementById('lineup-form-title').textContent = 'Добавить раскидку';
+                switchTab('point');
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.querySelectorAll('.tab')[1].classList.remove('active');
+                renderLineupsList(point);
             })
             .catch(err => alert('❌ Ошибка: ' + err.message));
     }
 
-    // Очистка всех точек
+    function renderLineupsList(point) {
+        const list = document.getElementById('lineups-list');
+        const icons = { smoke: '💨', flash: '⚡', molotov: '🔥', he: '💥' };
+
+        if (point.lineups.length === 0) {
+            list.innerHTML = '<p style="color:var(--text-3);font-size:.9rem;text-align:center;padding:1rem">Нет раскидок. Нажмите "+ Добавить"</p>';
+        } else {
+            list.innerHTML = point.lineups.map(l => `
+            <div class="lineup-item">
+                <div class="lineup-item-header">
+                    <div class="lineup-item-title">${icons[l.type]} ${l.title}</div>
+                    <div class="lineup-item-actions">
+                        <button class="btn-sm btn-edit" onclick="editLineup('${point.id}','${l.id}')">✏️</button>
+                        <button class="btn-sm btn-delete" onclick="deleteLineup('${point.id}','${l.id}')">🗑</button>
+                    </div>
+                </div>
+                <div class="lineup-item-details">${l.pos || 'Позиция не указана'}</div>
+            </div>
+        `).join('');
+        }
+    }
+
     function clearAll() {
         if (!confirm('Удалить ВСЕ точки на этой карте?')) return;
         hotspots[currentMap] = [];
-
         db.ref(`lineups/${currentMap}`).set([])
-            .then(() => {
-                console.log('✅ Очищено');
-                removePreview();
-            })
-            .catch(err => alert('❌ Ошибка: ' + err.message));
+            .then(() => removePreview());
     }
 
-    // Отрисовка точек
     function renderHotspots() {
         const wrapper = document.getElementById('map-wrapper');
         wrapper.querySelectorAll('.admin-hotspot').forEach(h => h.remove());
@@ -408,12 +512,14 @@
             div.className = 'admin-hotspot';
             div.style.left = h.x + '%';
             div.style.top = h.y + '%';
-            div.innerHTML = `<div class="admin-hotspot-label">${h.title}</div>`;
-            div.onclick = (e) => { e.stopPropagation(); editHotspot(h.id); };
+            div.innerHTML = `
+            <div class="admin-hotspot-label">${h.title}</div>
+            ${h.lineups && h.lineups.length > 0 ? `<div class="admin-hotspot-count">${h.lineups.length}</div>` : ''}
+        `;
+            div.onclick = (e) => { e.stopPropagation(); editPoint(h.id); };
             wrapper.appendChild(div);
         });
 
-        // Список точек
         const items = document.getElementById('hotspot-items');
         const icons = { smoke: '💨', flash: '⚡', molotov: '🔥', he: '💥' };
 
@@ -423,12 +529,15 @@
             items.innerHTML = hotspots[currentMap].map(h => `
             <div class="hotspot-item">
                 <div class="hotspot-item-info">
-                    <div class="hotspot-item-icon ${h.type}">${icons[h.type]}</div>
-                    <div class="hotspot-item-name">${h.title}</div>
+                    <div class="hotspot-item-icon ${h.lineups[0]?.type || 'smoke'}">${icons[h.lineups[0]?.type] || '💣'}</div>
+                    <div>
+                        <div class="hotspot-item-name">${h.title}</div>
+                        ${h.lineups && h.lineups.length > 0 ? `<div class="hotspot-item-count">${h.lineups.length} раскидок</div>` : ''}
+                    </div>
                 </div>
                 <div class="hotspot-item-actions">
-                    <button class="btn-sm btn-edit" onclick="editHotspot('${h.id}')">✏️</button>
-                    <button class="btn-sm btn-delete" onclick="deleteHotspot('${h.id}')">🗑</button>
+                    <button class="btn-sm btn-edit" onclick="editPoint('${h.id}')">✏️</button>
+                    <button class="btn-sm btn-delete" onclick="deletePoint('${h.id}')">🗑</button>
                 </div>
             </div>
         `).join('');
@@ -437,21 +546,33 @@
         document.getElementById('hotspot-count').textContent = hotspots[currentMap].length;
     }
 
-    // Очистка формы
-    function clearForm() {
-        ['input-title', 'input-desc', 'input-pos', 'input-aim', 'input-inst', 'input-video'].forEach(id => {
-            document.getElementById(id).value = '';
-        });
+    function clearPointForm() {
+        document.getElementById('input-title').value = '';
         document.getElementById('coord-x').textContent = '—';
         document.getElementById('coord-y').textContent = '—';
     }
 
-    // Отмена редактирования
+    function clearLineupForm() {
+        ['input-lineup-title', 'input-lineup-desc', 'input-lineup-pos', 'input-lineup-aim', 'input-lineup-inst', 'input-lineup-video'].forEach(id => {
+            document.getElementById(id).value = '';
+        });
+    }
+
     function cancelEdit() {
-        editingId = null;
-        document.getElementById('form-title-text').textContent = 'Добавить раскидку';
+        editingPointId = null;
+        document.getElementById('form-title-text').textContent = 'Добавить точку';
         removePreview();
-        clearForm();
+        clearPointForm();
+        document.getElementById('lineups-section').style.display = 'none';
+    }
+
+    function cancelLineupEdit() {
+        editingLineupId = null;
+        document.getElementById('lineup-form-title').textContent = 'Добавить раскидку';
+        clearLineupForm();
+        switchTab('point');
+        document.querySelectorAll('.tab')[0].classList.add('active');
+        document.querySelectorAll('.tab')[1].classList.remove('active');
     }
 </script>
 
