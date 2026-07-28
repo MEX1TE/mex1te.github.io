@@ -11,21 +11,13 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
 <header class="header">
     <div class="header-inner">
-        <a href="index.html" class="logo">
-            <div class="logo-icon">💣</div>
-            <div>CS2<span>NADES</span></div>
-        </a>
+        <a href="index.html" class="logo"><div class="logo-icon">💣</div><div>CS2<span>NADES</span></div></a>
         <ul class="nav">
             <li><a href="index.html">Главная</a></li>
             <li><a href="index.html#maps">Карты</a></li>
-            <li class="fav-counter">
-                <a href="favorites.html" class="active">Избранное</a>
-                <span class="fav-badge"></span>
-            </li>
-            <li><a href="index.html#about">О проекте</a></li>
+            <li class="fav-counter"><a href="favorites.html" class="active">Избранное</a><span class="fav-badge"></span></li>
         </ul>
     </div>
 </header>
@@ -36,59 +28,22 @@
 </section>
 
 <footer class="footer">
-    <div class="footer-inner">
-        <div class="footer-copy">© 2026 CS2NADES</div>
-        <ul class="footer-links"><li><a href="#">Discord</a></li><li><a href="#">Контакты</a></li></ul>
-    </div>
+    <div class="footer-inner"><div class="footer-copy">© 2026 CS2NADES</div><ul class="footer-links"><li><a href="#">Discord</a></li><li><a href="#">Контакты</a></li></ul></div>
 </footer>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
         const container = document.getElementById('favorites-container');
+        const badge = document.querySelector('.fav-badge');
+        if (badge) badge.textContent = favs.length > 0 ? favs.length : '';
 
-        if (favorites.length === 0) {
-            container.innerHTML = `
-            <div class="favorites-empty">
-                <div class="favorites-empty-icon">💔</div>
-                <h2>Пока пусто</h2>
-                <p>Добавляй раскидки в избранное, чтобы быстро находить их</p>
-                <a href="index.html#maps" class="favorites-btn">Выбрать карту</a>
-            </div>
-        `;
+        if (favs.length === 0) {
+            container.innerHTML = `<div class="favorites-empty"><div class="favorites-empty-icon">💔</div><h2>Пока пусто</h2><p>Добавляй раскидки в избранное на страницах карт</p><a href="index.html#maps" class="favorites-btn">Выбрать карту</a></div>`;
         } else {
-            container.innerHTML = `
-            <div class="lineups" style="padding:0">
-                ${favorites.map(id => `
-                    <div class="lcard" data-id="${id}" style="cursor:pointer" onclick="goToLineup('${id}')">
-                        <div class="lprev smoke">
-                            <span class="lprev-icon">💣</span>
-                            <button class="fav-btn active" onclick="event.stopPropagation();removeFavorite('${id}')">
-                                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                            </button>
-                        </div>
-                        <div class="linfo">
-                            <h3>${id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</h3>
-                            <p>Нажми, чтобы открыть</p>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        `;
+            container.innerHTML = `<div class="history-grid">${favs.map(id => `<div class="history-card" onclick="window.location.href='${id.startsWith('m')?'mirage':'dust2'}.html'"><div class="history-card-title">💣 ${id.replace(/-/g, ' ').toUpperCase()}</div><div class="history-card-meta">Нажми, чтобы открыть карту</div></div>`).join('')}</div>`;
         }
-
-        window.goToLineup = (id) => {
-            const [map] = id.split('-');
-            window.location.href = `${map}.html`;
-        };
-
-        window.removeFavorite = (id) => {
-            const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
-            localStorage.setItem('favorites', JSON.stringify(favs.filter(f => f !== id)));
-            location.reload();
-        };
     });
 </script>
-
 </body>
 </html>
