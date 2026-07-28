@@ -18,6 +18,7 @@
             <li><a href="index.html">Главная</a></li>
             <li><a href="index.html#maps" class="active">Карты</a></li>
             <li class="fav-counter"><a href="favorites.html">Избранное</a><span class="fav-badge"></span></li>
+            <li><a href="admin.html">Админ</a></li>
         </ul>
     </div>
 </header>
@@ -31,23 +32,14 @@
 <section class="map-container">
     <div class="map-wrapper">
         <img src="images/mirage-radar.webp" alt="Mirage Radar" class="map-image" onerror="this.style.background='var(--bg-tertiary)';this.style.minHeight='500px'">
-        <div class="map-overlay">
-            <div class="map-hotspot" data-id="m-a-flash" style="left:75%;top:25%"><div class="hotspot-label">A-site Flash</div></div>
-            <div class="map-hotspot" data-id="m-a-molo" style="left:78%;top:28%"><div class="hotspot-label">A-site Molotov</div></div>
-            <div class="map-hotspot" data-id="m-ct-smoke" style="left:35%;top:75%"><div class="hotspot-label">CT Smoke</div></div>
-            <div class="map-hotspot" data-id="m-ct-flash" style="left:38%;top:72%"><div class="hotspot-label">CT Flash</div></div>
-            <div class="map-hotspot" data-id="m-mid-smoke" style="left:50%;top:50%"><div class="hotspot-label">Mid Smoke</div></div>
-            <div class="map-hotspot" data-id="m-mid-molo" style="left:48%;top:52%"><div class="hotspot-label">Mid Molotov</div></div>
-            <div class="map-hotspot" data-id="m-b-smoke" style="left:25%;top:35%"><div class="hotspot-label">B-site Smoke</div></div>
-            <div class="map-hotspot" data-id="m-b-flash" style="left:28%;top:32%"><div class="hotspot-label">B-site Flash</div></div>
-            <div class="map-hotspot" data-id="m-jungle" style="left:65%;top:40%"><div class="hotspot-label">Jungle Smoke</div></div>
-            <div class="map-hotspot" data-id="m-conn" style="left:55%;top:35%"><div class="hotspot-label">Connector Smoke</div></div>
-            <div class="map-hotspot" data-id="m-bshort1" style="left:35%;top:45%"><div class="hotspot-label">B-short Smoke #1</div></div>
+        <div class="map-overlay" id="map-overlay">
+            <!-- Точки загружаются автоматически из Firebase -->
         </div>
         <div class="map-legend">
             <div class="legend-item"><div class="legend-dot smoke"></div><span>Smoke</span></div>
             <div class="legend-item"><div class="legend-dot flash"></div><span>Flash</span></div>
             <div class="legend-item"><div class="legend-dot molotov"></div><span>Molotov</span></div>
+            <div class="legend-item"><div class="legend-dot he"></div><span>HE</span></div>
         </div>
     </div>
 </section>
@@ -74,7 +66,7 @@
                 <p id="panel-inst"></p>
             </div>
         </div>
-        <div class="lineup-panel-actions">
+        <div style="display:flex;gap:.75rem;margin-top:1.5rem">
             <button class="btn btn-primary" id="fav-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> В избранное</button>
             <button class="btn btn-secondary" id="panel-close-2">Закрыть</button>
         </div>
@@ -85,21 +77,36 @@
     <div class="footer-inner"><div class="footer-copy">© 2026 CS2NADES</div><ul class="footer-links"><li><a href="#">Discord</a></li><li><a href="#">Контакты</a></li></ul></div>
 </footer>
 
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="script.js"></script>
 <script>
-    window.lineupData = {
-        'm-a-flash': { title: 'A-site Flash', desc: 'Поп-флешка с ramp', pos: 'У окна на A-ramp', aim: 'В потолок над бустом', inst: '1. Встань у окна\n2. Прицел в потолок\n3. Run throw', video: 'videos/mirage-a-flash.mp4', type: 'flash' },
-        'm-a-molo': { title: 'A-site Molotov', desc: 'Молотов на буст', pos: 'У синей коробки T-spawn', aim: 'На край крыши буста', inst: '1. У синей коробки\n2. На край крыши\n3. Run throw', video: 'videos/mirage-a-molotov.mp4', type: 'molotov' },
-        'm-ct-smoke': { title: 'CT Smoke', desc: 'Закрывает CT и mid', pos: 'T-spawn у ящиков', aim: 'На угол здания CT', inst: '1. T-spawn у ящиков\n2. Угол здания CT\n3. Jump throw', video: 'videos/mirage-ct-smoke.mp4', type: 'smoke' },
-        'm-ct-flash': { title: 'CT Flash', desc: 'Флешка через CT на A', pos: 'A-ramp', aim: 'В потолок CT', inst: '1. A-ramp\n2. Потолок CT\n3. Jump throw', video: 'videos/mirage-ct-flash.mp4', type: 'flash' },
-        'm-mid-smoke': { title: 'Mid Window Smoke', desc: 'Смок на окно mid', pos: 'T-spawn у стены', aim: 'На раму окна', inst: '1. T-spawn у стены\n2. Рама окна\n3. Jump throw', video: 'videos/mirage-mid-smoke.mp4', type: 'smoke' },
-        'm-mid-molo': { title: 'Mid Molotov', desc: 'Выкуривает снайпера', pos: 'T-spawn', aim: 'На ящик в mid', inst: '1. T-spawn\n2. Ящик в mid\n3. Jump throw', video: 'videos/mirage-mid-molotov.mp4', type: 'molotov' },
-        'm-b-smoke': { title: 'B-site Smoke', desc: 'Смок на B-site', pos: 'B-apps у стены', aim: 'На край крыши B', inst: '1. B-apps у стены\n2. Край крыши B\n3. Jump throw', video: 'videos/mirage-b-smoke.mp4', type: 'smoke' },
-        'm-b-flash': { title: 'B-site Flash', desc: 'Флешка для входа на B', pos: 'B-apps', aim: 'В потолок B-site', inst: '1. B-apps\n2. Потолок B-site\n3. Run throw', video: 'videos/mirage-b-flash.mp4', type: 'flash' },
-        'm-jungle': { title: 'Jungle Smoke', desc: 'Контроль A через Jungle', pos: 'T-spawn', aim: 'На край крыши Jungle', inst: '1. T-spawn\n2. Край крыши Jungle\n3. Jump throw', video: 'videos/mirage-jungle-smoke.mp4', type: 'smoke' },
-        'm-conn': { title: 'Connector Smoke', desc: 'Разделяет mid и A', pos: 'T-spawn', aim: 'На стену Connector', inst: '1. T-spawn\n2. Стена Connector\n3. Jump throw', video: 'videos/mirage-connector-smoke.mp4', type: 'smoke' },
-        'm-bshort1': { title: 'B-short Smoke #1', desc: 'Безопасный проход', pos: 'T-spawn', aim: 'На угол B-short', inst: '1. T-spawn\n2. Угол B-short\n3. Jump throw', video: 'videos/mirage-b-short-1.mp4', type: 'smoke' }
-    };
+    // Инициализируем lineupData
+    window.lineupData = {};
+
+    // Слушаем изменения в Firebase в реальном времени
+    db.ref('lineups/mirage').on('value', snapshot => {
+        const hotspots = snapshot.val() || [];
+        const overlay = document.getElementById('map-overlay');
+
+        // Очищаем старые точки
+        overlay.innerHTML = '';
+        window.lineupData = {};
+
+        // Создаём новые точки
+        hotspots.forEach(h => {
+            const div = document.createElement('div');
+            div.className = 'map-hotspot';
+            div.dataset.id = h.id;
+            div.style.left = h.x + '%';
+            div.style.top = h.y + '%';
+            div.innerHTML = `<div class="hotspot-label">${h.title}</div>`;
+            div.onclick = () => window.openLineup(h.id);
+            overlay.appendChild(div);
+
+            window.lineupData[h.id] = h;
+        });
+    });
 </script>
 </body>
 </html>

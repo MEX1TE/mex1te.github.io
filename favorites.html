@@ -18,6 +18,7 @@
             <li><a href="index.html">Главная</a></li>
             <li><a href="index.html#maps">Карты</a></li>
             <li class="fav-counter"><a href="favorites.html" class="active">Избранное</a><span class="fav-badge"></span></li>
+            <li><a href="admin.html">Админ</a></li>
         </ul>
     </div>
 </header>
@@ -31,6 +32,9 @@
     <div class="footer-inner"><div class="footer-copy">© 2026 CS2NADES</div><ul class="footer-links"><li><a href="#">Discord</a></li><li><a href="#">Контакты</a></li></ul></div>
 </footer>
 
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script src="script.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
@@ -41,7 +45,10 @@
         if (favs.length === 0) {
             container.innerHTML = `<div class="favorites-empty"><div class="favorites-empty-icon">💔</div><h2>Пока пусто</h2><p>Добавляй раскидки в избранное на страницах карт</p><a href="index.html#maps" class="favorites-btn">Выбрать карту</a></div>`;
         } else {
-            container.innerHTML = `<div class="history-grid">${favs.map(id => `<div class="history-card" onclick="window.location.href='${id.startsWith('m')?'mirage':'dust2'}.html'"><div class="history-card-title">💣 ${id.replace(/-/g, ' ').toUpperCase()}</div><div class="history-card-meta">Нажми, чтобы открыть карту</div></div>`).join('')}</div>`;
+            container.innerHTML = `<div class="history-grid">${favs.map(id => {
+                const map = id.startsWith('m') ? 'mirage' : 'dust2';
+                return `<div class="history-card" onclick="window.location.href='${map}.html'"><div class="history-card-title">💣 ${id.replace(/-/g, ' ').toUpperCase()}</div><div class="history-card-meta">Нажми, чтобы открыть карту</div></div>`;
+            }).join('')}</div>`;
         }
     });
 </script>

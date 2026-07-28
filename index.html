@@ -19,6 +19,7 @@
             <li><a href="index.html" class="active">Главная</a></li>
             <li><a href="#maps">Карты</a></li>
             <li class="fav-counter"><a href="favorites.html">Избранное</a><span class="fav-badge"></span></li>
+            <li><a href="admin.html">Админ</a></li>
         </ul>
     </div>
 </header>
@@ -27,8 +28,8 @@
     <h1>Гранатные лайнапы для CS2</h1>
     <p>Идеальные раскидки смоков, флешек и молотовов. Учись у про-игроков, побеждай в ranked.</p>
     <div class="hero-stats">
-        <div><div class="stat-val">2</div><div class="stat-lbl">Карты</div></div>
-        <div><div class="stat-val">31</div><div class="stat-lbl">Раскидок</div></div>
+        <div><div class="stat-val" id="maps-count">2</div><div class="stat-lbl">Карты</div></div>
+        <div><div class="stat-val" id="lineups-count">0</div><div class="stat-lbl">Раскидок</div></div>
         <div><div class="stat-val">HD</div><div class="stat-lbl">Видео</div></div>
     </div>
 </section>
@@ -38,11 +39,11 @@
     <div class="maps-grid">
         <a href="mirage.html" class="map-card">
             <div class="map-thumb"><span class="map-emoji">🕌</span></div>
-            <div class="map-body"><h3>Mirage <span class="map-arrow">→</span></h3><p>Классическая карта с тактическими раскидками</p><span class="badge">15 раскидок</span></div>
+            <div class="map-body"><h3>Mirage <span class="map-arrow">→</span></h3><p>Классическая карта с тактическими раскидками</p><span class="badge" id="mirage-count">0 раскидок</span></div>
         </a>
         <a href="dust2.html" class="map-card">
             <div class="map-thumb"><span class="map-emoji">🏜️</span></div>
-            <div class="map-body"><h3>Dust II <span class="map-arrow">→</span></h3><p>Легендарная карта с длинными коридорами</p><span class="badge">16 раскидок</span></div>
+            <div class="map-body"><h3>Dust II <span class="map-arrow">→</span></h3><p>Легендарная карта с длинными коридорами</p><span class="badge" id="dust2-count">0 раскидок</span></div>
         </a>
         <a href="#" class="map-card" style="pointer-events:none;opacity:.5">
             <div class="map-thumb"><span class="map-emoji">🔥</span></div>
@@ -57,6 +58,22 @@
         <ul class="footer-links"><li><a href="#">Discord</a></li><li><a href="#">Контакты</a></li></ul>
     </div>
 </footer>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="script.js"></script>
+<script>
+    // Загружаем количество раскидок из Firebase
+    db.ref('lineups').on('value', snapshot => {
+        const data = snapshot.val() || {};
+        const mirageCount = (data.mirage || []).length;
+        const dust2Count = (data.dust2 || []).length;
+        const total = mirageCount + dust2Count;
+
+        document.getElementById('mirage-count').textContent = `${mirageCount} раскидок`;
+        document.getElementById('dust2-count').textContent = `${dust2Count} раскидок`;
+        document.getElementById('lineups-count').textContent = total;
+    });
+</script>
 </body>
 </html>

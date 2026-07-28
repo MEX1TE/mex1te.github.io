@@ -18,6 +18,7 @@
             <li><a href="index.html">Главная</a></li>
             <li><a href="index.html#maps" class="active">Карты</a></li>
             <li class="fav-counter"><a href="favorites.html">Избранное</a><span class="fav-badge"></span></li>
+            <li><a href="admin.html">Админ</a></li>
         </ul>
     </div>
 </header>
@@ -31,22 +32,14 @@
 <section class="map-container">
     <div class="map-wrapper">
         <img src="images/dust2-radar.webp" alt="Dust 2 Radar" class="map-image" onerror="this.style.background='var(--bg-tertiary)';this.style.minHeight='500px'">
-        <div class="map-overlay">
-            <div class="map-hotspot" data-id="d-long-smoke" style="left:75%;top:30%"><div class="hotspot-label">A Long Smoke</div></div>
-            <div class="map-hotspot" data-id="d-long-flash" style="left:72%;top:28%"><div class="hotspot-label">A Long Flash</div></div>
-            <div class="map-hotspot" data-id="d-short-smoke" style="left:60%;top:20%"><div class="hotspot-label">A Short Smoke</div></div>
-            <div class="map-hotspot" data-id="d-b-smoke" style="left:25%;top:30%"><div class="hotspot-label">B Site Smoke</div></div>
-            <div class="map-hotspot" data-id="d-b-flash" style="left:28%;top:28%"><div class="hotspot-label">B Flash</div></div>
-            <div class="map-hotspot" data-id="d-b-molo" style="left:22%;top:35%"><div class="hotspot-label">B Molotov</div></div>
-            <div class="map-hotspot" data-id="d-mid-smoke" style="left:50%;top:50%"><div class="hotspot-label">Mid Doors Smoke</div></div>
-            <div class="map-hotspot" data-id="d-mid-molo" style="left:48%;top:52%"><div class="hotspot-label">Mid Molotov</div></div>
-            <div class="map-hotspot" data-id="d-ct-smoke" style="left:35%;top:75%"><div class="hotspot-label">CT Smoke</div></div>
-            <div class="map-hotspot" data-id="d-xbox" style="left:50%;top:40%"><div class="hotspot-label">X-box Smoke</div></div>
+        <div class="map-overlay" id="map-overlay">
+            <!-- Точки загружаются автоматически из Firebase -->
         </div>
         <div class="map-legend">
             <div class="legend-item"><div class="legend-dot smoke"></div><span>Smoke</span></div>
             <div class="legend-item"><div class="legend-dot flash"></div><span>Flash</span></div>
             <div class="legend-item"><div class="legend-dot molotov"></div><span>Molotov</span></div>
+            <div class="legend-item"><div class="legend-dot he"></div><span>HE</span></div>
         </div>
     </div>
 </section>
@@ -73,7 +66,7 @@
                 <p id="panel-inst"></p>
             </div>
         </div>
-        <div class="lineup-panel-actions">
+        <div style="display:flex;gap:.75rem;margin-top:1.5rem">
             <button class="btn btn-primary" id="fav-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> В избранное</button>
             <button class="btn btn-secondary" id="panel-close-2">Закрыть</button>
         </div>
@@ -84,20 +77,36 @@
     <div class="footer-inner"><div class="footer-copy">© 2026 CS2NADES</div><ul class="footer-links"><li><a href="#">Discord</a></li><li><a href="#">Контакты</a></li></ul></div>
 </footer>
 
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="script.js"></script>
 <script>
-    window.lineupData = {
-        'd-long-smoke': { title: 'A Long Smoke', desc: 'Закрывает A Long doors', pos: 'T-spawn у дверей', aim: 'На угол A Long doors', inst: '1. T-spawn у дверей\n2. Угол A Long doors\n3. Jump throw', video: 'videos/dust2-long-smoke.mp4', type: 'smoke' },
-        'd-long-flash': { title: 'A Long Flash', desc: 'Флешка для входа', pos: 'T-spawn', aim: 'В потолок A Long', inst: '1. T-spawn\n2. Потолок A Long\n3. Run throw', video: 'videos/dust2-long-flash.mp4', type: 'flash' },
-        'd-short-smoke': { title: 'A Short Smoke', desc: 'Смок на A Short', pos: 'T-spawn', aim: 'На угол A Short', inst: '1. T-spawn\n2. Угол A Short\n3. Jump throw', video: 'videos/dust2-short-smoke.mp4', type: 'smoke' },
-        'd-b-smoke': { title: 'B Site Smoke', desc: 'Смок на B-site', pos: 'T-spawn', aim: 'На крышу B-site', inst: '1. T-spawn\n2. Крыша B-site\n3. Jump throw', video: 'videos/dust2-b-site-smoke.mp4', type: 'smoke' },
-        'd-b-flash': { title: 'B Flash', desc: 'Флешка для входа на B', pos: 'У B Doors', aim: 'В потолок B-site', inst: '1. У B Doors\n2. Потолок B-site\n3. Run throw', video: 'videos/dust2-b-flash.mp4', type: 'flash' },
-        'd-b-molo': { title: 'B Molotov', desc: 'Выкуривает с позиции', pos: 'У B Doors', aim: 'На ящик B-site', inst: '1. У B Doors\n2. Ящик B-site\n3. Jump throw', video: 'videos/dust2-b-molotov.mp4', type: 'molotov' },
-        'd-mid-smoke': { title: 'Mid Doors Smoke', desc: 'Закрывает Mid Doors', pos: 'T-spawn', aim: 'На верх Mid Doors', inst: '1. T-spawn\n2. Верх Mid Doors\n3. Jump throw', video: 'videos/dust2-mid-smoke.mp4', type: 'smoke' },
-        'd-mid-molo': { title: 'Mid Molotov', desc: 'Выкуривает снайпера', pos: 'T-spawn', aim: 'На ящик Mid', inst: '1. T-spawn\n2. Ящик Mid\n3. Jump throw', video: 'videos/dust2-mid-molotov.mp4', type: 'molotov' },
-        'd-ct-smoke': { title: 'CT Smoke', desc: 'Смок на CT', pos: 'T-spawn', aim: 'На ящики CT', inst: '1. T-spawn\n2. Ящики CT\n3. Jump throw', video: 'videos/dust2-ct-smoke.mp4', type: 'smoke' },
-        'd-xbox': { title: 'X-box Smoke', desc: 'Контроль Mid', pos: 'T-spawn', aim: 'На X-box', inst: '1. T-spawn\n2. X-box\n3. Jump throw', video: 'videos/dust2-xbox-smoke.mp4', type: 'smoke' }
-    };
+    // Инициализируем lineupData
+    window.lineupData = {};
+
+    // Слушаем изменения в Firebase в реальном времени
+    db.ref('lineups/dust2').on('value', snapshot => {
+        const hotspots = snapshot.val() || [];
+        const overlay = document.getElementById('map-overlay');
+
+        // Очищаем старые точки
+        overlay.innerHTML = '';
+        window.lineupData = {};
+
+        // Создаём новые точки
+        hotspots.forEach(h => {
+            const div = document.createElement('div');
+            div.className = 'map-hotspot';
+            div.dataset.id = h.id;
+            div.style.left = h.x + '%';
+            div.style.top = h.y + '%';
+            div.innerHTML = `<div class="hotspot-label">${h.title}</div>`;
+            div.onclick = () => window.openLineup(h.id);
+            overlay.appendChild(div);
+
+            window.lineupData[h.id] = h;
+        });
+    });
 </script>
 </body>
 </html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Админ-панель | CS2NADES</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-container{max-width:1400px;margin:0 auto;padding:2rem}
+        .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;flex-wrap:wrap;gap:1rem}
+        .admin-title{font-size:2rem;font-weight:700}
+        .admin-actions{display:flex;gap:1rem;flex-wrap:wrap}
+        .btn-admin{padding:.7rem 1.5rem;border-radius:var(--radius-sm);font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all var(--transition);display:flex;align-items:center;gap:.5rem}
+        .btn-save{background:var(--he);color:#fff}
+        .btn-save:hover{background:#2ea043;transform:translateY(-2px)}
+        .btn-clear{background:var(--molotov);color:#fff}
+        .btn-clear:hover{background:#da3633;transform:translateY(-2px)}
+
+        .map-selector{margin-bottom:1.5rem}
+        .map-selector label{display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2)}
+        .map-selector select{width:100%;max-width:300px;padding:.7rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);font-family:inherit;font-size:.95rem;cursor:pointer}
+        .map-selector select:focus{outline:none;border-color:var(--accent)}
+
+        .admin-layout{display:grid;grid-template-columns:1fr 400px;gap:2rem}
+        @media(max-width:1024px){.admin-layout{grid-template-columns:1fr}}
+
+        .admin-map-wrapper{position:relative;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:crosshair}
+        .admin-map-image{width:100%;height:auto;display:block}
+        .admin-hotspot{position:absolute;width:28px;height:28px;transform:translate(-50%,-50%);cursor:pointer;transition:all var(--transition);z-index:10}
+        .admin-hotspot::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--accent);opacity:.4;animation:pulse 2s ease-in-out infinite}
+        .admin-hotspot::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent-glow)}
+        .admin-hotspot:hover{transform:translate(-50%,-50%) scale(1.3)}
+        .admin-hotspot-label{position:absolute;top:32px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:var(--text-1);padding:.4rem .8rem;border-radius:var(--radius-sm);font-size:.75rem;font-weight:600;white-space:nowrap;pointer-events:none}
+
+        .admin-form{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;height:fit-content;position:sticky;top:80px}
+        .form-title{font-size:1.3rem;font-weight:700;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem}
+        .form-group{margin-bottom:1.25rem}
+        .form-group label{display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2);font-size:.9rem}
+        .form-group input,.form-group select,.form-group textarea{width:100%;padding:.7rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);font-family:inherit;font-size:.95rem;transition:all var(--transition)}
+        .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+        .form-group textarea{resize:vertical;min-height:100px;font-family:'JetBrains Mono','Courier New',monospace}
+        .form-coords{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+        .coord-display{background:var(--bg-tertiary);padding:.7rem;border-radius:var(--radius-sm);font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--accent);text-align:center}
+
+        .hotspot-list{margin-top:2rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem}
+        .hotspot-list-title{font-size:1.2rem;font-weight:700;margin-bottom:1rem}
+        .hotspot-item{display:flex;justify-content:space-between;align-items:center;padding:.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:.5rem;transition:all var(--transition)}
+        .hotspot-item:hover{border-color:var(--border-hover)}
+        .hotspot-item-info{display:flex;align-items:center;gap:.75rem}
+        .hotspot-item-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+        .hotspot-item-icon.smoke{background:rgba(88,166,255,.15);color:var(--smoke)}
+        .hotspot-item-icon.flash{background:rgba(210,153,34,.15);color:var(--flash)}
+        .hotspot-item-icon.molotov{background:rgba(248,81,73,.15);color:var(--molotov)}
+        .hotspot-item-icon.he{background:rgba(63,185,80,.15);color:var(--he)}
+        .hotspot-item-name{font-weight:600;font-size:.95rem}
+        .hotspot-item-actions{display:flex;gap:.5rem}
+        .btn-sm{padding:.4rem .8rem;border-radius:var(--radius-sm);font-size:.8rem;font-weight:600;cursor:pointer;border:none;transition:all var(--transition)}
+        .btn-edit{background:var(--accent);color:#000}
+        .btn-delete{background:var(--molotov);color:#fff}
+
+        .empty-state{text-align:center;padding:3rem;color:var(--text-3)}
+        .empty-state-icon{font-size:3rem;margin-bottom:1rem;opacity:.3}
+
+        .status-bar{padding:.75rem 1rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem;font-size:.9rem}
+        .status-dot{width:10px;height:10px;border-radius:50%;background:var(--he);animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-inner">
+        <a href="index.html" class="logo"><div class="logo-icon">💣</div><div>CS2<span>NADES</span></div></a>
+        <ul class="nav">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="index.html#maps">Карты</a></li>
+            <li><a href="admin.html" class="active">Админ</a></li>
+        </ul>
+    </div>
+</header>
+
+<section class="admin-container">
+    <div class="admin-header">
+        <h1 class="admin-title">🛠 Админ-панель</h1>
+        <div class="admin-actions">
+            <button class="btn-admin btn-clear" onclick="clearAll()">🗑 Очистить всё</button>
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <div class="status-dot"></div>
+        <span>Подключено к Firebase — изменения сохраняются автоматически</span>
+    </div>
+
+    <div class="map-selector">
+        <label>Выберите карту:</label>
+        <select id="map-select" onchange="switchMap()">
+            <option value="mirage">Mirage</option>
+            <option value="dust2">Dust II</option>
+        </select>
+    </div>
+
+    <div class="admin-layout">
+        <div>
+            <div class="admin-map-wrapper" id="map-wrapper" onclick="addHotspot(event)">
+                <img src="images/mirage-radar.webp" alt="Map" class="admin-map-image" id="map-image" onerror="this.style.background='var(--bg-tertiary)';this.style.minHeight='500px'">
+            </div>
+
+            <div class="hotspot-list">
+                <h3 class="hotspot-list-title">📍 Точки на карте (<span id="hotspot-count">0</span>)</h3>
+                <div id="hotspot-items"></div>
+            </div>
+        </div>
+
+        <div class="admin-form" id="admin-form">
+            <h3 class="form-title">✏️ <span id="form-title-text">Добавить раскидку</span></h3>
+
+            <div class="form-group">
+                <label>Название:</label>
+                <input type="text" id="input-title" placeholder="Например: A-site Smoke">
+            </div>
+
+            <div class="form-group">
+                <label>Описание:</label>
+                <input type="text" id="input-desc" placeholder="Краткое описание раскидки">
+            </div>
+
+            <div class="form-group">
+                <label>Тип гранаты:</label>
+                <select id="input-type">
+                    <option value="smoke">💨 Smoke</option>
+                    <option value="flash">⚡ Flash</option>
+                    <option value="molotov">🔥 Molotov</option>
+                    <option value="he">💥 HE</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Позиция:</label>
+                <input type="text" id="input-pos" placeholder="Где стоять (например: T-spawn у ящиков)">
+            </div>
+
+            <div class="form-group">
+                <label>Прицел:</label>
+                <input type="text" id="input-aim" placeholder="Куда целиться (например: На угол здания)">
+            </div>
+
+            <div class="form-group">
+                <label>Инструкция:</label>
+                <textarea id="input-inst" placeholder="Пошаговая инструкция..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Видео (путь к файлу):</label>
+                <input type="text" id="input-video" placeholder="videos/mirage-a-smoke.mp4">
+                <small style="color:var(--text-3);margin-top:.3rem;display:block">Загрузи видео в папку videos/ на GitHub</small>
+            </div>
+
+            <div class="form-coords">
+                <div>
+                    <label style="display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2);font-size:.9rem">X (%):</label>
+                    <div class="coord-display" id="coord-x">—</div>
+                </div>
+                <div>
+                    <label style="display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2);font-size:.9rem">Y (%):</label>
+                    <div class="coord-display" id="coord-y">—</div>
+                </div>
+            </div>
+
+            <button class="btn-admin btn-save" style="width:100%;margin-top:1.5rem;justify-content:center" onclick="saveHotspot()">
+                💾 Сохранить точку
+            </button>
+            <button class="btn-admin btn-clear" style="width:100%;margin-top:.5rem;justify-content:center" onclick="cancelEdit()">
+                ❌ Отмена
+            </button>
+        </div>
+    </div>
+</section>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script>
+    // Firebase конфигурация — ЗАМЕНИ НА СВОЮ!
+    const firebaseConfig = {
+        apiKey: "AIzaSyAXNxDCdizaAB-3IJU65fLahDS_9ww6UWw",
+        authDomain: "cs2nades-1a910.firebaseapp.com",
+        databaseURL: "https://cs2nades-1a910-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "cs2nades-1a910",
+        storageBucket: "cs2nades-1a910.firebasestorage.app",
+        messagingSenderId: "497946011142",
+        appId: "1:497946011142:web:eea3fe5839ac4d23444587",
+        measurementId: "G-M14MZNH78P"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let currentMap = 'mirage';
+    let hotspots = { mirage: [], dust2: [] };
+    let editingId = null;
+    let tempCoords = { x: 0, y: 0 };
+
+    // Загружаем данные из Firebase
+    db.ref('lineups').on('value', snapshot => {
+        const data = snapshot.val() || {};
+        hotspots = {
+            mirage: data.mirage || [],
+            dust2: data.dust2 || []
+        };
+        renderHotspots();
+    });
+
+    // Переключение карты
+    function switchMap() {
+        currentMap = document.getElementById('map-select').value;
+        const img = document.getElementById('map-image');
+        img.src = `images/${currentMap}-radar.webp`;
+        renderHotspots();
+    }
+
+    // Добавление точки кликом на карту
+    function addHotspot(event) {
+        if (event.target.classList.contains('admin-hotspot')) return;
+
+        const rect = event.currentTarget.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width) * 100;
+        const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+        tempCoords = { x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
+        document.getElementById('coord-x').textContent = tempCoords.x + '%';
+        document.getElementById('coord-y').textContent = tempCoords.y + '%';
+
+        editingId = null;
+        document.getElementById('form-title-text').textContent = 'Добавить раскидку';
+        clearForm();
+    }
+
+    // Сохранение точки в Firebase
+    function saveHotspot() {
+        const title = document.getElementById('input-title').value.trim();
+        const desc = document.getElementById('input-desc').value.trim();
+        const type = document.getElementById('input-type').value;
+        const pos = document.getElementById('input-pos').value.trim();
+        const aim = document.getElementById('input-aim').value.trim();
+        const inst = document.getElementById('input-inst').value.trim();
+        const video = document.getElementById('input-video').value.trim();
+
+        if (!title || !type || tempCoords.x === 0) {
+            alert('Заполните обязательные поля и кликните на карту!');
+            return;
+        }
+
+        const hotspot = {
+            id: editingId || `${currentMap}-${Date.now()}`,
+            title, desc, type, pos, aim, inst, video,
+            x: tempCoords.x,
+            y: tempCoords.y
+        };
+
+        if (editingId) {
+            const index = hotspots[currentMap].findIndex(h => h.id === editingId);
+            if (index > -1) hotspots[currentMap][index] = hotspot;
+        } else {
+            hotspots[currentMap].push(hotspot);
+        }
+
+        // Сохраняем в Firebase
+        db.ref(`lineups/${currentMap}`).set(hotspots[currentMap])
+            .then(() => {
+                console.log('✅ Сохранено в Firebase');
+                clearForm();
+                editingId = null;
+                document.getElementById('form-title-text').textContent = 'Добавить раскидку';
+            })
+            .catch(err => alert('❌ Ошибка сохранения: ' + err.message));
+    }
+
+    // Редактирование точки
+    function editHotspot(id) {
+        const hotspot = hotspots[currentMap].find(h => h.id === id);
+        if (!hotspot) return;
+
+        editingId = id;
+        tempCoords = { x: hotspot.x, y: hotspot.y };
+
+        document.getElementById('input-title').value = hotspot.title;
+        document.getElementById('input-desc').value = hotspot.desc;
+        document.getElementById('input-type').value = hotspot.type;
+        document.getElementById('input-pos').value = hotspot.pos;
+        document.getElementById('input-aim').value = hotspot.aim;
+        document.getElementById('input-inst').value = hotspot.inst;
+        document.getElementById('input-video').value = hotspot.video;
+        document.getElementById('coord-x').textContent = hotspot.x + '%';
+        document.getElementById('coord-y').textContent = hotspot.y + '%';
+
+        document.getElementById('form-title-text').textContent = 'Редактировать раскидку';
+        document.getElementById('admin-form').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Удаление точки
+    function deleteHotspot(id) {
+        if (!confirm('Удалить эту точку?')) return;
+        hotspots[currentMap] = hotspots[currentMap].filter(h => h.id !== id);
+
+        db.ref(`lineups/${currentMap}`).set(hotspots[currentMap])
+            .then(() => console.log('✅ Удалено'))
+            .catch(err => alert('❌ Ошибка: ' + err.message));
+    }
+
+    // Очистка всех точек
+    function clearAll() {
+        if (!confirm('Удалить ВСЕ точки на этой карте?')) return;
+        hotspots[currentMap] = [];
+
+        db.ref(`lineups/${currentMap}`).set([])
+            .then(() => console.log('✅ Очищено'))
+            .catch(err => alert('❌ Ошибка: ' + err.message));
+    }
+
+    // Отрисовка точек
+    function renderHotspots() {
+        const wrapper = document.getElementById('map-wrapper');
+        wrapper.querySelectorAll('.admin-hotspot').forEach(h => h.remove());
+
+        hotspots[currentMap].forEach(h => {
+            const div = document.createElement('div');
+            div.className = 'admin-hotspot';
+            div.style.left = h.x + '%';
+            div.style.top = h.y + '%';
+            div.innerHTML = `<div class="admin-hotspot-label">${h.title}</div>`;
+            div.onclick = (e) => { e.stopPropagation(); editHotspot(h.id); };
+            wrapper.appendChild(div);
+        });
+
+        // Список точек
+        const items = document.getElementById('hotspot-items');
+        const icons = { smoke: '💨', flash: '⚡', molotov: '🔥', he: '💥' };
+
+        if (hotspots[currentMap].length === 0) {
+            items.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📍</div><p>Кликните на карту, чтобы добавить точку</p></div>';
+        } else {
+            items.innerHTML = hotspots[currentMap].map(h => `
+            <div class="hotspot-item">
+                <div class="hotspot-item-info">
+                    <div class="hotspot-item-icon ${h.type}">${icons[h.type]}</div>
+                    <div class="hotspot-item-name">${h.title}</div>
+                </div>
+                <div class="hotspot-item-actions">
+                    <button class="btn-sm btn-edit" onclick="editHotspot('${h.id}')">✏️</button>
+                    <button class="btn-sm btn-delete" onclick="deleteHotspot('${h.id}')">🗑</button>
+                </div>
+            </div>
+        `).join('');
+        }
+
+        document.getElementById('hotspot-count').textContent = hotspots[currentMap].length;
+    }
+
+    // Очистка формы
+    function clearForm() {
+        ['input-title', 'input-desc', 'input-pos', 'input-aim', 'input-inst', 'input-video'].forEach(id => {
+            document.getElementById(id).value = '';
+        });
+        document.getElementById('coord-x').textContent = '—';
+        document.getElementById('coord-y').textContent = '—';
+        tempCoords = { x: 0, y: 0 };
+    }
+
+    // Отмена редактирования
+    function cancelEdit() {
+        editingId = null;
+        document.getElementById('form-title-text').textContent = 'Добавить раскидку';
+        clearForm();
+    }
+</script>
+
+</body>
+</html>
