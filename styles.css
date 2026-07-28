@@ -328,6 +328,7 @@ h1,h2,h3{font-family:'Rajdhani','Inter',sans-serif;font-weight:700;letter-spacin
     .footer-inner{flex-direction:column;text-align:center}
 }
 /* ============================================
+<<<<<<< HEAD
    INTERACTIVE MAP
    ============================================ */
 .map-container {
@@ -627,4 +628,132 @@ h1,h2,h3{font-family:'Rajdhani','Inter',sans-serif;font-weight:700;letter-spacin
     .lineup-panel { width: 100%; max-width: 100%; right: -100%; }
     .map-legend { gap: 1rem; padding: 0.75rem 1rem; }
     .legend-item { font-size: 0.75rem; }
+=======
+   FAVORITES BUTTON
+   ============================================ */
+.fav-btn{
+    position:absolute;top:.75rem;right:.75rem;
+    width:36px;height:36px;border-radius:50%;
+    background:rgba(0,0,0,.5);backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,.15);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;transition:all var(--transition);z-index:5;
+}
+.fav-btn:hover{
+    background:rgba(0,0,0,.7);border-color:var(--molotov);
+    transform:scale(1.1);
+}
+.fav-btn svg{
+    width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;
+    transition:all var(--transition);
+}
+.fav-btn.active{
+    background:var(--molotov);border-color:var(--molotov);
+}
+.fav-btn.active svg{
+    fill:#fff;stroke:#fff;
+    animation:heartBeat .4s ease;
+}
+@keyframes heartBeat{
+    0%{transform:scale(1)}
+    50%{transform:scale(1.3)}
+    100%{transform:scale(1)}
+}
+
+/* ============================================
+   FAVORITES COUNTER
+   ============================================ */
+.fav-counter{
+    position:relative;
+}
+.fav-badge{
+    position:absolute;top:-8px;right:-12px;
+    min-width:18px;height:18px;padding:0 5px;
+    background:var(--molotov);border-radius:999px;
+    font-size:.7rem;font-weight:700;color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    line-height:1;
+}
+.fav-badge:empty{display:none}
+
+/* ============================================
+   HISTORY SECTION
+   ============================================ */
+.history-section{
+    max-width:1400px;margin:0 auto;padding:0 2rem 2rem;
+}
+.history-title{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:1rem;
+}
+.history-title h3{
+    font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;
+    color:var(--text-2);display:flex;align-items:center;gap:.5rem;
+}
+.history-clear{
+    padding:.4rem .85rem;background:transparent;border:1px solid var(--border);
+    border-radius:var(--radius-sm);color:var(--text-3);font-size:.78rem;
+    cursor:pointer;transition:all var(--transition);font-family:inherit;
+}
+.history-clear:hover{
+    background:var(--molotov);color:#fff;border-color:var(--molotov);
+}
+.history-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+    gap:1rem;
+}
+.history-card{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:var(--radius-sm);padding:.85rem;cursor:pointer;
+    transition:all var(--transition);display:flex;flex-direction:column;gap:.5rem;
+}
+.history-card:hover{
+    border-color:var(--border-hover);transform:translateY(-2px);
+}
+.history-card-title{
+    font-size:.88rem;font-weight:600;color:var(--text-1);
+    display:flex;align-items:center;gap:.4rem;
+}
+.history-card-meta{
+    font-size:.75rem;color:var(--text-3);
+}
+.history-empty{
+    text-align:center;padding:2rem;color:var(--text-3);font-size:.9rem;
+}
+
+/* ============================================
+   FAVORITES PAGE
+   ============================================ */
+.favorites-page{
+    max-width:1400px;margin:0 auto;padding:2rem;
+}
+.favorites-empty{
+    text-align:center;padding:4rem 2rem;
+}
+.favorites-empty-icon{
+    font-size:4rem;margin-bottom:1rem;opacity:.3;
+}
+.favorites-empty h2{
+    font-size:1.5rem;margin-bottom:.5rem;color:var(--text-1);
+}
+.favorites-empty p{
+    color:var(--text-2);margin-bottom:1.5rem;
+}
+.favorites-btn{
+    display:inline-block;padding:.7rem 1.5rem;
+    background:var(--accent);color:#000;border-radius:var(--radius-sm);
+    font-weight:600;transition:all var(--transition);
+}
+.favorites-btn:hover{
+    background:var(--accent-hover);transform:translateY(-2px);
+    box-shadow:0 8px 20px var(--accent-glow);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media(max-width:768px){
+    .history-section{padding-left:1rem;padding-right:1rem}
+    .history-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+>>>>>>> 0b90840ac42a2e0f9ebc73464c051f5b7547a6ec
 }
