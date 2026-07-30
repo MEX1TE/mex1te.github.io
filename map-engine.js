@@ -98,7 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // FIREBASE DATA
     window.targetsData = {};
     let currentSelectedTarget = null;
-    let activeFilter = 'all'; // 'all', 'smoke', 'flash', 'molotov', 'he'
+    let activeFilter = 'all';
+    let activeSide = 'all';
 
     db.ref(`lineups/${MAP_NAME}`).on('value', snapshot => {
         const data = snapshot.val();
@@ -115,6 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             div.className = 'map-hotspot';
             div.dataset.id = t.id;
             div.dataset.types = getTargetTypes(t);
+            div.dataset.sides = getTargetSides(t);
             div.style.left = t.x + '%';
             div.style.top = t.y + '%';
             
@@ -147,13 +149,26 @@ document.addEventListener('DOMContentLoaded', () => {
         return Array.from(types).join(',');
     }
 
+    function getTargetSides(target) {
+        if (!target.sources) return '';
+        const sides = new Set();
+        target.sources.forEach(s => {
+            if (s.side) sides.add(s.side);
+        });
+        return Array.from(sides).join(',');
+    }
+
     function applyFilters() {
         const hotspots = document.querySelectorAll('.map-hotspot');
         
         hotspots.forEach(hotspot => {
             const types = hotspot.dataset.types || '';
+            const sides = hotspot.dataset.sides || '';
             
-            if (activeFilter === 'all' || types.includes(activeFilter)) {
+            const matchType = activeFilter === 'all' || types.includes(activeFilter);
+            const matchSide = activeSide === 'all' || sides.includes(activeSide);
+            
+            if (matchType && matchSide) {
                 hotspot.style.display = 'block';
             } else {
                 hotspot.style.display = 'none';
@@ -161,8 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Filter buttons
-    const filterButtons = document.querySelectorAll('.filter-btn');
+    const filterButtons = document.querySelectorAll('.filter-btn[data-filter]');
     filterButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             filterButtons.forEach(b => b.classList.remove('active'));
@@ -170,7 +184,23 @@ document.addEventListener('DOMContentLoaded', () => {
             activeFilter = btn.dataset.filter;
             applyFilters();
             
-            // Сбросить выбранную цель при смене фильтра
+            if (currentSelectedTarget) {
+                const overlay = document.getElementById('map-overlay');
+                overlay.querySelectorAll('.map-hotspot-source, .connection-line').forEach(el => el.remove());
+                overlay.querySelectorAll('.map-hotspot').forEach(h => h.classList.remove('active'));
+                currentSelectedTarget = null;
+            }
+        });
+    });
+
+    const sideButtons = document.querySelectorAll('.side-btn[data-side]');
+    sideButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            sideButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeSide = btn.dataset.side;
+            applyFilters();
+            
             if (currentSelectedTarget) {
                 const overlay = document.getElementById('map-overlay');
                 overlay.querySelectorAll('.map-hotspot-source, .connection-line').forEach(el => el.remove());
@@ -198,6 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const sDiv = document.createElement('div');
                 sDiv.className = 'map-hotspot-source';
                 sDiv.dataset.type = s.type;
+                sDiv.dataset.side = s.side;
                 sDiv.style.left = s.x + '%';
                 sDiv.style.top = s.y + '%';
                 sDiv.innerHTML = `<div class="map-hotspot-label">${s.title}</div>`;
@@ -234,7 +265,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3)">Видео не добавлено</div>`;
         }
         
-        // YouTube
         if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
             let videoId = '';
             if (videoUrl.includes('v=')) {
@@ -247,7 +277,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        // Rutube
         if (videoUrl.includes('rutube.ru')) {
             let videoId = '';
             if (videoUrl.includes('/video/')) {
@@ -265,7 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        // VK
         if (videoUrl.includes('vk.com') || videoUrl.includes('vkvideo.ru')) {
             let match = videoUrl.match(/video(-?\d+)_(\d+)/);
             if (!match) match = videoUrl.match(/clip(-?\d+)_(\d+)/);
@@ -276,7 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        // Локальное видео
         if (videoUrl.endsWith('.mp4') || videoUrl.endsWith('.webm')) {
             return `<video controls autoplay loop playsinline><source src="${videoUrl}" type="video/mp4"></video>`;
         }
@@ -294,8 +321,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const overlayActive = document.getElementById('overlay-active');
         
         document.querySelector('.lineup-panel-title').textContent = `${target.title} — ${source.title}`;
-        document.querySelector('.lineup-panel-subtitle').textContent = `Откуда: ${source.title} → Куда: ${target.title}`;
-        document.getElementById('panel-pos').textContent = `Позиция: ${source.title}`;
+        document.querySelector('.lineup-panel-subtitle').textContent = `Откуда: ${source.title} (${source.side}) → Куда: ${target.title}`;
+        document.getElementById('panel-pos').textContent = `Позиция: ${source.title} (${source.side})`;
         document.getElementById('panel-aim').textContent = source.aim || 'Прицел не указан';
         document.getElementById('panel-inst').textContent = source.inst || 'Инструкция не указана';
         
@@ -327,7 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = 'hidden';
         
         const hist = JSON.parse(localStorage.getItem('history') || '[]');
-        hist.unshift({ id: favId, title: `${target.title} — ${source.title}`, type: source.type, timestamp: Date.now() });
+        hist.unshift({ id: favId, title: `${target.title} — ${source.title}`, type: source.type, side: source.side, timestamp: Date.now() });
         localStorage.setItem('history', JSON.stringify(hist.slice(0, 20)));
         renderHistory();
     }
@@ -387,7 +414,8 @@ document.addEventListener('DOMContentLoaded', () => {
             grid.innerHTML = hist.map(item => {
                 const mins = Math.floor((Date.now() - item.timestamp) / 60000);
                 const time = mins < 1 ? 'Только что' : mins < 60 ? `${mins} мин назад` : `${Math.floor(mins/60)} ч назад`;
-                return `<div class="history-card"><div class="history-card-title"><span>${icons[item.type]||''}</span> ${item.title}</div><div class="history-card-meta">${time}</div></div>`;
+                const sideBadge = item.side ? `<span style="background:var(--bg-tertiary);padding:.1rem .4rem;border-radius:4px;font-size:.7rem;margin-left:.3rem">${item.side}</span>` : '';
+                return `<div class="history-card"><div class="history-card-title"><span>${icons[item.type]||''}</span> ${item.title}${sideBadge}</div><div class="history-card-meta">${time}</div></div>`;
             }).join('');
         }
         

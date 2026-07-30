@@ -262,3 +262,38 @@ h1,h2,h3{font-family:'Rajdhani','Inter',sans-serif;font-weight:700;letter-spacin
     font-weight: 700;
     border: 2px solid var(--bg-secondary);
 }
+/* Side filter buttons */
+.side-btn {
+    padding: .45rem .9rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-2);
+    font-size: .82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+    font-family: inherit;
+}
+
+.side-btn:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-1);
+    border-color: var(--border-hover);
+}
+
+.side-btn.active {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+}
+
+.side-btn[data-side="T"].active {
+    background: var(--accent);
+    color: #000;
+}
+
+.side-btn[data-side="CT"].active {
+    background: var(--smoke);
+    color: #fff;
+}
