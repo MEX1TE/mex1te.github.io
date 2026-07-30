@@ -20,6 +20,8 @@
         .btn-clear:hover{background:#da3633;transform:translateY(-2px)}
         .btn-add{background:var(--smoke);color:#fff}
         .btn-add:hover{background:#4a9eff;transform:translateY(-2px)}
+        .btn-logout{background:var(--bg-card);color:var(--text-2);border:1px solid var(--border)}
+        .btn-logout:hover{background:var(--molotov);color:#fff;border-color:var(--molotov)}
         
         .map-selector{margin-bottom:1.5rem}
         .map-selector label{display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2)}
@@ -116,6 +118,47 @@
 </head>
 <body>
 
+<!-- ЗАЩИТА: Если не авторизован, скрипт ниже перенаправит на login -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script>
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyAXNxDCdizaAB-3IJU65fLahDS_9ww6UWw", 
+      authDomain: "cs2nades-1a910.firebaseapp.com",
+      databaseURL: "https://cs2nades-1a910-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "cs2nades-1a910",
+      storageBucket: "cs2nades-1a910.firebasestorage.app",
+      messagingSenderId: "497946011142",
+      appId: "1:497946011142:web:eea3fe5839ac4d23444587",
+      measurementId: "G-M14MZNH78P"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const auth = firebase.auth();
+
+    // ПРОВЕРКА АВТОРИЗАЦИИ
+    auth.onAuthStateChanged(user => {
+        if (!user) {
+            // Если не вошёл в систему -> выкидываем на страницу входа
+            window.location.href = 'admin-login.html';
+        } else {
+            // Если вошёл -> показываем имя и загружаем админку
+            console.log('✅ Админ авторизован:', user.email);
+            document.getElementById('admin-email').textContent = user.email;
+            initAdminPanel();
+        }
+    });
+
+    function logout() {
+        auth.signOut().then(() => {
+            window.location.href = 'admin-login.html';
+        });
+    }
+</script>
+
 <header class="header">
     <div class="header-inner">
         <a href="index.html" class="logo"><div class="logo-icon">💣</div><div>CS2<span>NADES</span></div></a>
@@ -129,8 +172,14 @@
 
 <section class="admin-container">
     <div class="admin-header">
-        <h1 class="admin-title">🛠 Админ-панель</h1>
+        <div>
+            <h1 class="admin-title">🛠 Админ-панель</h1>
+            <div style="font-size:0.9rem; color:var(--text-2); margin-top:0.25rem;">
+                Вошёл как: <strong id="admin-email" style="color:var(--accent)">Загрузка...</strong>
+            </div>
+        </div>
         <div class="admin-actions">
+            <button class="btn-admin btn-logout" onclick="logout()">🚪 Выйти</button>
             <button class="btn-admin btn-clear" onclick="clearAll()">🗑 Очистить всё</button>
         </div>
     </div>
@@ -166,7 +215,7 @@
             </div>
 
             <div class="targets-list">
-                <h3 class="targets-list-title"> Все цели (<span id="target-count">0</span>)</h3>
+                <h3 class="targets-list-title">🎯 Все цели (<span id="target-count">0</span>)</h3>
                 <div id="target-items"></div>
             </div>
         </div>
@@ -179,526 +228,486 @@
     </div>
 </section>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script>
-// Firebase конфигурация — ЗАМЕНИ НА СВОЮ!
-const firebaseConfig = {
-  apiKey: "AIzaSyAXNxDCdizaAB-3IJU65fLahDS_9ww6UWw",
-  authDomain: "cs2nades-1a910.firebaseapp.com",
-  databaseURL: "https://cs2nades-1a910-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "cs2nades-1a910",
-  storageBucket: "cs2nades-1a910.firebasestorage.app",
-  messagingSenderId: "497946011142",
-  appId: "1:497946011142:web:eea3fe5839ac4d23444587",
-  measurementId: "G-M14MZNH78P"
-};
+// Весь функционал админки теперь внутри этой функции и запустится ТОЛЬКО после успешного входа
+function initAdminPanel() {
+    let currentMap = 'mirage';
+    let targets = { mirage: [], dust2: [], inferno: [], ancient: [], anubis: [], nuke: [], overpass: [], vertigo: [] };
+    let selectedTargetId = null;
+    let editingSourceId = null;
+    let currentTargetForSource = null;
+    let tempCoords = { x: 0, y: 0 };
+    let previewElement = null;
+    let mode = 'target';
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+    db.ref('lineups').on('value', snapshot => {
+        const data = snapshot.val() || {};
+        targets = {
+            mirage: data.mirage || [],
+            dust2: data.dust2 || [],
+            inferno: data.inferno || [],
+            ancient: data.ancient || [],
+            anubis: data.anubis || [],
+            nuke: data.nuke || [],
+            overpass: data.overpass || [],
+            vertigo: data.vertigo || []
+        };
+        renderAll();
+    });
 
-let currentMap = 'mirage';
-let targets = { mirage: [], dust2: [], inferno: [], ancient: [], anubis: [], nuke: [], overpass: [], vertigo: [] };
-let selectedTargetId = null;
-let editingSourceId = null;
-let currentTargetForSource = null;
-let tempCoords = { x: 0, y: 0 };
-let previewElement = null;
-let mode = 'target';
-
-db.ref('lineups').on('value', snapshot => {
-    const data = snapshot.val() || {};
-    targets = {
-        mirage: data.mirage || [],
-        dust2: data.dust2 || [],
-        inferno: data.inferno || [],
-        ancient: data.ancient || [],
-        anubis: data.anubis || [],
-        nuke: data.nuke || [],
-        overpass: data.overpass || [],
-        vertigo: data.vertigo || []
-    };
-    renderAll();
-});
-
-function switchMap() {
-    currentMap = document.getElementById('map-select').value;
-    document.getElementById('map-image').src = `images/${currentMap}-radar.webp`;
-    selectedTargetId = null;
-    editingSourceId = null;
-    mode = 'target';
-    removePreview();
-    renderAll();
-    updateModeUI();
-}
-
-function removePreview() {
-    if (previewElement) { previewElement.remove(); previewElement = null; }
-}
-
-function createPreview(x, y, type) {
-    removePreview();
-    previewElement = document.createElement('div');
-    previewElement.className = `admin-hotspot-preview ${type}`;
-    previewElement.style.left = x + '%';
-    previewElement.style.top = y + '%';
-    const label = type === 'target' ? '🎯 Новая цель' : '📍 Новый источник';
-    previewElement.innerHTML = `<div class="admin-hotspot-preview-label">${label}</div>`;
-    document.getElementById('map-wrapper').appendChild(previewElement);
-}
-
-function updateModeUI() {
-    const hintText = document.getElementById('hint-text');
-    
-    if (mode === 'target') {
-        hintText.innerHTML = 'Кликните на пустое место карты, чтобы создать <strong>точку-цель</strong> (куда прилетает граната).';
-    } else {
-        const target = targets[currentMap].find(t => t.id === selectedTargetId);
-        hintText.innerHTML = `Кликните на карту, чтобы создать <strong>источник</strong> для цели "<strong>${target ? target.title : '?'}</strong>". <button onclick="exitSourceMode()" style="background:var(--molotov);color:#fff;border:none;padding:.3rem .7rem;border-radius:4px;font-size:.75rem;cursor:pointer;margin-left:.5rem">Выйти</button>`;
+    function switchMap() {
+        currentMap = document.getElementById('map-select').value;
+        document.getElementById('map-image').src = `images/${currentMap}-radar.webp`;
+        selectedTargetId = null;
+        editingSourceId = null;
+        mode = 'target';
+        removePreview();
+        renderAll();
+        updateModeUI();
     }
-}
 
-function exitSourceMode() {
-    mode = 'target';
-    selectedTargetId = null;
-    editingSourceId = null;
-    removePreview();
+    function removePreview() {
+        if (previewElement) { previewElement.remove(); previewElement = null; }
+    }
+
+    function createPreview(x, y, type) {
+        removePreview();
+        previewElement = document.createElement('div');
+        previewElement.className = `admin-hotspot-preview ${type}`;
+        previewElement.style.left = x + '%';
+        previewElement.style.top = y + '%';
+        const label = type === 'target' ? '🎯 Новая цель' : '📍 Новый источник';
+        previewElement.innerHTML = `<div class="admin-hotspot-preview-label">${label}</div>`;
+        document.getElementById('map-wrapper').appendChild(previewElement);
+    }
+
+    function updateModeUI() {
+        const hintText = document.getElementById('hint-text');
+        if (mode === 'target') {
+            hintText.innerHTML = 'Кликните на пустое место карты, чтобы создать <strong>точку-цель</strong> (куда прилетает граната).';
+        } else {
+            const target = targets[currentMap].find(t => t.id === selectedTargetId);
+            hintText.innerHTML = `Кликните на карту, чтобы создать <strong>источник</strong> для цели "<strong>${target ? target.title : '?'}</strong>". <button onclick="exitSourceMode()" style="background:var(--molotov);color:#fff;border:none;padding:.3rem .7rem;border-radius:4px;font-size:.75rem;cursor:pointer;margin-left:.5rem">Выйти</button>`;
+        }
+    }
+
+    function exitSourceMode() {
+        mode = 'target';
+        selectedTargetId = null;
+        editingSourceId = null;
+        removePreview();
+        renderAll();
+        updateModeUI();
+        renderForm();
+    }
+
+    document.getElementById('map-wrapper').addEventListener('click', function(event) {
+        if (event.target.closest('.admin-hotspot-target') || event.target.closest('.admin-hotspot-source')) return;
+        
+        const rect = this.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width) * 100;
+        const y = ((event.clientY - rect.top) / rect.height) * 100;
+        
+        tempCoords = { x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
+        
+        if (mode === 'target') {
+            createPreview(tempCoords.x, tempCoords.y, 'target');
+            showTargetForm();
+        } else if (mode === 'source') {
+            createPreview(tempCoords.x, tempCoords.y, 'source');
+            showSourceForm();
+        }
+        
+        document.getElementById('admin-form').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    function selectTarget(id) {
+        selectedTargetId = id;
+        mode = 'source';
+        editingSourceId = null;
+        removePreview();
+        renderAll();
+        updateModeUI();
+        showTargetDetailsForm();
+    }
+
+    function showTargetForm() {
+        const form = document.getElementById('form-content');
+        form.innerHTML = `
+            <h3 class="form-title">🎯 Новая точка-цель</h3>
+            <div class="form-group">
+                <label>Название (куда прилетает):</label>
+                <input type="text" id="input-title" placeholder="Например: Окно Mid" autofocus>
+            </div>
+            <div class="form-coords">
+                <div><label>X (%):</label><div class="coord-display" id="coord-x">${tempCoords.x}%</div></div>
+                <div><label>Y (%):</label><div class="coord-display" id="coord-y">${tempCoords.y}%</div></div>
+            </div>
+            <button class="btn-admin btn-save" style="width:100%;justify-content:center" onclick="saveNewTarget()">💾 Создать цель</button>
+            <button class="btn-cancel" onclick="cancelAction()">❌ Отмена</button>
+        `;
+    }
+
+    function showSourceForm() {
+        const target = targets[currentMap].find(t => t.id === selectedTargetId);
+        if (!target) return;
+        
+        const form = document.getElementById('form-content');
+        form.innerHTML = `
+            <h3 class="form-title">📍 Новый источник</h3>
+            <p style="color:var(--text-2);font-size:.85rem;margin-bottom:1rem">Для цели: <strong style="color:var(--accent)">${target.title}</strong></p>
+            <div class="form-group">
+                <label>Название (откуда кидать):</label>
+                <input type="text" id="input-source-title" placeholder="Например: T-spawn #1" autofocus>
+            </div>
+            <div class="form-group">
+                <label>Сторона:</label>
+                <div class="side-selector">
+                    <label><input type="radio" name="source-side" value="T" checked> T-Side</label>
+                    <label><input type="radio" name="source-side" value="CT"> CT-Side</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Тип гранаты:</label>
+                <select id="input-source-type">
+                    <option value="smoke">💨 Smoke</option>
+                    <option value="flash">⚡ Flash</option>
+                    <option value="molotov">🔥 Molotov</option>
+                    <option value="he">💥 HE</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Прицел:</label>
+                <input type="text" id="input-source-aim" placeholder="Например: На раму окна">
+            </div>
+            <div class="form-group">
+                <label>Инструкция:</label>
+                <textarea id="input-source-inst" placeholder="1. Встань...&#10;2. Прицел...&#10;3. Jump throw"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Видео:</label>
+                <input type="text" id="input-source-video" placeholder="https://youtube.com/watch?v=... или videos/clip.mp4">
+            </div>
+            <div class="form-coords">
+                <div><label>X (%):</label><div class="coord-display">${tempCoords.x}%</div></div>
+                <div><label>Y (%):</label><div class="coord-display">${tempCoords.y}%</div></div>
+            </div>
+            <button class="btn-admin btn-save" style="width:100%;justify-content:center" onclick="saveNewSource()">💾 Создать источник</button>
+            <button class="btn-cancel" onclick="cancelAction()">❌ Отмена</button>
+        `;
+    }
+
+    function showTargetDetailsForm() {
+        const target = targets[currentMap].find(t => t.id === selectedTargetId);
+        if (!target) return;
+        
+        const icons = { smoke: '💨', flash: '⚡', molotov: '🔥', he: '💥' };
+        const form = document.getElementById('form-content');
+        
+        let sourcesHTML = '';
+        if (target.sources && target.sources.length > 0) {
+            sourcesHTML = target.sources.map(s => `
+                <div class="source-item">
+                    <div class="source-item-info">
+                        <span class="source-item-icon">${icons[s.type]}</span>
+                        <span class="source-item-name">${s.title} (${s.side})</span>
+                    </div>
+                    <div class="source-item-actions">
+                        <button class="btn-sm btn-edit" onclick="editSource('${s.id}')">✏️</button>
+                        <button class="btn-sm btn-delete" onclick="deleteSource('${s.id}')">🗑</button>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            sourcesHTML = '<div class="empty-state">Нет источников. Кликните на карту, чтобы добавить.</div>';
+        }
+        
+        form.innerHTML = `
+            <h3 class="form-title">🎯 ${target.title}</h3>
+            <div class="form-coords">
+                <div><label>X:</label><div class="coord-display">${target.x}%</div></div>
+                <div><label>Y:</label><div class="coord-display">${target.y}%</div></div>
+            </div>
+            <button class="btn-admin btn-clear" style="width:100%;justify-content:center;margin-bottom:.5rem" onclick="deleteTarget('${target.id}')">🗑 Удалить цель</button>
+            <button class="btn-cancel" onclick="exitSourceMode()">← Назад к целям</button>
+            
+            <div class="sources-section">
+                <div class="sources-title"><span>📍 Источники (${target.sources ? target.sources.length : 0})</span></div>
+                ${sourcesHTML}
+                <p style="color:var(--text-3);font-size:.8rem;text-align:center;margin-top:.75rem">💡 Кликните на карту, чтобы добавить источник</p>
+            </div>
+        `;
+    }
+
+    function renderForm() {
+        if (selectedTargetId && mode === 'source') {
+            showTargetDetailsForm();
+        } else {
+            const form = document.getElementById('form-content');
+            form.innerHTML = `
+                <h3 class="form-title">🎯 Выберите действие</h3>
+                <div class="empty-state">
+                    <div style="font-size:2.5rem;margin-bottom:.75rem;opacity:.3">🗺️</div>
+                    <p>Кликните на карту, чтобы создать цель,<br>или выберите существующую из списка ниже.</p>
+                </div>
+            `;
+        }
+    }
+
+    function saveNewTarget() {
+        const title = document.getElementById('input-title').value.trim();
+        if (!title) { alert('Введите название!'); return; }
+        
+        targets[currentMap].push({
+            id: `${currentMap}-${Date.now()}`,
+            title,
+            x: tempCoords.x,
+            y: tempCoords.y,
+            sources: []
+        });
+        
+        db.ref(`lineups/${currentMap}`).set(targets[currentMap])
+            .then(() => {
+                removePreview();
+                renderAll();
+                mode = 'target';
+                updateModeUI();
+                renderForm();
+            })
+            .catch(err => alert('❌ Ошибка: ' + err.message));
+    }
+
+    function saveNewSource() {
+        const title = document.getElementById('input-source-title').value.trim();
+        const side = document.querySelector('input[name="source-side"]:checked').value;
+        const type = document.getElementById('input-source-type').value;
+        const aim = document.getElementById('input-source-aim').value.trim();
+        const inst = document.getElementById('input-source-inst').value.trim();
+        const video = document.getElementById('input-source-video').value.trim();
+        
+        if (!title) { alert('Введите название!'); return; }
+        
+        const target = targets[currentMap].find(t => t.id === selectedTargetId);
+        if (!target) return;
+        
+        if (!target.sources) target.sources = [];
+        
+        if (editingSourceId) {
+            const index = target.sources.findIndex(s => s.id === editingSourceId);
+            if (index > -1) {
+                target.sources[index] = { ...target.sources[index], title, side, type, aim, inst, video, x: tempCoords.x, y: tempCoords.y };
+            }
+        } else {
+            target.sources.push({
+                id: `source-${Date.now()}`,
+                title, side, type, aim, inst, video,
+                x: tempCoords.x,
+                y: tempCoords.y
+            });
+        }
+        
+        db.ref(`lineups/${currentMap}`).set(targets[currentMap])
+            .then(() => {
+                removePreview();
+                editingSourceId = null;
+                renderAll();
+                showTargetDetailsForm();
+            })
+            .catch(err => alert('❌ Ошибка: ' + err.message));
+    }
+
+    function editSource(sourceId) {
+        const target = targets[currentMap].find(t => t.id === selectedTargetId);
+        if (!target) return;
+        const source = target.sources.find(s => s.id === sourceId);
+        if (!source) return;
+        
+        editingSourceId = sourceId;
+        tempCoords = { x: source.x, y: source.y };
+        createPreview(source.x, source.y, 'source');
+        
+        const form = document.getElementById('form-content');
+        form.innerHTML = `
+            <h3 class="form-title">✏️ Редактировать источник</h3>
+            <p style="color:var(--text-2);font-size:.85rem;margin-bottom:1rem">Для цели: <strong style="color:var(--accent)">${target.title}</strong></p>
+            <div class="form-group">
+                <label>Название:</label>
+                <input type="text" id="input-source-title" value="${source.title}">
+            </div>
+            <div class="form-group">
+                <label>Сторона:</label>
+                <div class="side-selector">
+                    <label><input type="radio" name="source-side" value="T" ${source.side === 'T' ? 'checked' : ''}> T-Side</label>
+                    <label><input type="radio" name="source-side" value="CT" ${source.side === 'CT' ? 'checked' : ''}> CT-Side</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Тип гранаты:</label>
+                <select id="input-source-type">
+                    <option value="smoke" ${source.type==='smoke'?'selected':''}>💨 Smoke</option>
+                    <option value="flash" ${source.type==='flash'?'selected':''}>⚡ Flash</option>
+                    <option value="molotov" ${source.type==='molotov'?'selected':''}>🔥 Molotov</option>
+                    <option value="he" ${source.type==='he'?'selected':''}>💥 HE</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Прицел:</label>
+                <input type="text" id="input-source-aim" value="${source.aim || ''}">
+            </div>
+            <div class="form-group">
+                <label>Инструкция:</label>
+                <textarea id="input-source-inst">${source.inst || ''}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Видео:</label>
+                <input type="text" id="input-source-video" value="${source.video || ''}">
+            </div>
+            <div class="form-coords">
+                <div><label>X (%):</label><div class="coord-display">${source.x}%</div></div>
+                <div><label>Y (%):</label><div class="coord-display">${source.y}%</div></div>
+            </div>
+            <p style="color:var(--text-3);font-size:.8rem;margin-bottom:.75rem">💡 Кликните на другое место карты, чтобы переместить точку</p>
+            <button class="btn-admin btn-save" style="width:100%;justify-content:center" onclick="saveNewSource()">💾 Сохранить</button>
+            <button class="btn-cancel" onclick="cancelEditSource()">❌ Отмена</button>
+        `;
+        
+        document.getElementById('admin-form').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function cancelEditSource() {
+        editingSourceId = null;
+        removePreview();
+        showTargetDetailsForm();
+    }
+
+    function deleteSource(sourceId) {
+        if (!confirm('Удалить этот источник?')) return;
+        const target = targets[currentMap].find(t => t.id === selectedTargetId);
+        if (!target) return;
+        target.sources = target.sources.filter(s => s.id !== sourceId);
+        db.ref(`lineups/${currentMap}`).set(targets[currentMap])
+            .then(() => {
+                renderAll();
+                showTargetDetailsForm();
+            });
+    }
+
+    function deleteTarget(id) {
+        if (!confirm('Удалить эту цель и все её источники?')) return;
+        targets[currentMap] = targets[currentMap].filter(t => t.id !== id);
+        selectedTargetId = null;
+        mode = 'target';
+        db.ref(`lineups/${currentMap}`).set(targets[currentMap])
+            .then(() => {
+                removePreview();
+                renderAll();
+                updateModeUI();
+                renderForm();
+            });
+    }
+
+    function clearAll() {
+        if (!confirm('Удалить ВСЁ на этой карте?')) return;
+        targets[currentMap] = [];
+        selectedTargetId = null;
+        mode = 'target';
+        db.ref(`lineups/${currentMap}`).set([])
+            .then(() => {
+                removePreview();
+                renderAll();
+                updateModeUI();
+                renderForm();
+            });
+    }
+
+    function cancelAction() {
+        removePreview();
+        if (selectedTargetId) {
+            showTargetDetailsForm();
+        } else {
+            renderForm();
+        }
+    }
+
+    function renderAll() {
+        const wrapper = document.getElementById('map-wrapper');
+        wrapper.querySelectorAll('.admin-hotspot-target, .admin-hotspot-source, .connection-line').forEach(h => h.remove());
+        
+        targets[currentMap].forEach(t => {
+            const div = document.createElement('div');
+            div.className = 'admin-hotspot-target' + (t.id === selectedTargetId ? ' selected' : '');
+            div.style.left = t.x + '%';
+            div.style.top = t.y + '%';
+            const count = t.sources ? t.sources.length : 0;
+            div.innerHTML = `
+                <div class="admin-hotspot-target-label">${t.title}</div>
+                ${count > 0 ? `<div class="admin-hotspot-count">${count}</div>` : ''}
+            `;
+            div.onclick = (e) => { e.stopPropagation(); selectTarget(t.id); };
+            wrapper.appendChild(div);
+            
+            if (t.id === selectedTargetId && t.sources) {
+                t.sources.forEach(s => {
+                    const sDiv = document.createElement('div');
+                    sDiv.className = 'admin-hotspot-source';
+                    sDiv.style.left = s.x + '%';
+                    sDiv.style.top = s.y + '%';
+                    sDiv.innerHTML = `<div class="admin-hotspot-source-label">${s.title}</div>`;
+                    sDiv.onclick = (e) => { e.stopPropagation(); editSource(s.id); };
+                    wrapper.appendChild(sDiv);
+                    
+                    drawConnection(t.x, t.y, s.x, s.y);
+                });
+            }
+        });
+        
+        const items = document.getElementById('target-items');
+        if (targets[currentMap].length === 0) {
+            items.innerHTML = '<div class="empty-state">Нет целей. Кликните на карту, чтобы создать.</div>';
+        } else {
+            items.innerHTML = targets[currentMap].map(t => {
+                const count = t.sources ? t.sources.length : 0;
+                return `
+                    <div class="target-item ${t.id === selectedTargetId ? 'selected' : ''}" onclick="selectTarget('${t.id}')">
+                        <div class="target-item-info">
+                            <span class="target-item-icon">🎯</span>
+                            <span class="target-item-name">${t.title}</span>
+                            ${count > 0 ? `<span class="target-item-count">(${count})</span>` : ''}
+                        </div>
+                        <div class="target-item-actions">
+                            <button class="btn-sm btn-delete" onclick="event.stopPropagation();deleteTarget('${t.id}')">🗑</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        document.getElementById('target-count').textContent = targets[currentMap].length;
+    }
+
+    function drawConnection(x1, y1, x2, y2) {
+        const wrapper = document.getElementById('map-wrapper');
+        const line = document.createElement('div');
+        line.className = 'connection-line';
+        
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const length = Math.sqrt(dx * dx + dy * dy);
+        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+        
+        line.style.left = x1 + '%';
+        line.style.top = y1 + '%';
+        line.style.width = length + '%';
+        line.style.transform = `rotate(${angle}deg)`;
+        
+        wrapper.appendChild(line);
+    }
+
+    // Запуск при успешной авторизации
     renderAll();
     updateModeUI();
     renderForm();
 }
-
-document.getElementById('map-wrapper').addEventListener('click', function(event) {
-    if (event.target.closest('.admin-hotspot-target') || event.target.closest('.admin-hotspot-source')) return;
-    
-    const rect = this.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * 100;
-    const y = ((event.clientY - rect.top) / rect.height) * 100;
-    
-    tempCoords = { x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
-    
-    if (mode === 'target') {
-        createPreview(tempCoords.x, tempCoords.y, 'target');
-        showTargetForm();
-    } else if (mode === 'source') {
-        createPreview(tempCoords.x, tempCoords.y, 'source');
-        showSourceForm();
-    }
-    
-    document.getElementById('admin-form').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-});
-
-function selectTarget(id) {
-    selectedTargetId = id;
-    mode = 'source';
-    editingSourceId = null;
-    removePreview();
-    renderAll();
-    updateModeUI();
-    showTargetDetailsForm();
-}
-
-function showTargetForm() {
-    const form = document.getElementById('form-content');
-    form.innerHTML = `
-        <h3 class="form-title">🎯 Новая точка-цель</h3>
-        <div class="form-group">
-            <label>Название (куда прилетает):</label>
-            <input type="text" id="input-title" placeholder="Например: Окно Mid" autofocus>
-        </div>
-        <div class="form-coords">
-            <div>
-                <label>X (%):</label>
-                <div class="coord-display" id="coord-x">${tempCoords.x}%</div>
-            </div>
-            <div>
-                <label>Y (%):</label>
-                <div class="coord-display" id="coord-y">${tempCoords.y}%</div>
-            </div>
-        </div>
-        <button class="btn-admin btn-save" style="width:100%;justify-content:center" onclick="saveNewTarget()">💾 Создать цель</button>
-        <button class="btn-cancel" onclick="cancelAction()">❌ Отмена</button>
-    `;
-}
-
-function showSourceForm() {
-    const target = targets[currentMap].find(t => t.id === selectedTargetId);
-    if (!target) return;
-    
-    const form = document.getElementById('form-content');
-    form.innerHTML = `
-        <h3 class="form-title">📍 Новый источник</h3>
-        <p style="color:var(--text-2);font-size:.85rem;margin-bottom:1rem">Для цели: <strong style="color:var(--accent)">${target.title}</strong></p>
-        <div class="form-group">
-            <label>Название (откуда кидать):</label>
-            <input type="text" id="input-source-title" placeholder="Например: T-spawn #1" autofocus>
-        </div>
-        <div class="form-group">
-            <label>Сторона:</label>
-            <div class="side-selector">
-                <label><input type="radio" name="source-side" value="T" checked> T-Side</label>
-                <label><input type="radio" name="source-side" value="CT"> CT-Side</label>
-            </div>
-        </div>
-        <div class="form-group">
-            <label>Тип гранаты:</label>
-            <select id="input-source-type">
-                <option value="smoke">💨 Smoke</option>
-                <option value="flash">⚡ Flash</option>
-                <option value="molotov">🔥 Molotov</option>
-                <option value="he">💥 HE</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Прицел:</label>
-            <input type="text" id="input-source-aim" placeholder="Например: На раму окна">
-        </div>
-        <div class="form-group">
-            <label>Инструкция:</label>
-            <textarea id="input-source-inst" placeholder="1. Встань...&#10;2. Прицел...&#10;3. Jump throw"></textarea>
-        </div>
-        <div class="form-group">
-            <label>Видео:</label>
-            <input type="text" id="input-source-video" placeholder="https://youtube.com/watch?v=... или videos/clip.mp4">
-        </div>
-        <div class="form-coords">
-            <div>
-                <label>X (%):</label>
-                <div class="coord-display">${tempCoords.x}%</div>
-            </div>
-            <div>
-                <label>Y (%):</label>
-                <div class="coord-display">${tempCoords.y}%</div>
-            </div>
-        </div>
-        <button class="btn-admin btn-save" style="width:100%;justify-content:center" onclick="saveNewSource()">💾 Создать источник</button>
-        <button class="btn-cancel" onclick="cancelAction()">❌ Отмена</button>
-    `;
-}
-
-function showTargetDetailsForm() {
-    const target = targets[currentMap].find(t => t.id === selectedTargetId);
-    if (!target) return;
-    
-    const icons = { smoke: '💨', flash: '⚡', molotov: '🔥', he: '💥' };
-    const form = document.getElementById('form-content');
-    
-    let sourcesHTML = '';
-    if (target.sources && target.sources.length > 0) {
-        sourcesHTML = target.sources.map(s => `
-            <div class="source-item">
-                <div class="source-item-info">
-                    <span class="source-item-icon">${icons[s.type]}</span>
-                    <span class="source-item-name">${s.title} (${s.side})</span>
-                </div>
-                <div class="source-item-actions">
-                    <button class="btn-sm btn-edit" onclick="editSource('${s.id}')">✏️</button>
-                    <button class="btn-sm btn-delete" onclick="deleteSource('${s.id}')">🗑</button>
-                </div>
-            </div>
-        `).join('');
-    } else {
-        sourcesHTML = '<div class="empty-state">Нет источников. Кликните на карту, чтобы добавить.</div>';
-    }
-    
-    form.innerHTML = `
-        <h3 class="form-title">🎯 ${target.title}</h3>
-        <div class="form-coords">
-            <div>
-                <label>X:</label>
-                <div class="coord-display">${target.x}%</div>
-            </div>
-            <div>
-                <label>Y:</label>
-                <div class="coord-display">${target.y}%</div>
-            </div>
-        </div>
-        <button class="btn-admin btn-clear" style="width:100%;justify-content:center;margin-bottom:.5rem" onclick="deleteTarget('${target.id}')">🗑 Удалить цель</button>
-        <button class="btn-cancel" onclick="exitSourceMode()">← Назад к целям</button>
-        
-        <div class="sources-section">
-            <div class="sources-title">
-                <span>📍 Источники (${target.sources ? target.sources.length : 0})</span>
-            </div>
-            ${sourcesHTML}
-            <p style="color:var(--text-3);font-size:.8rem;text-align:center;margin-top:.75rem">💡 Кликните на карту, чтобы добавить источник</p>
-        </div>
-    `;
-}
-
-function renderForm() {
-    if (selectedTargetId && mode === 'source') {
-        showTargetDetailsForm();
-    } else {
-        const form = document.getElementById('form-content');
-        form.innerHTML = `
-            <h3 class="form-title">🎯 Выберите действие</h3>
-            <div class="empty-state">
-                <div style="font-size:2.5rem;margin-bottom:.75rem;opacity:.3">️</div>
-                <p>Кликните на карту, чтобы создать цель,<br>или выберите существующую из списка ниже.</p>
-            </div>
-        `;
-    }
-}
-
-function saveNewTarget() {
-    const title = document.getElementById('input-title').value.trim();
-    if (!title) { alert('Введите название!'); return; }
-    
-    targets[currentMap].push({
-        id: `${currentMap}-${Date.now()}`,
-        title,
-        x: tempCoords.x,
-        y: tempCoords.y,
-        sources: []
-    });
-    
-    db.ref(`lineups/${currentMap}`).set(targets[currentMap])
-        .then(() => {
-            removePreview();
-            renderAll();
-            mode = 'target';
-            updateModeUI();
-            renderForm();
-        })
-        .catch(err => alert('❌ Ошибка: ' + err.message));
-}
-
-function saveNewSource() {
-    const title = document.getElementById('input-source-title').value.trim();
-    const side = document.querySelector('input[name="source-side"]:checked').value;
-    const type = document.getElementById('input-source-type').value;
-    const aim = document.getElementById('input-source-aim').value.trim();
-    const inst = document.getElementById('input-source-inst').value.trim();
-    const video = document.getElementById('input-source-video').value.trim();
-    
-    if (!title) { alert('Введите название!'); return; }
-    
-    const target = targets[currentMap].find(t => t.id === selectedTargetId);
-    if (!target) return;
-    
-    if (!target.sources) target.sources = [];
-    
-    if (editingSourceId) {
-        const index = target.sources.findIndex(s => s.id === editingSourceId);
-        if (index > -1) {
-            target.sources[index] = { ...target.sources[index], title, side, type, aim, inst, video, x: tempCoords.x, y: tempCoords.y };
-        }
-    } else {
-        target.sources.push({
-            id: `source-${Date.now()}`,
-            title, side, type, aim, inst, video,
-            x: tempCoords.x,
-            y: tempCoords.y
-        });
-    }
-    
-    db.ref(`lineups/${currentMap}`).set(targets[currentMap])
-        .then(() => {
-            removePreview();
-            editingSourceId = null;
-            renderAll();
-            showTargetDetailsForm();
-        })
-        .catch(err => alert('❌ Ошибка: ' + err.message));
-}
-
-function editSource(sourceId) {
-    const target = targets[currentMap].find(t => t.id === selectedTargetId);
-    if (!target) return;
-    const source = target.sources.find(s => s.id === sourceId);
-    if (!source) return;
-    
-    editingSourceId = sourceId;
-    tempCoords = { x: source.x, y: source.y };
-    createPreview(source.x, source.y, 'source');
-    
-    const form = document.getElementById('form-content');
-    form.innerHTML = `
-        <h3 class="form-title">✏️ Редактировать источник</h3>
-        <p style="color:var(--text-2);font-size:.85rem;margin-bottom:1rem">Для цели: <strong style="color:var(--accent)">${target.title}</strong></p>
-        <div class="form-group">
-            <label>Название:</label>
-            <input type="text" id="input-source-title" value="${source.title}">
-        </div>
-        <div class="form-group">
-            <label>Сторона:</label>
-            <div class="side-selector">
-                <label><input type="radio" name="source-side" value="T" ${source.side === 'T' ? 'checked' : ''}> T-Side</label>
-                <label><input type="radio" name="source-side" value="CT" ${source.side === 'CT' ? 'checked' : ''}> CT-Side</label>
-            </div>
-        </div>
-        <div class="form-group">
-            <label>Тип гранаты:</label>
-            <select id="input-source-type">
-                <option value="smoke" ${source.type==='smoke'?'selected':''}>💨 Smoke</option>
-                <option value="flash" ${source.type==='flash'?'selected':''}>⚡ Flash</option>
-                <option value="molotov" ${source.type==='molotov'?'selected':''}>🔥 Molotov</option>
-                <option value="he" ${source.type==='he'?'selected':''}>💥 HE</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Прицел:</label>
-            <input type="text" id="input-source-aim" value="${source.aim || ''}">
-        </div>
-        <div class="form-group">
-            <label>Инструкция:</label>
-            <textarea id="input-source-inst">${source.inst || ''}</textarea>
-        </div>
-        <div class="form-group">
-            <label>Видео:</label>
-            <input type="text" id="input-source-video" value="${source.video || ''}">
-        </div>
-        <div class="form-coords">
-            <div>
-                <label>X (%):</label>
-                <div class="coord-display">${source.x}%</div>
-            </div>
-            <div>
-                <label>Y (%):</label>
-                <div class="coord-display">${source.y}%</div>
-            </div>
-        </div>
-        <p style="color:var(--text-3);font-size:.8rem;margin-bottom:.75rem">💡 Кликните на другое место карты, чтобы переместить точку</p>
-        <button class="btn-admin btn-save" style="width:100%;justify-content:center" onclick="saveNewSource()">💾 Сохранить</button>
-        <button class="btn-cancel" onclick="cancelEditSource()">❌ Отмена</button>
-    `;
-    
-    document.getElementById('admin-form').scrollIntoView({ behavior: 'smooth' });
-}
-
-function cancelEditSource() {
-    editingSourceId = null;
-    removePreview();
-    showTargetDetailsForm();
-}
-
-function deleteSource(sourceId) {
-    if (!confirm('Удалить этот источник?')) return;
-    const target = targets[currentMap].find(t => t.id === selectedTargetId);
-    if (!target) return;
-    target.sources = target.sources.filter(s => s.id !== sourceId);
-    db.ref(`lineups/${currentMap}`).set(targets[currentMap])
-        .then(() => {
-            renderAll();
-            showTargetDetailsForm();
-        });
-}
-
-function deleteTarget(id) {
-    if (!confirm('Удалить эту цель и все её источники?')) return;
-    targets[currentMap] = targets[currentMap].filter(t => t.id !== id);
-    selectedTargetId = null;
-    mode = 'target';
-    db.ref(`lineups/${currentMap}`).set(targets[currentMap])
-        .then(() => {
-            removePreview();
-            renderAll();
-            updateModeUI();
-            renderForm();
-        });
-}
-
-function clearAll() {
-    if (!confirm('Удалить ВСЁ на этой карте?')) return;
-    targets[currentMap] = [];
-    selectedTargetId = null;
-    mode = 'target';
-    db.ref(`lineups/${currentMap}`).set([])
-        .then(() => {
-            removePreview();
-            renderAll();
-            updateModeUI();
-            renderForm();
-        });
-}
-
-function cancelAction() {
-    removePreview();
-    if (selectedTargetId) {
-        showTargetDetailsForm();
-    } else {
-        renderForm();
-    }
-}
-
-function renderAll() {
-    const wrapper = document.getElementById('map-wrapper');
-    wrapper.querySelectorAll('.admin-hotspot-target, .admin-hotspot-source, .connection-line').forEach(h => h.remove());
-    
-    targets[currentMap].forEach(t => {
-        const div = document.createElement('div');
-        div.className = 'admin-hotspot-target' + (t.id === selectedTargetId ? ' selected' : '');
-        div.style.left = t.x + '%';
-        div.style.top = t.y + '%';
-        const count = t.sources ? t.sources.length : 0;
-        div.innerHTML = `
-            <div class="admin-hotspot-target-label">${t.title}</div>
-            ${count > 0 ? `<div class="admin-hotspot-count">${count}</div>` : ''}
-        `;
-        div.onclick = (e) => { e.stopPropagation(); selectTarget(t.id); };
-        wrapper.appendChild(div);
-        
-        if (t.id === selectedTargetId && t.sources) {
-            t.sources.forEach(s => {
-                const sDiv = document.createElement('div');
-                sDiv.className = 'admin-hotspot-source';
-                sDiv.style.left = s.x + '%';
-                sDiv.style.top = s.y + '%';
-                sDiv.innerHTML = `<div class="admin-hotspot-source-label">${s.title}</div>`;
-                sDiv.onclick = (e) => { e.stopPropagation(); editSource(s.id); };
-                wrapper.appendChild(sDiv);
-                
-                drawConnection(t.x, t.y, s.x, s.y);
-            });
-        }
-    });
-    
-    const items = document.getElementById('target-items');
-    if (targets[currentMap].length === 0) {
-        items.innerHTML = '<div class="empty-state">Нет целей. Кликните на карту, чтобы создать.</div>';
-    } else {
-        items.innerHTML = targets[currentMap].map(t => {
-            const count = t.sources ? t.sources.length : 0;
-            return `
-                <div class="target-item ${t.id === selectedTargetId ? 'selected' : ''}" onclick="selectTarget('${t.id}')">
-                    <div class="target-item-info">
-                        <span class="target-item-icon">🎯</span>
-                        <span class="target-item-name">${t.title}</span>
-                        ${count > 0 ? `<span class="target-item-count">(${count})</span>` : ''}
-                    </div>
-                    <div class="target-item-actions">
-                        <button class="btn-sm btn-delete" onclick="event.stopPropagation();deleteTarget('${t.id}')">🗑</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-    
-    document.getElementById('target-count').textContent = targets[currentMap].length;
-}
-
-function drawConnection(x1, y1, x2, y2) {
-    const wrapper = document.getElementById('map-wrapper');
-    const line = document.createElement('div');
-    line.className = 'connection-line';
-    
-    const dx = x2 - x1;
-    const dy = y2 - y1;
-    const length = Math.sqrt(dx * dx + dy * dy);
-    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-    
-    line.style.left = x1 + '%';
-    line.style.top = y1 + '%';
-    line.style.width = length + '%';
-    line.style.transform = `rotate(${angle}deg)`;
-    
-    wrapper.appendChild(line);
-}
-
-renderAll();
-updateModeUI();
-renderForm();
 </script>
 
 </body>

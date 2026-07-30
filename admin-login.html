@@ -2,103 +2,151 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Вход | CS2NADES</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход | CS2NADES Admin</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .login-page{display:flex;align-items:center;justify-content:center;min-height:80vh;padding:2rem}
-        .login-card{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:2.5rem;width:100%;max-width:400px;text-align:center}
-        .login-icon{font-size:3rem;margin-bottom:1rem}
-        .login-title{font-size:1.8rem;font-weight:700;margin-bottom:.5rem}
-        .login-subtitle{color:var(--text-2);margin-bottom:2rem;font-size:.95rem}
-        .login-input{width:100%;padding:.85rem 1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);font-family:inherit;font-size:1rem;margin-bottom:1rem;transition:all var(--transition);text-align:center;letter-spacing:2px}
-        .login-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
-        .login-input::placeholder{color:var(--text-3);letter-spacing:normal}
-        .login-btn{width:100%;padding:.85rem;background:var(--accent);color:#000;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:1rem;cursor:pointer;transition:all var(--transition);font-family:inherit}
-        .login-btn:hover{background:var(--accent-hover);transform:translateY(-2px)}
-        .login-error{color:var(--molotov);font-size:.88rem;margin-top:.75rem;display:none}
-        .login-error.show{display:block}
-        .login-back{display:inline-block;margin-top:1.5rem;color:var(--text-3);font-size:.88rem;transition:color var(--transition)}
-        .login-back:hover{color:var(--accent)}
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--bg-primary);
+        }
+        .login-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        .login-subtitle {
+            color: var(--text-2);
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-1);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+        .login-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all var(--transition);
+        }
+        .login-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+        .login-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .login-error {
+            color: var(--molotov);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+        }
+        .login-error.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
-<header class="header">
-    <div class="header-inner">
-        <a href="index.html" class="logo"><div class="logo-icon">💣</div><div>CS2<span>NADES</span></div></a>
+    <div class="login-box">
+        <h1 class="login-title">🔒 Админ-панель</h1>
+        <p class="login-subtitle">Введите email и пароль администратора</p>
+        <form id="login-form">
+            <input type="email" id="email-input" class="login-input" placeholder="Email" required>
+            <input type="password" id="password-input" class="login-input" placeholder="Пароль" required>
+            <button type="submit" class="login-btn" id="login-btn">Войти</button>
+        </form>
+        <div class="login-error" id="login-error"></div>
     </div>
-</header>
 
-<section class="login-page">
-    <div class="login-card">
-        <div class="login-icon">🔒</div>
-        <h1 class="login-title">Админ-панель</h1>
-        <p class="login-subtitle">Введите пароль для доступа</p>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script>
+        
+        const firebaseConfig = {
+  apiKey: "AIzaSyAXNxDCdizaAB-3IJU65fLahDS_9ww6UWw",
+  authDomain: "cs2nades-1a910.firebaseapp.com",
+  databaseURL: "https://cs2nades-1a910-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "cs2nades-1a910",
+  storageBucket: "cs2nades-1a910.firebasestorage.app",
+  messagingSenderId: "497946011142",
+  appId: "1:497946011142:web:eea3fe5839ac4d23444587",
+  measurementId: "G-M14MZNH78P"
+};
 
-        <input type="password" id="password" class="login-input" placeholder="Пароль" autocomplete="off">
-        <button class="login-btn" onclick="tryLogin()">Войти</button>
-        <div class="login-error" id="login-error">Неверный пароль</div>
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
 
-        <a href="index.html" class="login-back">← На главную</a>
-    </div>
-</section>
+        // Если уже авторизован — сразу в админку
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                window.location.href = 'admin.html';
+            }
+        });
 
-<script>
-    // SHA-256 хеш вашего пароля
-    // Пароль по умолчанию: "cs2admin2026"
-    // Чтобы сменить пароль, откройте консоль браузера и введите:
-    //   crypto.subtle.digest('SHA-256', new TextEncoder().encode('ВАШ_НОВЫЙ_ПАРОЛЬ')).then(h => console.log(Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('')))
-    // Скопируйте результат и вставьте ниже:
-    const PASSWORD_HASH = 'd34377d2599f158d598dee3f54ad2634259f8ada53068a61181606a6d17784c5';
-
-    async function hashPassword(password) {
-        const data = new TextEncoder().encode(password);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    async function tryLogin() {
-        const password = document.getElementById('password').value;
-        const errorEl = document.getElementById('login-error');
-
-        if (!password) {
-            errorEl.textContent = 'Введите пароль';
-            errorEl.classList.add('show');
-            return;
-        }
-
-        const hash = await hashPassword(password);
-
-        if (hash === PASSWORD_HASH) {
-            // Генерируем токен сессии (действителен 7 дней)
-            const sessionToken = await hashPassword(password + Date.now());
-            const expires = Date.now() + (7 * 24 * 60 * 60 * 1000);
-            localStorage.setItem('admin_session', JSON.stringify({
-                token: sessionToken,
-                expires: expires
-            }));
-            // Также сохраняем хеш пароля для проверки на других страницах
-            localStorage.setItem('admin_auth', hash);
-            window.location.href = 'admin.html';
-        } else {
-            errorEl.textContent = 'Неверный пароль';
-            errorEl.classList.add('show');
-            document.getElementById('password').value = '';
-            document.getElementById('password').focus();
-        }
-    }
-
-    // Вход по Enter
-    document.getElementById('password').addEventListener('keydown', e => {
-        if (e.key === 'Enter') tryLogin();
-    });
-
-    // Фокус на поле ввода
-    document.getElementById('password').focus();
-</script>
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email-input').value;
+            const password = document.getElementById('password-input').value;
+            const errorEl = document.getElementById('login-error');
+            const btn = document.getElementById('login-btn');
+            
+            btn.disabled = true;
+            btn.textContent = 'Вход...';
+            errorEl.classList.remove('show');
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                // Успешный вход — редирект произойдёт автоматически через onAuthStateChanged
+            } catch (err) {
+                let message = 'Ошибка входа';
+                if (err.code === 'auth/wrong-password') message = 'Неверный пароль';
+                else if (err.code === 'auth/user-not-found') message = 'Пользователь не найден';
+                else if (err.code === 'auth/too-many-requests') message = 'Слишком много попыток. Подождите';
+                
+                errorEl.textContent = message;
+                errorEl.classList.add('show');
+                btn.disabled = false;
+                btn.textContent = 'Войти';
+            }
+        });
+    </script>
 </body>
 </html>
