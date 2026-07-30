@@ -16,6 +16,16 @@
         .zoom-btn{width:32px;height:32px;border-radius:var(--radius-sm);background:var(--bg-card);border:1px solid var(--border);color:var(--text-1);font-size:1.2rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition)}
         .zoom-btn:hover{background:var(--accent);color:#000;border-color:var(--accent)}
         .zoom-level{padding:.4rem .75rem;background:var(--bg-card);border-radius:var(--radius-sm);font-size:.8rem;font-weight:600;color:var(--text-2)}
+        .map-filters{display:flex;gap:.5rem;padding:.75rem 1rem;background:var(--bg-tertiary);border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center}
+        .filter-label{font-size:.85rem;font-weight:600;color:var(--text-2);margin-right:.5rem}
+        .filter-btn{padding:.45rem .9rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-2);font-size:.82rem;font-weight:600;cursor:pointer;transition:all var(--transition);display:flex;align-items:center;gap:.35rem;font-family:inherit}
+        .filter-btn:hover{background:var(--bg-card-hover);color:var(--text-1);border-color:var(--border-hover)}
+        .filter-btn.active{background:var(--accent);color:#000;border-color:var(--accent)}
+        .filter-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+        .filter-dot.smoke{background:var(--smoke)}
+        .filter-dot.flash{background:var(--flash)}
+        .filter-dot.molotov{background:var(--molotov)}
+        .filter-dot.he{background:var(--he)}
         .map-viewport{width:100%;height:500px;overflow:hidden;position:relative;cursor:grab}
         .map-viewport:active{cursor:grabbing}
         .map-content{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transform-origin:center center;transition:transform .1s ease-out;will-change:transform}
@@ -45,6 +55,7 @@
         .legend-dot.source{background:var(--smoke)}
         .hint-text{padding:.75rem 1rem;background:rgba(245,166,35,.08);border-bottom:1px solid rgba(245,166,35,.2);font-size:.85rem;color:var(--text-2)}
         .hint-text strong{color:var(--accent)}
+        .hotspot-count{position:absolute;top:-8px;right:-8px;background:var(--molotov);color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;border:2px solid var(--bg-secondary)}
         @media(max-width:768px){.map-viewport{height:400px}.map-content,.map-overlay{width:800px;height:800px}.map-image{width:800px;height:800px}}
     </style>
 </head>
@@ -83,6 +94,24 @@
             </div>
         </div>
     </div>
+
+    <div class="map-filters">
+        <span class="filter-label">Фильтр:</span>
+        <button class="filter-btn active" data-filter="all">Все</button>
+        <button class="filter-btn" data-filter="smoke">
+            <span class="filter-dot smoke"></span>Smoke
+        </button>
+        <button class="filter-btn" data-filter="flash">
+            <span class="filter-dot flash"></span>Flash
+        </button>
+        <button class="filter-btn" data-filter="molotov">
+            <span class="filter-dot molotov"></span>Molotov
+        </button>
+        <button class="filter-btn" data-filter="he">
+            <span class="filter-dot he"></span>HE
+        </button>
+    </div>
+
     <div class="hint-text">💡 <strong>Жёлтая точка</strong> — куда прилетает граната. <strong>Синие точки</strong> — откуда кидать.</div>
     <div class="map-viewport" id="map-viewport">
         <div class="map-content" id="map-content">
@@ -110,7 +139,7 @@
     </div>
     <div class="lineup-panel-content">
         <div class="lineup-panel-section"><div class="lineup-panel-section-title">🎥 Видео</div><div class="lineup-panel-video" id="panel-video"></div></div>
-        <div class="lineup-panel-section"><div class="lineup-panel-section-title">📍 Позиция</div><p id="panel-pos"></p></div>
+        <div class="lineup-panel-section"><div class="lineup-panel-section-title"> Позиция</div><p id="panel-pos"></p></div>
         <div class="lineup-panel-section"><div class="lineup-panel-section-title">🎯 Прицел</div><p id="panel-aim"></p></div>
         <div class="lineup-panel-section">
             <div class="lineup-panel-section-title">📝 Инструкция</div>

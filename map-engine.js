@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // FIREBASE DATA
     window.targetsData = {};
     let currentSelectedTarget = null;
+    let activeFilter = 'all'; // 'all', 'smoke', 'flash', 'molotov', 'he'
 
     db.ref(`lineups/${MAP_NAME}`).on('value', snapshot => {
         const data = snapshot.val();
@@ -113,13 +114,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const div = document.createElement('div');
             div.className = 'map-hotspot';
             div.dataset.id = t.id;
+            div.dataset.types = getTargetTypes(t);
             div.style.left = t.x + '%';
             div.style.top = t.y + '%';
             
             const sourceCount = t.sources ? t.sources.length : 0;
             div.innerHTML = `
                 <div class="map-hotspot-label">${t.title}</div>
-                ${sourceCount > 1 ? `<div style="position:absolute;top:-8px;right:-8px;background:var(--molotov);color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700">${sourceCount}</div>` : ''}
+                ${sourceCount > 1 ? `<div class="hotspot-count">${sourceCount}</div>` : ''}
             `;
             
             div.onclick = (e) => {
@@ -130,8 +132,52 @@ document.addEventListener('DOMContentLoaded', () => {
             overlay.appendChild(div);
             window.targetsData[t.id] = t;
         });
+        
+        applyFilters();
     }, error => {
         console.error('❌ Ошибка Firebase:', error);
+    });
+
+    function getTargetTypes(target) {
+        if (!target.sources) return '';
+        const types = new Set();
+        target.sources.forEach(s => {
+            if (s.type) types.add(s.type);
+        });
+        return Array.from(types).join(',');
+    }
+
+    function applyFilters() {
+        const hotspots = document.querySelectorAll('.map-hotspot');
+        
+        hotspots.forEach(hotspot => {
+            const types = hotspot.dataset.types || '';
+            
+            if (activeFilter === 'all' || types.includes(activeFilter)) {
+                hotspot.style.display = 'block';
+            } else {
+                hotspot.style.display = 'none';
+            }
+        });
+    }
+
+    // Filter buttons
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeFilter = btn.dataset.filter;
+            applyFilters();
+            
+            // Сбросить выбранную цель при смене фильтра
+            if (currentSelectedTarget) {
+                const overlay = document.getElementById('map-overlay');
+                overlay.querySelectorAll('.map-hotspot-source, .connection-line').forEach(el => el.remove());
+                overlay.querySelectorAll('.map-hotspot').forEach(h => h.classList.remove('active'));
+                currentSelectedTarget = null;
+            }
+        });
     });
 
     function selectTarget(targetId) {
@@ -151,6 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
             target.sources.forEach(s => {
                 const sDiv = document.createElement('div');
                 sDiv.className = 'map-hotspot-source';
+                sDiv.dataset.type = s.type;
                 sDiv.style.left = s.x + '%';
                 sDiv.style.top = s.y + '%';
                 sDiv.innerHTML = `<div class="map-hotspot-label">${s.title}</div>`;
@@ -182,104 +229,60 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.appendChild(line);
     }
 
-    // Функция для создания видео embed
     function createVideoEmbed(videoUrl) {
-    if (!videoUrl || videoUrl.trim() === '') {
-        return `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3)">Видео не добавлено</div>`;
-    }
-    
-    // YouTube
-    if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
-        let videoId = '';
-        if (videoUrl.includes('v=')) {
-            videoId = videoUrl.split('v=')[1].split('&')[0];
-        } else if (videoUrl.includes('youtu.be/')) {
-            videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
+        if (!videoUrl || videoUrl.trim() === '') {
+            return `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3)">Видео не добавлено</div>`;
         }
-        if (videoId) {
-            return `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-        }
-    }
-    
-    // Rutube
-    if (videoUrl.includes('rutube.ru')) {
-        let videoId = '';
         
-        // Формат 1: https://rutube.ru/video/VIDEO_ID/
-        if (videoUrl.includes('/video/')) {
-            const match = videoUrl.match(/\/video\/([a-f0-9-]+)/i);
-            if (match) {
-                videoId = match[1];
+        // YouTube
+        if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+            let videoId = '';
+            if (videoUrl.includes('v=')) {
+                videoId = videoUrl.split('v=')[1].split('&')[0];
+            } else if (videoUrl.includes('youtu.be/')) {
+                videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
             }
-        }
-        // Формат 2: https://rutube.ru/play/embed/VIDEO_ID/
-        else if (videoUrl.includes('/play/embed/')) {
-            const match = videoUrl.match(/\/play\/embed\/([a-f0-9-]+)/i);
-            if (match) {
-                videoId = match[1];
-            }
-        }
-        // Формат 3: просто ID в конце URL
-        else {
-            const match = videoUrl.match(/([a-f0-9-]{36})/i);
-            if (match) {
-                videoId = match[1];
+            if (videoId) {
+                return `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
             }
         }
         
-        if (videoId) {
-            return `<iframe 
-                src="https://rutube.ru/play/embed/${videoId}" 
-                width="100%" 
-                height="100%" 
-                frameborder="0" 
-                allow="autoplay; encrypted-media; fullscreen; picture-in-picture" 
-                allowfullscreen
-                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-            ></iframe>`
-        }
-    }
-    
-    // VK - поддержка vk.com и vkvideo.ru
-    if (videoUrl.includes('vk.com') || videoUrl.includes('vkvideo.ru')) {
-        let match = videoUrl.match(/video(-?\d+)_(\d+)/);
-        if (!match) {
-            match = videoUrl.match(/clip(-?\d+)_(\d+)/);
+        // Rutube
+        if (videoUrl.includes('rutube.ru')) {
+            let videoId = '';
+            if (videoUrl.includes('/video/')) {
+                const match = videoUrl.match(/\/video\/([a-f0-9-]+)/i);
+                if (match) videoId = match[1];
+            } else if (videoUrl.includes('/play/embed/')) {
+                const match = videoUrl.match(/\/play\/embed\/([a-f0-9-]+)/i);
+                if (match) videoId = match[1];
+            } else {
+                const match = videoUrl.match(/([a-f0-9-]{36})/i);
+                if (match) videoId = match[1];
+            }
+            if (videoId) {
+                return `<iframe src="https://rutube.ru/play/embed/${videoId}" width="100%" height="100%" frameborder="0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+            }
         }
         
-        if (match) {
-            const oid = match[1];
-            const id = match[2];
-            return `<iframe 
-                src="https://vk.com/video_ext.php?oid=${oid}&id=${id}&hd=2&autoplay=0" 
-                width="100%" 
-                height="100%" 
-                frameborder="0" 
-                allow="autoplay; encrypted-media; fullscreen; picture-in-picture;" 
-                allowfullscreen
-                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-            ></iframe>
-            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);color:#fff;font-size:0.85rem;text-align:center;padding:2rem;">
-                Если видео не загружается, <a href="https://vk.com/video${oid}_${id}" target="_blank" style="color:var(--accent);text-decoration:underline">откройте его напрямую</a>
-            </div>
-        `;
-            
+        // VK
+        if (videoUrl.includes('vk.com') || videoUrl.includes('vkvideo.ru')) {
+            let match = videoUrl.match(/video(-?\d+)_(\d+)/);
+            if (!match) match = videoUrl.match(/clip(-?\d+)_(\d+)/);
+            if (match) {
+                const oid = match[1];
+                const id = match[2];
+                return `<iframe src="https://vk.com/video_ext.php?oid=${oid}&id=${id}&hd=2" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
+            }
         }
+        
+        // Локальное видео
+        if (videoUrl.endsWith('.mp4') || videoUrl.endsWith('.webm')) {
+            return `<video controls autoplay loop playsinline><source src="${videoUrl}" type="video/mp4"></video>`;
+        }
+        
+        return `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3)">Неподдерживаемый формат</div>`;
     }
-    
-    // Локальное видео
-    if (videoUrl.endsWith('.mp4') || videoUrl.endsWith('.webm')) {
-        return `<video controls autoplay loop playsinline><source src="${videoUrl}" type="video/mp4">Ваш браузер не поддерживает видео</video>`;
-    }
-    
-    // Если не распознали — показываем ссылку
-    return `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3);flex-direction:column;gap:1rem">
-        <div>Неподдерживаемый формат видео</div>
-        <div style="font-size:0.85rem;color:var(--text-2);max-width:80%;text-align:center;word-break:break-all">
-            Ссылка: ${videoUrl}
-        </div>
-    </div>`;
-}
 
     function openSource(targetId, sourceId) {
         const target = window.targetsData[targetId];
