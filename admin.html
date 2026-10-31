@@ -22,17 +22,17 @@
         .btn-add:hover{background:#4a9eff;transform:translateY(-2px)}
         .btn-logout{background:var(--bg-card);color:var(--text-2);border:1px solid var(--border)}
         .btn-logout:hover{background:var(--molotov);color:#fff;border-color:var(--molotov)}
-        
+
         .map-selector{margin-bottom:1.5rem}
         .map-selector label{display:block;margin-bottom:.5rem;font-weight:600;color:var(--text-2)}
         .map-selector select{width:100%;max-width:300px;padding:.7rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);font-family:inherit;font-size:.95rem;cursor:pointer}
-        
+
         .admin-layout{display:grid;grid-template-columns:1fr 450px;gap:2rem}
         @media(max-width:1024px){.admin-layout{grid-template-columns:1fr}}
-        
+
         .admin-map-wrapper{position:relative;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:crosshair}
         .admin-map-image{width:100%;height:auto;display:block;pointer-events:none}
-        
+
         .admin-hotspot-target{position:absolute;width:32px;height:32px;transform:translate(-50%,-50%);cursor:pointer;transition:all var(--transition);z-index:10}
         .admin-hotspot-target::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--accent);opacity:.4;animation:pulse 2s ease-in-out infinite}
         .admin-hotspot-target::after{content:'';position:absolute;inset:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent-glow)}
@@ -42,15 +42,15 @@
         .admin-hotspot-target.selected::after{background:var(--he)}
         .admin-hotspot-target-label{position:absolute;top:36px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:var(--text-1);padding:.4rem .8rem;border-radius:var(--radius-sm);font-size:.75rem;font-weight:600;white-space:nowrap;pointer-events:none}
         .admin-hotspot-count{position:absolute;top:-8px;right:-8px;background:var(--molotov);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;border:2px solid var(--bg-secondary)}
-        
+
         .admin-hotspot-source{position:absolute;width:26px;height:26px;transform:translate(-50%,-50%);cursor:pointer;transition:all var(--transition);z-index:15}
         .admin-hotspot-source::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--smoke);opacity:.5;animation:pulse 2s ease-in-out infinite}
         .admin-hotspot-source::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--smoke);box-shadow:0 0 10px rgba(88,166,255,.5)}
         .admin-hotspot-source:hover{transform:translate(-50%,-50%) scale(1.2)}
         .admin-hotspot-source-label{position:absolute;top:30px;left:50%;transform:translateX(-50%);background:rgba(88,166,255,.9);color:#fff;padding:.3rem .7rem;border-radius:var(--radius-sm);font-size:.7rem;font-weight:600;white-space:nowrap;pointer-events:none}
-        
+
         .connection-line{position:absolute;height:2px;background:linear-gradient(90deg,var(--smoke),var(--accent));transform-origin:0 50%;pointer-events:none;z-index:5;opacity:.5}
-        
+
         .admin-hotspot-preview{position:absolute;width:36px;height:36px;transform:translate(-50%,-50%);z-index:25;pointer-events:none;animation:previewAppear .3s ease}
         .admin-hotspot-preview::before{content:'';position:absolute;inset:0;border-radius:50%;opacity:.5;animation:previewPulse 1.5s ease-in-out infinite}
         .admin-hotspot-preview::after{content:'';position:absolute;inset:6px;border-radius:50%}
@@ -61,10 +61,10 @@
         .admin-hotspot-preview-label{position:absolute;top:40px;left:50%;transform:translateX(-50%);padding:.3rem .7rem;border-radius:var(--radius-sm);font-size:.72rem;font-weight:600;white-space:nowrap}
         .admin-hotspot-preview.target .admin-hotspot-preview-label{background:var(--accent);color:#000}
         .admin-hotspot-preview.source .admin-hotspot-preview-label{background:var(--smoke);color:#fff}
-        
+
         @keyframes previewAppear{from{opacity:0;transform:translate(-50%,-50%) scale(0.5)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
         @keyframes previewPulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.6);opacity:.15}}
-        
+
         .admin-form{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;height:fit-content;position:sticky;top:80px;max-height:calc(100vh - 100px);overflow-y:auto}
         .form-title{font-size:1.2rem;font-weight:700;margin-bottom:1.25rem;display:flex;align-items:center;gap:.5rem}
         .form-group{margin-bottom:1rem}
@@ -74,14 +74,14 @@
         .form-group textarea{resize:vertical;min-height:80px;font-family:'JetBrains Mono','Courier New',monospace}
         .form-coords{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem}
         .coord-display{background:var(--bg-tertiary);padding:.6rem;border-radius:var(--radius-sm);font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--accent);text-align:center}
-        
+
         .status-bar{padding:.65rem 1rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);margin-bottom:1rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem}
         .status-dot{width:8px;height:8px;border-radius:50%;background:var(--he);animation:pulse 2s infinite}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-        
+
         .hint-box{padding:.85rem;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:var(--radius-sm);margin-bottom:1rem;font-size:.85rem;color:var(--text-2);display:flex;align-items:flex-start;gap:.6rem}
         .hint-box-icon{font-size:1.2rem;flex-shrink:0}
-        
+
         .sources-section{margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)}
         .sources-title{font-size:.95rem;font-weight:700;margin-bottom:.75rem;display:flex;align-items:center;justify-content:space-between}
         .source-item{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.85rem;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center}
@@ -92,12 +92,12 @@
         .btn-sm{padding:.35rem .65rem;border-radius:var(--radius-sm);font-size:.75rem;font-weight:600;cursor:pointer;border:none;transition:all var(--transition)}
         .btn-edit{background:var(--accent);color:#000}
         .btn-delete{background:var(--molotov);color:#fff}
-        
+
         .empty-state{text-align:center;padding:2rem;color:var(--text-3);font-size:.85rem}
-        
+
         .btn-cancel{width:100%;padding:.65rem;background:var(--bg-card);color:var(--text-2);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;transition:all var(--transition);margin-top:.5rem}
         .btn-cancel:hover{background:var(--bg-card-hover);color:var(--text-1)}
-        
+
         .targets-list{margin-top:1.5rem;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
         .targets-list-title{font-size:1rem;font-weight:700;margin-bottom:.75rem}
         .target-item{display:flex;justify-content:space-between;align-items:center;padding:.65rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:.4rem;cursor:pointer;transition:all var(--transition)}
@@ -108,13 +108,14 @@
         .target-item-name{font-weight:600;font-size:.85rem}
         .target-item-count{font-size:.7rem;color:var(--text-3);margin-left:.4rem}
         .target-item-actions{display:flex;gap:.4rem}
-        
+
         .side-selector{display:flex;gap:.5rem;margin-bottom:1rem}
         .side-selector label{flex:1;display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.6rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition);font-weight:600}
         .side-selector label:hover{background:var(--bg-card-hover)}
         .side-selector input[type="radio"]{accent-color:var(--accent)}
         .side-selector label:has(input:checked){border-color:var(--accent);background:rgba(245,166,35,.1)}
     </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -123,9 +124,8 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script>
-    
     const firebaseConfig = {
-      apiKey: "AIzaSyAXNxDCdizaAB-3IJU65fLahDS_9ww6UWw", 
+      apiKey: "AIzaSyAXNxDCdizaAB-3IJU65fLahDS_9ww6UWw",
       authDomain: "cs2nades-1a910.firebaseapp.com",
       databaseURL: "https://cs2nades-1a910-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "cs2nades-1a910",
@@ -135,7 +135,7 @@
       measurementId: "G-M14MZNH78P"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const auth = firebase.auth();
 
@@ -156,6 +156,13 @@
         auth.signOut().then(() => {
             window.location.href = 'admin-login.html';
         });
+    }
+
+    // Защита от поломки вёрстки при вводе спецсимволов
+    function escapeHtml(str) {
+        return String(str ?? '').replace(/[&<>"']/g, c => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
     }
 </script>
 
@@ -209,7 +216,7 @@
                 <div class="hint-box-icon">💡</div>
                 <div id="hint-text">Кликните на пустое место карты, чтобы создать <strong>точку-цель</strong> (куда прилетает граната).</div>
             </div>
-            
+
             <div class="admin-map-wrapper" id="map-wrapper">
                 <img src="images/mirage-radar.webp" alt="Map" class="admin-map-image" id="map-image" onerror="this.style.background='var(--bg-tertiary)'">
             </div>
@@ -229,13 +236,13 @@
 </section>
 
 <script>
-// Весь функционал админки теперь внутри этой функции и запустится ТОЛЬКО после успешного входа
+// Весь функционал админки внутри этой функции — запустится ТОЛЬКО после успешного входа.
+// ВАЖНО: функции, вызываемые из inline-обработчиков (onclick/onchange), экспортируются в window в конце.
 function initAdminPanel() {
     let currentMap = 'mirage';
     let targets = { mirage: [], dust2: [], inferno: [], ancient: [], anubis: [], nuke: [], overpass: [], vertigo: [] };
     let selectedTargetId = null;
     let editingSourceId = null;
-    let currentTargetForSource = null;
     let tempCoords = { x: 0, y: 0 };
     let previewElement = null;
     let mode = 'target';
@@ -287,7 +294,7 @@ function initAdminPanel() {
             hintText.innerHTML = 'Кликните на пустое место карты, чтобы создать <strong>точку-цель</strong> (куда прилетает граната).';
         } else {
             const target = targets[currentMap].find(t => t.id === selectedTargetId);
-            hintText.innerHTML = `Кликните на карту, чтобы создать <strong>источник</strong> для цели "<strong>${target ? target.title : '?'}</strong>". <button onclick="exitSourceMode()" style="background:var(--molotov);color:#fff;border:none;padding:.3rem .7rem;border-radius:4px;font-size:.75rem;cursor:pointer;margin-left:.5rem">Выйти</button>`;
+            hintText.innerHTML = `Кликните на карту, чтобы создать <strong>источник</strong> для цели "<strong>${escapeHtml(target ? target.title : '?')}</strong>". <button onclick="exitSourceMode()" style="background:var(--molotov);color:#fff;border:none;padding:.3rem .7rem;border-radius:4px;font-size:.75rem;cursor:pointer;margin-left:.5rem">Выйти</button>`;
         }
     }
 
@@ -303,13 +310,13 @@ function initAdminPanel() {
 
     document.getElementById('map-wrapper').addEventListener('click', function(event) {
         if (event.target.closest('.admin-hotspot-target') || event.target.closest('.admin-hotspot-source')) return;
-        
+
         const rect = this.getBoundingClientRect();
         const x = ((event.clientX - rect.left) / rect.width) * 100;
         const y = ((event.clientY - rect.top) / rect.height) * 100;
-        
+
         tempCoords = { x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
-        
+
         if (mode === 'target') {
             createPreview(tempCoords.x, tempCoords.y, 'target');
             showTargetForm();
@@ -317,7 +324,7 @@ function initAdminPanel() {
             createPreview(tempCoords.x, tempCoords.y, 'source');
             showSourceForm();
         }
-        
+
         document.getElementById('admin-form').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
 
@@ -351,11 +358,11 @@ function initAdminPanel() {
     function showSourceForm() {
         const target = targets[currentMap].find(t => t.id === selectedTargetId);
         if (!target) return;
-        
+
         const form = document.getElementById('form-content');
         form.innerHTML = `
             <h3 class="form-title">📍 Новый источник</h3>
-            <p style="color:var(--text-2);font-size:.85rem;margin-bottom:1rem">Для цели: <strong style="color:var(--accent)">${target.title}</strong></p>
+            <p style="color:var(--text-2);font-size:.85rem;margin-bottom:1rem">Для цели: <strong style="color:var(--accent)">${escapeHtml(target.title)}</strong></p>
             <div class="form-group">
                 <label>Название (откуда кидать):</label>
                 <input type="text" id="input-source-title" placeholder="Например: T-spawn #1" autofocus>
@@ -400,17 +407,17 @@ function initAdminPanel() {
     function showTargetDetailsForm() {
         const target = targets[currentMap].find(t => t.id === selectedTargetId);
         if (!target) return;
-        
+
         const icons = { smoke: '💨', flash: '⚡', molotov: '🔥', he: '💥' };
         const form = document.getElementById('form-content');
-        
+
         let sourcesHTML = '';
         if (target.sources && target.sources.length > 0) {
             sourcesHTML = target.sources.map(s => `
                 <div class="source-item">
                     <div class="source-item-info">
-                        <span class="source-item-icon">${icons[s.type]}</span>
-                        <span class="source-item-name">${s.title} (${s.side})</span>
+                        <span class="source-item-icon">${icons[s.type] || '💣'}</span>
+                        <span class="source-item-name">${escapeHtml(s.title)} (${escapeHtml(s.side || '?')})</span>
                     </div>
                     <div class="source-item-actions">
                         <button class="btn-sm btn-edit" onclick="editSource('${s.id}')">✏️</button>
@@ -421,16 +428,16 @@ function initAdminPanel() {
         } else {
             sourcesHTML = '<div class="empty-state">Нет источников. Кликните на карту, чтобы добавить.</div>';
         }
-        
+
         form.innerHTML = `
-            <h3 class="form-title">🎯 ${target.title}</h3>
+            <h3 class="form-title">🎯 ${escapeHtml(target.title)}</h3>
             <div class="form-coords">
                 <div><label>X:</label><div class="coord-display">${target.x}%</div></div>
                 <div><label>Y:</label><div class="coord-display">${target.y}%</div></div>
             </div>
             <button class="btn-admin btn-clear" style="width:100%;justify-content:center;margin-bottom:.5rem" onclick="deleteTarget('${target.id}')">🗑 Удалить цель</button>
             <button class="btn-cancel" onclick="exitSourceMode()">← Назад к целям</button>
-            
+
             <div class="sources-section">
                 <div class="sources-title"><span>📍 Источники (${target.sources ? target.sources.length : 0})</span></div>
                 ${sourcesHTML}
@@ -457,7 +464,7 @@ function initAdminPanel() {
     function saveNewTarget() {
         const title = document.getElementById('input-title').value.trim();
         if (!title) { alert('Введите название!'); return; }
-        
+
         targets[currentMap].push({
             id: `${currentMap}-${Date.now()}`,
             title,
@@ -465,7 +472,7 @@ function initAdminPanel() {
             y: tempCoords.y,
             sources: []
         });
-        
+
         db.ref(`lineups/${currentMap}`).set(targets[currentMap])
             .then(() => {
                 removePreview();
@@ -484,14 +491,14 @@ function initAdminPanel() {
         const aim = document.getElementById('input-source-aim').value.trim();
         const inst = document.getElementById('input-source-inst').value.trim();
         const video = document.getElementById('input-source-video').value.trim();
-        
+
         if (!title) { alert('Введите название!'); return; }
-        
+
         const target = targets[currentMap].find(t => t.id === selectedTargetId);
         if (!target) return;
-        
+
         if (!target.sources) target.sources = [];
-        
+
         if (editingSourceId) {
             const index = target.sources.findIndex(s => s.id === editingSourceId);
             if (index > -1) {
@@ -505,7 +512,7 @@ function initAdminPanel() {
                 y: tempCoords.y
             });
         }
-        
+
         db.ref(`lineups/${currentMap}`).set(targets[currentMap])
             .then(() => {
                 removePreview();
@@ -521,18 +528,18 @@ function initAdminPanel() {
         if (!target) return;
         const source = target.sources.find(s => s.id === sourceId);
         if (!source) return;
-        
+
         editingSourceId = sourceId;
         tempCoords = { x: source.x, y: source.y };
         createPreview(source.x, source.y, 'source');
-        
+
         const form = document.getElementById('form-content');
         form.innerHTML = `
             <h3 class="form-title">✏️ Редактировать источник</h3>
-            <p style="color:var(--text-2);font-size:.85rem;margin-bottom:1rem">Для цели: <strong style="color:var(--accent)">${target.title}</strong></p>
+            <p style="color:var(--text-2);font-size:.85rem;margin-bottom:1rem">Для цели: <strong style="color:var(--accent)">${escapeHtml(target.title)}</strong></p>
             <div class="form-group">
                 <label>Название:</label>
-                <input type="text" id="input-source-title" value="${source.title}">
+                <input type="text" id="input-source-title" value="${escapeHtml(source.title)}">
             </div>
             <div class="form-group">
                 <label>Сторона:</label>
@@ -552,15 +559,15 @@ function initAdminPanel() {
             </div>
             <div class="form-group">
                 <label>Прицел:</label>
-                <input type="text" id="input-source-aim" value="${source.aim || ''}">
+                <input type="text" id="input-source-aim" value="${escapeHtml(source.aim || '')}">
             </div>
             <div class="form-group">
                 <label>Инструкция:</label>
-                <textarea id="input-source-inst">${source.inst || ''}</textarea>
+                <textarea id="input-source-inst">${escapeHtml(source.inst || '')}</textarea>
             </div>
             <div class="form-group">
                 <label>Видео:</label>
-                <input type="text" id="input-source-video" value="${source.video || ''}">
+                <input type="text" id="input-source-video" value="${escapeHtml(source.video || '')}">
             </div>
             <div class="form-coords">
                 <div><label>X (%):</label><div class="coord-display">${source.x}%</div></div>
@@ -570,7 +577,7 @@ function initAdminPanel() {
             <button class="btn-admin btn-save" style="width:100%;justify-content:center" onclick="saveNewSource()">💾 Сохранить</button>
             <button class="btn-cancel" onclick="cancelEditSource()">❌ Отмена</button>
         `;
-        
+
         document.getElementById('admin-form').scrollIntoView({ behavior: 'smooth' });
     }
 
@@ -632,7 +639,7 @@ function initAdminPanel() {
     function renderAll() {
         const wrapper = document.getElementById('map-wrapper');
         wrapper.querySelectorAll('.admin-hotspot-target, .admin-hotspot-source, .connection-line').forEach(h => h.remove());
-        
+
         targets[currentMap].forEach(t => {
             const div = document.createElement('div');
             div.className = 'admin-hotspot-target' + (t.id === selectedTargetId ? ' selected' : '');
@@ -640,27 +647,27 @@ function initAdminPanel() {
             div.style.top = t.y + '%';
             const count = t.sources ? t.sources.length : 0;
             div.innerHTML = `
-                <div class="admin-hotspot-target-label">${t.title}</div>
+                <div class="admin-hotspot-target-label">${escapeHtml(t.title)}</div>
                 ${count > 0 ? `<div class="admin-hotspot-count">${count}</div>` : ''}
             `;
             div.onclick = (e) => { e.stopPropagation(); selectTarget(t.id); };
             wrapper.appendChild(div);
-            
+
             if (t.id === selectedTargetId && t.sources) {
                 t.sources.forEach(s => {
                     const sDiv = document.createElement('div');
                     sDiv.className = 'admin-hotspot-source';
                     sDiv.style.left = s.x + '%';
                     sDiv.style.top = s.y + '%';
-                    sDiv.innerHTML = `<div class="admin-hotspot-source-label">${s.title}</div>`;
+                    sDiv.innerHTML = `<div class="admin-hotspot-source-label">${escapeHtml(s.title)}</div>`;
                     sDiv.onclick = (e) => { e.stopPropagation(); editSource(s.id); };
                     wrapper.appendChild(sDiv);
-                    
+
                     drawConnection(t.x, t.y, s.x, s.y);
                 });
             }
         });
-        
+
         const items = document.getElementById('target-items');
         if (targets[currentMap].length === 0) {
             items.innerHTML = '<div class="empty-state">Нет целей. Кликните на карту, чтобы создать.</div>';
@@ -671,7 +678,7 @@ function initAdminPanel() {
                     <div class="target-item ${t.id === selectedTargetId ? 'selected' : ''}" onclick="selectTarget('${t.id}')">
                         <div class="target-item-info">
                             <span class="target-item-icon">🎯</span>
-                            <span class="target-item-name">${t.title}</span>
+                            <span class="target-item-name">${escapeHtml(t.title)}</span>
                             ${count > 0 ? `<span class="target-item-count">(${count})</span>` : ''}
                         </div>
                         <div class="target-item-actions">
@@ -681,7 +688,7 @@ function initAdminPanel() {
                 `;
             }).join('');
         }
-        
+
         document.getElementById('target-count').textContent = targets[currentMap].length;
     }
 
@@ -689,19 +696,30 @@ function initAdminPanel() {
         const wrapper = document.getElementById('map-wrapper');
         const line = document.createElement('div');
         line.className = 'connection-line';
-        
+
         const dx = x2 - x1;
         const dy = y2 - y1;
         const length = Math.sqrt(dx * dx + dy * dy);
         const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-        
+
         line.style.left = x1 + '%';
         line.style.top = y1 + '%';
         line.style.width = length + '%';
         line.style.transform = `rotate(${angle}deg)`;
-        
+
         wrapper.appendChild(line);
     }
+
+    // ===== КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ =====
+    // Inline-обработчики (onclick="...", onchange="...") ищут функции в глобальной области.
+    // Все функции выше объявлены внутри initAdminPanel и недоступны глобально —
+    // без этих строк каждая кнопка/селект в админке падала бы с ReferenceError.
+    Object.assign(window, {
+        switchMap, exitSourceMode, selectTarget,
+        saveNewTarget, saveNewSource, editSource,
+        deleteSource, deleteTarget, clearAll,
+        cancelAction, cancelEditSource
+    });
 
     // Запуск при успешной авторизации
     renderAll();

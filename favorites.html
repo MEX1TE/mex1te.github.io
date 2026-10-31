@@ -4,11 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Избранное — CS2NADES</title>
+    <meta name="description" content="Избранные гранатные лайнапы CS2.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f5a623'/><text x='50' y='68' font-size='55' text-anchor='middle'>💣</text></svg>">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .fav-remove{background:var(--bg-card);border:1px solid var(--border);color:var(--text-3);border-radius:var(--radius-sm);cursor:pointer;font-size:.75rem;padding:.35rem .65rem;transition:all var(--transition)}
+        .fav-remove:hover{background:var(--molotov);color:#fff;border-color:var(--molotov)}
+        .fav-card{display:block;text-decoration:none;color:inherit}
+        .history-card{position:relative}
+        .fav-card-meta{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+    </style>
+<base target="_blank">
 </head>
 <body>
 <header class="header">
@@ -24,7 +33,7 @@
 
 <section class="favorites-page">
     <h1 class="section-title">❤️ Избранные раскидки</h1>
-    <div id="favorites-container"></div>
+    <div id="favorites-container"><div class="history-empty">Загрузка...</div></div>
 </section>
 
 <footer class="footer">
@@ -33,23 +42,98 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-<script src="script.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
-        const container = document.getElementById('favorites-container');
-        const badge = document.querySelector('.fav-badge');
-        if (badge) badge.textContent = favs.length > 0 ? favs.length : '';
+const firebaseConfig = {
+  apiKey: "AIzaSyAXNxDCdizaAB-3IJU65fLahDS_9ww6UWw",
+  authDomain: "cs2nades-1a910.firebaseapp.com",
+  databaseURL: "https://cs2nades-1a910-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "cs2nades-1a910",
+  storageBucket: "cs2nades-1a910.firebasestorage.app",
+  messagingSenderId: "497946011142",
+  appId: "1:497946011142:web:eea3fe5839ac4d23444587",
+  measurementId: "G-M14MZNH78P"
+};
 
-        if (favs.length === 0) {
-            container.innerHTML = `<div class="favorites-empty"><div class="favorites-empty-icon">💔</div><h2>Пока пусто</h2><p>Добавляй раскидки в избранное на страницах карт</p><a href="index.html#maps" class="favorites-btn">Выбрать карту</a></div>`;
-        } else {
-            container.innerHTML = `<div class="history-grid">${favs.map(id => {
-                const map = id.startsWith('m') ? 'mirage' : 'dust2';
-                return `<div class="history-card" onclick="window.location.href='${map}.html'"><div class="history-card-title">💣 ${id.replace(/-/g, ' ').toUpperCase()}</div><div class="history-card-meta">Нажми, чтобы открыть карту</div></div>`;
-            }).join('')}</div>`;
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+const MAPS = ['mirage', 'dust2', 'inferno', 'ancient', 'anubis', 'nuke', 'overpass', 'vertigo'];
+const MAP_TITLES = { mirage: '🕌 Mirage', dust2: '🏜️ Dust II', inferno: '🔥 Inferno', ancient: '🏛️ Ancient', anubis: '🐫 Anubis', nuke: '☢️ Nuke', overpass: '🌉 Overpass', vertigo: '🏗️ Vertigo' };
+const icons = { smoke: '💨', flash: '⚡', molotov: '🔥', he: '💥' };
+
+function getFavs() { return JSON.parse(localStorage.getItem('favorites') || '[]'); }
+function setFavs(favs) {
+    localStorage.setItem('favorites', JSON.stringify(favs));
+    updateBadge();
+    render(); // перерендер после удаления
+}
+function updateBadge() {
+    const badge = document.querySelector('.fav-badge');
+    if (badge) {
+        const favs = getFavs();
+        badge.textContent = favs.length > 0 ? favs.length : '';
+    }
+}
+
+// favId имеет вид "<map>-<targetTs>-source-<sourceTs>" → карта = первая часть
+function mapFromId(id) {
+    const m = id.split('-')[0];
+    return MAPS.includes(m) ? m : null;
+}
+
+// Загружаем данные всех карт и сопоставляем id избранного с реальными названиями
+let lineupsData = {};
+
+Promise.all(MAPS.map(map =>
+    db.ref(`lineups/${map}`).once('value').then(snap => {
+        const data = snap.val();
+        const targets = data ? Object.values(data) : [];
+        const lookup = {};
+        targets.forEach(t => (t.sources || []).forEach(src => {
+            lookup[`${t.id}-${src.id}`] = {
+                title: `${t.title} — ${src.title}`,
+                type: src.type,
+                side: src.side,
+                map
+            };
+        }));
+        lineupsData[map] = lookup;
+    })
+)).then(render).catch(render);
+
+function render() {
+    updateBadge();
+    const favs = getFavs();
+    const container = document.getElementById('favorites-container');
+
+    if (favs.length === 0) {
+        container.innerHTML = `<div class="favorites-empty"><div class="favorites-empty-icon">💔</div><h2>Пока пусто</h2><p>Добавляй раскидки в избранное на страницах карт</p><a href="index.html#maps" class="favorites-btn">Выбрать карту</a></div>`;
+        return;
+    }
+
+    container.innerHTML = `<div class="history-grid">${favs.map(id => {
+        const map = mapFromId(id);
+        const info = map ? lineupsData[map]?.[id] : null;
+        if (!map || !info) {
+            return `<div class="history-card">
+                <div class="history-card-title">💣 ${id.replace(/-/g, ' ').toUpperCase()}</div>
+                <div class="fav-card-meta"><span class="history-card-meta">Раскидка удалена или устарела</span><button class="fav-remove" onclick="removeFav('${id}')">Удалить</button></div>
+            </div>`;
         }
-    });
+        const sideBadge = info.side ? `<span style="background:var(--bg-tertiary);padding:.1rem .4rem;border-radius:4px;font-size:.7rem;margin-left:.3rem">${info.side}</span>` : '';
+        return `<div class="history-card">
+            <a class="history-card-title fav-card" href="${map}.html">${icons[info.type] || '💣'} ${info.title}${sideBadge}</a>
+            <div class="fav-card-meta"><span class="history-card-meta">${MAP_TITLES[map]} → нажми, чтобы открыть карту</span><button class="fav-remove" onclick="removeFav('${id}')">Удалить</button></div>
+        </div>`;
+    }).join('')}</div>`;
+}
+
+function removeFav(id) {
+    setFavs(getFavs().filter(f => f !== id));
+}
+
+// Синхронизация между вкладками
+window.addEventListener('storage', e => { if (e.key === 'favorites') render(); });
 </script>
 </body>
 </html>

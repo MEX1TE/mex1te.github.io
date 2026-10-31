@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f5a623'/><text x='50' y='68' font-size='55' text-anchor='middle'>💣</text></svg>">
     <link rel="stylesheet" href="styles.css">
+<base target="_blank">
 </head>
 <body>
 <header class="header">
@@ -89,11 +90,28 @@ const firebaseConfig = {
   measurementId: "G-M14MZNH78P"
 };
 
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 const maps = ['mirage', 'dust2', 'inferno', 'ancient', 'anubis', 'nuke', 'overpass', 'vertigo'];
-let totalLineups = 0;
+
+// Исправлено: считаем по объекту counts, а не парся текст бейджей
+const counts = {};
+
+function pluralize(n) {
+    const mod100 = n % 100;
+    if (mod100 >= 11 && mod100 <= 14) return 'раскидок';
+    switch (n % 10) {
+        case 1: return 'раскидка';
+        case 2: case 3: case 4: return 'раскидки';
+        default: return 'раскидок';
+    }
+}
+
+function updateTotal() {
+    const total = Object.values(counts).reduce((sum, c) => sum + c, 0);
+    document.getElementById('total-lineups').textContent = total;
+}
 
 maps.forEach(map => {
     db.ref(`lineups/${map}`).on('value', snapshot => {
@@ -101,20 +119,13 @@ maps.forEach(map => {
         const targets = data ? Object.values(data) : [];
         let count = 0;
         targets.forEach(t => { count += t.sources ? t.sources.length : 0; });
-        
+
+        counts[map] = count;
+
         const el = document.getElementById(`count-${map}`);
-        if (el) el.textContent = count > 0 ? `${count} раскидок` : 'Пока пусто';
-        
-        // Пересчёт общего количества
-        totalLineups = 0;
-        maps.forEach(m => {
-            const badge = document.getElementById(`count-${m}`);
-            if (badge) {
-                const match = badge.textContent.match(/(\d+)/);
-                if (match) totalLineups += parseInt(match[1]);
-            }
-        });
-        document.getElementById('total-lineups').textContent = totalLineups;
+        if (el) el.textContent = count > 0 ? `${count} ${pluralize(count)}` : 'Пока пусто';
+
+        updateTotal();
     });
 });
 </script>

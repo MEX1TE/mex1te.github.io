@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Firebase конфигурация — ЗАМЕНИ НА СВОЮ!
+    // Firebase конфигурация
     const firebaseConfig = {
   apiKey: "AIzaSyAXNxDCdizaAB-3IJU65fLahDS_9ww6UWw",
   authDomain: "cs2nades-1a910.firebaseapp.com",
@@ -11,10 +11,17 @@ document.addEventListener('DOMContentLoaded', () => {
   measurementId: "G-M14MZNH78P"
 };
 
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     console.log(`🗺️ Загрузка карты: ${MAP_NAME}`);
+
+    // ===== Helpers =====
+    function escapeHtml(str) {
+        return String(str ?? '').replace(/[&<>"']/g, c => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+    }
 
     // ZOOM & PAN
     let zoom = 1;
@@ -44,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: false });
 
     viewport.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
         if (e.target.closest('.map-hotspot') || e.target.closest('.map-hotspot-source')) return;
         isDragging = true;
         startX = e.clientX - panX;
@@ -85,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             zoom = Math.max(0.5, Math.min(touchStartZoom * (dist / touchStartDist), 3));
             updateTransform();
         } else if (e.touches.length === 1 && isDragging) {
+            e.preventDefault();
             panX = e.touches[0].clientX - startX;
             panY = e.touches[0].clientY - startY;
             updateTransform();
@@ -105,12 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = snapshot.val();
         const targets = data ? Object.values(data) : [];
         const overlay = document.getElementById('map-overlay');
-        
+
         overlay.innerHTML = '';
         window.targetsData = {};
-        
+
         console.log(`✅ Загружено ${targets.length} целей для ${MAP_NAME}`);
-        
+
         targets.forEach(t => {
             const div = document.createElement('div');
             div.className = 'map-hotspot';
@@ -119,22 +128,22 @@ document.addEventListener('DOMContentLoaded', () => {
             div.dataset.sides = getTargetSides(t);
             div.style.left = t.x + '%';
             div.style.top = t.y + '%';
-            
+
             const sourceCount = t.sources ? t.sources.length : 0;
             div.innerHTML = `
-                <div class="map-hotspot-label">${t.title}</div>
+                <div class="map-hotspot-label">${escapeHtml(t.title)}</div>
                 ${sourceCount > 1 ? `<div class="hotspot-count">${sourceCount}</div>` : ''}
             `;
-            
+
             div.onclick = (e) => {
                 e.stopPropagation();
                 selectTarget(t.id);
             };
-            
+
             overlay.appendChild(div);
             window.targetsData[t.id] = t;
         });
-        
+
         applyFilters();
     }, error => {
         console.error('❌ Ошибка Firebase:', error);
@@ -160,20 +169,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function applyFilters() {
         const hotspots = document.querySelectorAll('.map-hotspot');
-        
+
         hotspots.forEach(hotspot => {
             const types = hotspot.dataset.types || '';
             const sides = hotspot.dataset.sides || '';
-            
+
             const matchType = activeFilter === 'all' || types.includes(activeFilter);
             const matchSide = activeSide === 'all' || sides.includes(activeSide);
-            
-            if (matchType && matchSide) {
-                hotspot.style.display = 'block';
-            } else {
-                hotspot.style.display = 'none';
-            }
+
+            hotspot.style.display = (matchType && matchSide) ? 'block' : 'none';
         });
+    }
+
+    function resetSelection() {
+        const mapOverlay = document.getElementById('map-overlay');
+        mapOverlay.querySelectorAll('.map-hotspot-source, .connection-line').forEach(el => el.remove());
+        mapOverlay.querySelectorAll('.map-hotspot').forEach(h => h.classList.remove('active'));
+        currentSelectedTarget = null;
     }
 
     const filterButtons = document.querySelectorAll('.filter-btn[data-filter]');
@@ -183,13 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.add('active');
             activeFilter = btn.dataset.filter;
             applyFilters();
-            
-            if (currentSelectedTarget) {
-                const overlay = document.getElementById('map-overlay');
-                overlay.querySelectorAll('.map-hotspot-source, .connection-line').forEach(el => el.remove());
-                overlay.querySelectorAll('.map-hotspot').forEach(h => h.classList.remove('active'));
-                currentSelectedTarget = null;
-            }
+            resetSelection();
         });
     });
 
@@ -200,29 +206,23 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.add('active');
             activeSide = btn.dataset.side;
             applyFilters();
-            
-            if (currentSelectedTarget) {
-                const overlay = document.getElementById('map-overlay');
-                overlay.querySelectorAll('.map-hotspot-source, .connection-line').forEach(el => el.remove());
-                overlay.querySelectorAll('.map-hotspot').forEach(h => h.classList.remove('active'));
-                currentSelectedTarget = null;
-            }
+            resetSelection();
         });
     });
 
     function selectTarget(targetId) {
         const target = window.targetsData[targetId];
         if (!target) return;
-        
+
         currentSelectedTarget = targetId;
-        
+
         const overlay = document.getElementById('map-overlay');
         overlay.querySelectorAll('.map-hotspot-source, .connection-line').forEach(el => el.remove());
         overlay.querySelectorAll('.map-hotspot').forEach(h => h.classList.remove('active'));
-        
+
         const targetEl = overlay.querySelector(`.map-hotspot[data-id="${targetId}"]`);
         if (targetEl) targetEl.classList.add('active');
-        
+
         if (target.sources && target.sources.length > 0) {
             target.sources.forEach(s => {
                 const sDiv = document.createElement('div');
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 sDiv.dataset.side = s.side;
                 sDiv.style.left = s.x + '%';
                 sDiv.style.top = s.y + '%';
-                sDiv.innerHTML = `<div class="map-hotspot-label">${s.title}</div>`;
+                sDiv.innerHTML = `<div class="map-hotspot-label">${escapeHtml(s.title)}</div>`;
                 sDiv.onclick = (e) => {
                     e.stopPropagation();
                     openSource(targetId, s.id);
@@ -246,17 +246,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const overlay = document.getElementById('map-overlay');
         const line = document.createElement('div');
         line.className = 'connection-line';
-        
+
         const dx = x2 - x1;
         const dy = y2 - y1;
         const length = Math.sqrt(dx * dx + dy * dy);
         const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-        
+
         line.style.left = x1 + '%';
         line.style.top = y1 + '%';
         line.style.width = length + '%';
         line.style.transform = `rotate(${angle}deg)`;
-        
+
         overlay.appendChild(line);
     }
 
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!videoUrl || videoUrl.trim() === '') {
             return `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3)">Видео не добавлено</div>`;
         }
-        
+
         if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
             let videoId = '';
             if (videoUrl.includes('v=')) {
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
             }
         }
-        
+
         if (videoUrl.includes('rutube.ru')) {
             let videoId = '';
             if (videoUrl.includes('/video/')) {
@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return `<iframe src="https://rutube.ru/play/embed/${videoId}" width="100%" height="100%" frameborder="0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
             }
         }
-        
+
         if (videoUrl.includes('vk.com') || videoUrl.includes('vkvideo.ru')) {
             let match = videoUrl.match(/video(-?\d+)_(\d+)/);
             if (!match) match = videoUrl.match(/clip(-?\d+)_(\d+)/);
@@ -303,11 +303,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 return `<iframe src="https://vk.com/video_ext.php?oid=${oid}&id=${id}&hd=2" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
             }
         }
-        
+
         if (videoUrl.endsWith('.mp4') || videoUrl.endsWith('.webm')) {
-            return `<video controls autoplay loop playsinline><source src="${videoUrl}" type="video/mp4"></video>`;
+            const mime = videoUrl.endsWith('.webm') ? 'video/webm' : 'video/mp4';
+            return `<video controls autoplay loop playsinline><source src="${videoUrl}" type="${mime}"></video>`;
         }
-        
+
         return `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3)">Неподдерживаемый формат</div>`;
     }
 
@@ -316,50 +317,61 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!target) return;
         const source = target.sources.find(s => s.id === sourceId);
         if (!source) return;
-        
+
         const panel = document.getElementById('lineup-panel');
         const overlayActive = document.getElementById('overlay-active');
-        
+
         document.querySelector('.lineup-panel-title').textContent = `${target.title} — ${source.title}`;
         document.querySelector('.lineup-panel-subtitle').textContent = `Откуда: ${source.title} (${source.side}) → Куда: ${target.title}`;
         document.getElementById('panel-pos').textContent = `Позиция: ${source.title} (${source.side})`;
         document.getElementById('panel-aim').textContent = source.aim || 'Прицел не указан';
         document.getElementById('panel-inst').textContent = source.inst || 'Инструкция не указана';
-        
+
         const vidBox = document.getElementById('panel-video');
         vidBox.innerHTML = createVideoEmbed(source.video);
-        
+
         const favBtn = document.getElementById('fav-btn');
         const favId = `${targetId}-${sourceId}`;
-        const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
-        const isFav = favs.includes(favId);
-        
-        updateFavBtnUI(favBtn, isFav);
-        
+
+        updateFavBtnUI(favBtn, isFavorite(favId));
+
         favBtn.onclick = () => {
-            const currentFavs = JSON.parse(localStorage.getItem('favorites') || '[]');
-            if (currentFavs.includes(favId)) {
-                localStorage.setItem('favorites', JSON.stringify(currentFavs.filter(f => f !== favId)));
-                updateFavBtnUI(favBtn, false);
+            if (isFavorite(favId)) {
+                removeFavorite(favId);
             } else {
-                currentFavs.push(favId);
-                localStorage.setItem('favorites', JSON.stringify(currentFavs));
-                updateFavBtnUI(favBtn, true);
+                addFavorite(favId);
             }
+            updateFavBtnUI(favBtn, isFavorite(favId));
             updateFavCounter();
         };
-        
+
         panel.classList.add('open');
         overlayActive.classList.add('show');
         document.body.style.overflow = 'hidden';
-        
-        const hist = JSON.parse(localStorage.getItem('history') || '[]');
+
+        // История — без дубликатов (исправлено)
+        const hist = JSON.parse(localStorage.getItem('history') || '[]').filter(h => h.id !== favId);
         hist.unshift({ id: favId, title: `${target.title} — ${source.title}`, type: source.type, side: source.side, timestamp: Date.now() });
         localStorage.setItem('history', JSON.stringify(hist.slice(0, 20)));
         renderHistory();
     }
 
+    // ===== Favorites helpers (единое место) =====
+    function getFavorites() { return JSON.parse(localStorage.getItem('favorites') || '[]'); }
+    function isFavorite(id) { return getFavorites().includes(id); }
+    function addFavorite(id) {
+        const favs = getFavorites();
+        if (!favs.includes(id)) {
+            favs.push(id);
+            localStorage.setItem('favorites', JSON.stringify(favs));
+        }
+    }
+    function removeFavorite(id) {
+        localStorage.setItem('favorites', JSON.stringify(getFavorites().filter(f => f !== id)));
+    }
+
     function updateFavBtnUI(btn, isFav) {
+        if (!btn) return;
         if (isFav) {
             btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" stroke="#fff" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> В избранном`;
             btn.className = 'btn btn-secondary';
@@ -375,12 +387,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = '';
     }
 
-    document.getElementById('panel-close').addEventListener('click', closePanel);
-    document.getElementById('panel-close-2').addEventListener('click', closePanel);
-    document.getElementById('overlay-active').addEventListener('click', closePanel);
+    document.getElementById('panel-close')?.addEventListener('click', closePanel);
+    document.getElementById('panel-close-2')?.addEventListener('click', closePanel);
+    document.getElementById('overlay-active')?.addEventListener('click', closePanel);
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
 
-    document.getElementById('copy-inst').addEventListener('click', async function() {
+    document.getElementById('copy-inst')?.addEventListener('click', async function() {
         const text = document.getElementById('panel-inst').textContent;
         try {
             await navigator.clipboard.writeText(text);
@@ -394,11 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('map-overlay').addEventListener('click', (e) => {
-        if (e.target.id === 'map-overlay') {
-            document.getElementById('map-overlay').querySelectorAll('.map-hotspot').forEach(h => h.classList.remove('active'));
-            document.getElementById('map-overlay').querySelectorAll('.map-hotspot-source, .connection-line').forEach(el => el.remove());
-            currentSelectedTarget = null;
-        }
+        if (e.target.id === 'map-overlay') resetSelection();
     });
 
     function renderHistory() {
@@ -406,7 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!section) return;
         const grid = section.querySelector('.history-grid');
         const hist = JSON.parse(localStorage.getItem('history') || '[]');
-        
+
         if (hist.length === 0) {
             grid.innerHTML = '<div class="history-empty">История пуста</div>';
         } else {
@@ -414,21 +422,23 @@ document.addEventListener('DOMContentLoaded', () => {
             grid.innerHTML = hist.map(item => {
                 const mins = Math.floor((Date.now() - item.timestamp) / 60000);
                 const time = mins < 1 ? 'Только что' : mins < 60 ? `${mins} мин назад` : `${Math.floor(mins/60)} ч назад`;
-                const sideBadge = item.side ? `<span style="background:var(--bg-tertiary);padding:.1rem .4rem;border-radius:4px;font-size:.7rem;margin-left:.3rem">${item.side}</span>` : '';
-                return `<div class="history-card"><div class="history-card-title"><span>${icons[item.type]||''}</span> ${item.title}${sideBadge}</div><div class="history-card-meta">${time}</div></div>`;
+                const sideBadge = item.side ? `<span style="background:var(--bg-tertiary);padding:.1rem .4rem;border-radius:4px;font-size:.7rem;margin-left:.3rem">${escapeHtml(item.side)}</span>` : '';
+                return `<div class="history-card"><div class="history-card-title"><span>${icons[item.type]||'💣'}</span> ${escapeHtml(item.title)}${sideBadge}</div><div class="history-card-meta">${time}</div></div>`;
             }).join('');
         }
-        
-        section.querySelector('.history-clear')?.addEventListener('click', () => {
+
+        // Исправлено: обработчик вешался заново при каждом вызове
+        const clearBtn = section.querySelector('.history-clear');
+        if (clearBtn) clearBtn.onclick = () => {
             localStorage.setItem('history', '[]');
             renderHistory();
-        });
+        };
     }
 
     function updateFavCounter() {
         const badge = document.querySelector('.fav-badge');
         if (badge) {
-            const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const favs = getFavorites();
             badge.textContent = favs.length > 0 ? favs.length : '';
         }
     }
